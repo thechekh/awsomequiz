@@ -82,7 +82,7 @@ supabase/
   migrations/0004_stats_handle_updates.sql  # trigger fires on UPDATE too -- DONE
   migrations/0005_flashcards.sql        # flashcard tables + RLS + stats trigger -- DONE
   seed.sql                   # CLF-C02 cert + 4 domains (auto-run by `supabase db reset`)
-docker/Dockerfile            # Streamlit container (python:3.11-slim + uv)
+docker/Dockerfile            # Streamlit container (python:3.13-slim + uv)
 docker-compose.yml           # Streamlit service; talks to Supabase via host.docker.internal
 Makefile / dev.ps1           # one-command orchestration
 dumps/CLF-C02.db             # source data (915 Q / 3,755 options)
@@ -116,7 +116,7 @@ docs/how_to_run.md           # local + deploy walkthroughs
 2. **No `difficulty` column.** Surface accuracy via `question_stats` rollup instead.
 3. **`questions.domain_id` is nullable** because source data has no domain. Don't make it NOT NULL without first tagging the 915 existing questions.
 4. **No `explanation_short` column.** The brief lists it as "legacy" but our SQLite has only one description field per option, mapped to `explanation_detailed`.
-5. **Python 3.11** (brief says 3.11+; 3.11-slim is the smaller/broader-supported base image vs 3.13).
+5. **Python 3.13+** -- `requires-python = ">=3.13,<3.15"`. Streamlit Cloud needs the deploy Advanced setting at 3.13 or 3.14 to match the uv.lock file's >=3.13 pin. (Previously was 3.11; bumped after Streamlit Cloud build failed on the version mismatch.)
 6. **Supabase CLI for local dev** (not a hand-rolled docker-compose with Postgres + GoTrue). Gives 1:1 prod parity for auth flows. Streamlit runs as a separate container.
 
 ## Hard constraints from the brief (do not violate)

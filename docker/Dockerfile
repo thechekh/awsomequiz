@@ -1,6 +1,6 @@
 # Streamlit app container. Talks to a local Supabase stack (started by the
 # Supabase CLI) over host.docker.internal, or to a real Supabase project in prod.
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Pin uv to a known good version; multi-stage copy keeps the final image small.
 COPY --from=ghcr.io/astral-sh/uv:0.5.20 /uv /uvx /bin/

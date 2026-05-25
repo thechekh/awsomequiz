@@ -39,7 +39,7 @@ cd "C:\Users\ba4f1\Desktop\AWSomeQuiz\aws_prep 1\aws_prep"
 uv sync
 ```
 
-First run downloads Python 3.11 if missing (~1 min) and installs streamlit + supabase + psycopg + pydantic. Regenerates `uv.lock` for the new `pyproject.toml`.
+First run downloads Python 3.13 if missing (~1 min) and installs streamlit + supabase + psycopg + pydantic.
 
 ### 2. Boot the local Supabase stack
 

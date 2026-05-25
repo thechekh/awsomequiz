@@ -26,7 +26,7 @@ Make sure **Docker Desktop is running** before continuing.
 ```powershell
 # Windows
 cd "C:\Users\ba4f1\Desktop\AWSomeQuiz\aws_prep 1\aws_prep"
-uv sync                       # ~1 min first time (downloads Python 3.11 if missing)
+uv sync                       # ~1 min first time (downloads Python 3.13 if missing)
 .\dev.ps1 db-up               # ~5-10 min first time (downloads ~3 GB of Supabase images)
 Copy-Item .env.example .env
 .\dev.ps1 db-status           # prints the keys -- paste anon key into .env if it differs
@@ -185,7 +185,7 @@ Expected output: `Verified: 915 questions, 3755 options in Postgres`.
 3. **Repository:** select your `awsomequiz` repo.
 4. **Branch:** `main`.
 5. **Main file path:** `streamlit_app.py`.
-6. **Python version:** 3.11 (under Advanced settings).
+6. **Python version:** 3.13 (under Advanced settings). If 3.14 appears, that works too -- `requires-python` allows up to 3.14.
 7. Under **Advanced settings -> Secrets**, paste:
    ```toml
    SUPABASE_URL = "https://abcdefg.supabase.co"
@@ -316,7 +316,8 @@ If AWS updates CLF-C02 questions and you have a fresh SQLite:
 
 | Symptom | Fix |
 |---|---|
-| Streamlit Cloud build fails: "ModuleNotFoundError: ..." | Check Python version is 3.11 in Advanced settings; verify the missing package is in `pyproject.toml` |
+| Streamlit Cloud build fails: "ModuleNotFoundError: ..." | Check Python version is 3.13+ in Advanced settings; verify the missing package is in `pyproject.toml` |
+| Streamlit Cloud build fails: "Python (X.Y.Z) is not compatible with the locked Python requirement: `>=3.13`" | Advanced settings -> Python version -> 3.13 (or 3.14) -> Reboot app |
 | App loads but "SUPABASE_URL must be set" | Re-check Streamlit Cloud secrets (they're TOML; quote strings) |
 | Sign-up email never arrives | Supabase free-tier sends from a generic address that often goes to spam. Check spam. To use your own SMTP, configure in **Supabase -> Authentication -> Email Settings** |
 | Verification link 404s back to your app | The link's `redirect_to` doesn't match the **Redirect URLs** allow-list in **Supabase -> Authentication -> URL Configuration**. Add it. |
