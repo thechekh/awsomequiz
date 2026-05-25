@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.ruff_cache/
+.pytest_cache/
+
+# Streamlit / Supabase secrets
+.streamlit/secrets.toml
+.env
+.env.local
+.env.*.local
+
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+.claude/
+*.swp

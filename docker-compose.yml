@@ -1,0 +1,36 @@
+# Streamlit app container. The Supabase stack itself is managed by the Supabase
+# CLI (`supabase start`) on the host; this compose file just runs our app and
+# points it at host.docker.internal where Supabase is listening.
+#
+# Usage:
+#   supabase start                        # one-time per session: start Supabase
+#   cp .env.example .env                  # one-time: populate keys from `supabase status`
+#   docker compose up --build streamlit   # build + run the app at http://localhost:8501
+
+services:
+  streamlit:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: awsomequiz-streamlit
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      # Defaults assume Supabase CLI is running on the Docker host with the
+      # standard local ports. .env can override.
+      SUPABASE_URL: ${SUPABASE_URL:-http://host.docker.internal:54321}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY in .env (run `supabase status`)}
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:-postgresql://postgres:postgres@host.docker.internal:54322/postgres}
+      APP_SITE_URL: ${APP_SITE_URL:-http://localhost:8501}
+    extra_hosts:
+      # Required on Linux so host.docker.internal resolves; harmless elsewhere.
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Mount source for hot reload during dev. Drop these in CI/prod builds.
+      - ./streamlit_app.py:/app/streamlit_app.py
+      - ./pages:/app/pages
+      - ./app:/app/app
+      - ./.streamlit:/app/.streamlit
+    restart: unless-stopped

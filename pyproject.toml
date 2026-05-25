@@ -1,0 +1,45 @@
+[project]
+name = "awsomequiz"
+version = "0.1.0"
+description = "Multi-user CLF-C02 practice platform on Supabase + Streamlit"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "streamlit>=1.40,<2.0",
+    "supabase>=2.10,<3.0",
+    "psycopg[binary]>=3.2,<4.0",
+    "python-dotenv>=1.0,<2.0",
+    "pydantic>=2.9,<3.0",
+    "pandas>=2.2,<3.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8",
+    "pytest>=8.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "UP",     # pyupgrade
+    "SIM",    # flake8-simplify
+    "C4",     # flake8-comprehensions
+    "RUF",    # ruff-specific
+]
+ignore = [
+    "E501",   # line too long (long SQL strings make this noisy)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["T201"]  # print() is fine in CLI scripts
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,10 @@
+# Streamlit Community Cloud reads this file directly.
+# Local dev uses pyproject.toml + uv.lock (uv sync) -- they should stay in sync.
+# Bump versions here when you bump them in pyproject.toml.
+
+streamlit>=1.40,<2.0
+supabase>=2.10,<3.0
+psycopg[binary]>=3.2,<4.0
+python-dotenv>=1.0,<2.0
+pydantic>=2.9,<3.0
+pandas>=2.2,<3.0
