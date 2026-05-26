@@ -33,37 +33,51 @@ OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 # reload on Streamlit Cloud. To persist login across reloads we stash the
 # Supabase refresh_token in a first-party cookie via extra-streamlit-components'
 # CookieManager and rehydrate the session on each cold start.
+#
+# The CookieManager IS A WIDGET, so it cannot be wrapped in @st.cache_resource
+# (Streamlit throws CachedWidgetWarning). Instead it's instantiated once per
+# script run at the top of streamlit_app.py and the instance is stashed in
+# session_state under COOKIE_MANAGER_KEY for these helpers to read.
 
 
-@st.cache_resource
+COOKIE_MANAGER_KEY = "_cookie_manager"
+
+
 def _cookie_manager():
-    """Single CookieManager instance for the whole app (cached across reruns)."""
-    import extra_streamlit_components as stx
-    return stx.CookieManager(key="awsomequiz_cookie_manager")
+    """Return the CookieManager instance owned by streamlit_app.py (or None
+    if it hasn't been instantiated yet on this rerun)."""
+    return st.session_state.get(COOKIE_MANAGER_KEY)
 
 
 def _save_refresh_cookie(refresh_token: str) -> None:
     if not refresh_token:
         return
+    cm = _cookie_manager()
+    if cm is None:
+        return
     expires_at = datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)
     try:
-        _cookie_manager().set(
-            COOKIE_NAME, refresh_token, expires_at=expires_at, key="cookie_set"
-        )
+        cm.set(COOKIE_NAME, refresh_token, expires_at=expires_at, key="cookie_set")
     except Exception:  # noqa: BLE001 - never block sign-in on cookie failure
         pass
 
 
 def _read_refresh_cookie() -> str | None:
+    cm = _cookie_manager()
+    if cm is None:
+        return None
     try:
-        return _cookie_manager().get(COOKIE_NAME)
+        return cm.get(COOKIE_NAME)
     except Exception:  # noqa: BLE001
         return None
 
 
 def _delete_refresh_cookie() -> None:
+    cm = _cookie_manager()
+    if cm is None:
+        return
     try:
-        _cookie_manager().delete(COOKIE_NAME, key="cookie_delete")
+        cm.delete(COOKIE_NAME, key="cookie_delete")
     except Exception:  # noqa: BLE001
         pass
 

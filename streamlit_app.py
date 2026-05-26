@@ -11,7 +11,10 @@ from __future__ import annotations
 
 import streamlit as st
 
+import extra_streamlit_components as stx
+
 from app.auth import (
+    COOKIE_MANAGER_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -71,6 +74,12 @@ st.set_page_config(
 
 # Inject the global CSS once; cheap and idempotent across reruns.
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+# CookieManager is a Streamlit widget; it has to be instantiated at the top
+# of every script run (not inside a cached function). We stash the instance
+# in session_state so app/auth.py helpers can read/write cookies without
+# re-declaring the widget (which would duplicate the key).
+st.session_state[COOKIE_MANAGER_KEY] = stx.CookieManager(key="awsomequiz_cookies")
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
