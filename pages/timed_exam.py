@@ -159,15 +159,21 @@ def _render_review_row(row: dict) -> None:
     title = f"Q{row['index'] + 1}: {row['stem'][:80]}"
     if len(row["stem"]) > 80:
         title += "..."
-    marker = "[OK]" if row["is_correct"] else ("[--]" if row["unanswered"] else "[X]")
+    if row["is_correct"]:
+        marker = "✅"
+    elif row["unanswered"]:
+        marker = "⬜"
+    else:
+        marker = "❌"
     with st.expander(f"{marker} {title}"):
         st.markdown(row["stem"])
         st.write("")
         for o in row["options"]:
             was_selected = o["id"] in row["selected_option_ids"]
             is_right = o["is_correct"]
+            opt_marker = "✅" if is_right else "❌"
             you = "  (your answer)" if was_selected else ""
-            line = f"**{o['label']}. {o['text']}**{you}"
+            line = f"{opt_marker} **{o['label']}. {o['text']}**{you}"
             if is_right and was_selected:
                 st.success(line)
             elif is_right:
@@ -177,9 +183,9 @@ def _render_review_row(row: dict) -> None:
             else:
                 st.write(line)
             if o.get("explanation_detailed"):
-                st.caption(o["explanation_detailed"])
+                st.markdown(o["explanation_detailed"])
             if o.get("related_context"):
-                st.caption(f"Related: {o['related_context']}")
+                st.markdown(f"*Related:* {o['related_context']}")
 
 
 # ---------------------------------------------------------------------------

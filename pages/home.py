@@ -115,11 +115,3 @@ m1, m2, m3 = st.columns(3)
 m1.metric("Certification", cert["code"])
 m2.metric("Questions available", q_count)
 m3.metric("Pass threshold", f"{cert['pass_threshold_pct']}%")
-
-st.divider()
-
-st.subheader("Coming soon")
-st.markdown(
-    "- **Production deploy** -- Streamlit Cloud + hosted Supabase guide (Phase 8)\n"
-    "- **Domain tagging** -- per-domain accuracy stats will populate once questions are tagged"
-)

@@ -18,30 +18,12 @@ import time
 import streamlit as st
 
 from app.queries import (
-    REPORT_REASONS,
     get_question_with_options,
     get_user_answer,
     is_bookmarked,
-    report_question,
     toggle_bookmark,
 )
 from app.session import abandon_session, complete_session, record_answer
-
-
-@st.dialog("Report this question")
-def _report_dialog(qid: str, user_id: str) -> None:
-    st.caption("Sends a note to the question-bank maintainer. Other users can't see it.")
-    with st.form("runner_report_form", clear_on_submit=True):
-        reason = st.selectbox("Reason", options=list(REPORT_REASONS))
-        details = st.text_area("Details (optional)", height=100)
-        submitted = st.form_submit_button("Submit report", type="primary")
-    if submitted:
-        try:
-            report_question(user_id, qid, reason, details or None)
-        except Exception as exc:  # noqa: BLE001
-            st.error(f"Could not submit report: {exc}")
-            return
-        st.success("Report submitted. Thank you.")
 
 
 def _clear_runner_state(namespace: str) -> None:
@@ -87,7 +69,7 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     correct_ids = [o["id"] for o in question["options"] if o["is_correct"]]
     prior = get_user_answer(session["id"], qid)
 
-    hcol, bcol, rcol = st.columns([6, 1, 1])
+    hcol, bcol = st.columns([7, 1])
     hcol.subheader(f"Question {index + 1}")
 
     bookmarked = is_bookmarked(user["id"], qid)
@@ -95,9 +77,6 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     if bcol.button(bm_label, key=f"runner_bm_{qid}", use_container_width=True):
         toggle_bookmark(user["id"], qid)
         st.rerun()
-
-    if rcol.button("Report", key=f"runner_rp_{qid}", use_container_width=True):
-        _report_dialog(qid, user["id"])
 
     st.markdown(question["stem"])
 
@@ -154,9 +133,9 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
         for o in question["options"]:
             was_selected = o["id"] in selected_ids
             is_right = o["is_correct"]
-            marker = "[correct]" if is_right else "[wrong]  "
+            marker = "✅" if is_right else "❌"
             you = "  (your answer)" if was_selected else ""
-            line = f"**{marker} {o['label']}. {o['text']}**{you}"
+            line = f"{marker} **{o['label']}. {o['text']}**{you}"
             if is_right and was_selected:
                 st.success(line)
             elif is_right:
@@ -166,9 +145,9 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
             else:
                 st.write(line)
             if o.get("explanation_detailed"):
-                st.caption(o["explanation_detailed"])
+                st.markdown(o["explanation_detailed"])
             if o.get("related_context"):
-                st.caption(f"Related: {o['related_context']}")
+                st.markdown(f"*Related:* {o['related_context']}")
             st.write("")
 
         next_label = "Finish session" if index + 1 == total else "Next question"
