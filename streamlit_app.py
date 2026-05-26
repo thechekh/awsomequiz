@@ -10,7 +10,6 @@ Two responsibilities:
 from __future__ import annotations
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 import extra_streamlit_components as stx
 
@@ -24,7 +23,7 @@ from app.auth import (
     verify_otp,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
-from app.styles import CUSTOM_CSS, DARK_OVERRIDE_CSS, github_link_fix_html
+from app.styles import CUSTOM_CSS, DARK_OVERRIDE_CSS
 
 DARK_MODE_KEY = "dark_mode"
 DARK_MODE_COOKIE = "awsomequiz_dark"
@@ -97,10 +96,6 @@ if DARK_MODE_KEY not in st.session_state:
 
 if st.session_state.get(DARK_MODE_KEY):
     st.markdown(DARK_OVERRIDE_CSS, unsafe_allow_html=True)
-
-# Rewrite st.link_button's target so the GitHub OAuth link stays in the
-# same tab (link_button defaults to target=_blank). Invisible iframe.
-components.html(github_link_fix_html(), height=0)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"

@@ -11,41 +11,13 @@ Light-theme palette inspired by Claude's "Competitive Intelligence" artifact:
 Injected once in streamlit_app.py via `st.markdown(CUSTOM_CSS, unsafe_allow_html=True)`.
 """
 
-_GITHUB_LINK_FIX_JS = """
-<script>
-(function() {
-    // st.link_button defaults to target="_blank" so the GitHub OAuth flow
-    // opens in a new tab. We want same-tab navigation so the user comes
-    // back to the original tab signed in. This script (running in a
-    // Streamlit component iframe -- same origin) rewrites the parent-doc
-    // link's target to _self.
-    try {
-        const doc = window.parent.document;
-        const fixLinks = () => {
-            doc.querySelectorAll('a[href*="provider=github"]').forEach(a => {
-                if (a.target !== '_self') {
-                    a.target = '_self';
-                }
-            });
-        };
-        fixLinks();
-        const obs = new MutationObserver(fixLinks);
-        obs.observe(doc.body, { childList: true, subtree: true });
-    } catch (e) {
-        console.warn('GitHub link target rewrite failed:', e);
-    }
-})();
-</script>
-"""
-
-
-def github_link_fix_html() -> str:
-    """JS snippet to make the GitHub OAuth link open in the same tab.
-
-    Inject via `streamlit.components.v1.html(github_link_fix_html(), height=0)`
-    in streamlit_app.py so it runs on every rerun.
-    """
-    return _GITHUB_LINK_FIX_JS
+# Note on GitHub OAuth UX: st.link_button defaults to target="_blank" (new tab).
+# We tried rewriting it to "_self" via JS to keep auth in the same tab, but
+# Streamlit renders link_button inside a sandboxed iframe and GitHub refuses
+# to be framed (Content-Security-Policy: frame-ancestors 'none'). So same-tab
+# navigation is impossible from inside the Streamlit iframe. The OAuth flow
+# now completes in the new tab; the cookie-based session persists, so
+# reloading the original tab will pick up the signed-in state too.
 
 
 CUSTOM_CSS = """
@@ -510,20 +482,32 @@ footer {
     visibility: hidden;
 }
 
-/* ----- Hide invisible utility components (cookie manager + github-link
-   target fix). They render as 0px iframes but their containers can take
-   small vertical space and cause flicker / layout shift on rerun. ------- */
-.element-container:has(iframe[height="0"]),
+/* ----- Hide invisible utility components (cookie manager). Renders as a
+   small iframe whose container can take vertical space and cause flicker
+   / layout shift on dark-mode toggle rerun. ------------------------------ */
 .element-container:has(iframe[title*="extra_streamlit_components"]),
-.element-container:has(iframe[title*="CookieManager"]) {
+.element-container:has(iframe[title*="CookieManager"]),
+[data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
+[data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]) {
     display: none !important;
     height: 0 !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    line-height: 0 !important;
 }
 iframe[title*="extra_streamlit_components"],
 iframe[title*="CookieManager"] {
     display: none !important;
+    height: 0 !important;
+}
+
+/* Lock the height of the top header row (the columns wrapping the Dark
+   mode toggle) so the page below can't shift even by a pixel when the
+   toggle state changes. */
+[data-testid="stAppViewBlockContainer"] > [data-testid="stHorizontalBlock"]:first-of-type {
+    min-height: 44px !important;
+    margin-bottom: 0.25rem !important;
 }
 </style>
 """
