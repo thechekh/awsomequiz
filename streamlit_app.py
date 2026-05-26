@@ -16,6 +16,7 @@ import extra_streamlit_components as stx
 
 from app.auth import (
     COOKIE_MANAGER_KEY,
+    DARK_MODE_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -26,7 +27,6 @@ from app.auth import (
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
 from app.styles import GITHUB_BUTTON_CSS, render_combined_css
 
-DARK_MODE_KEY = "dark_mode"
 DARK_MODE_COOKIE = "awsomequiz_dark"
 
 

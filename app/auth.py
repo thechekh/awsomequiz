@@ -22,6 +22,7 @@ from app.db import get_supabase
 SESSION_KEY = "supabase_session"
 COOKIE_NAME = "awsomequiz_rt"
 COOKIE_MAX_AGE_DAYS = 30
+DARK_MODE_KEY = "dark_mode"  # Shared so pages can render theme-aware UI bits.
 OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 
 
