@@ -181,6 +181,30 @@ else:
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
 
+# Dark mode toggle: rendered at top-right of every page via st.columns so the
+# layout is stable across toggles (DARK_OVERRIDE_CSS only changes colors,
+# not dimensions). Persists via cookie so the preference survives reloads.
+_, toggle_col = st.columns([9, 2])
+with toggle_col:
+    new_dark = st.toggle(
+        "Dark mode",
+        value=st.session_state.get(DARK_MODE_KEY, False),
+        key="dark_mode_toggle",
+    )
+if new_dark != st.session_state.get(DARK_MODE_KEY):
+    st.session_state[DARK_MODE_KEY] = new_dark
+    try:
+        from datetime import datetime, timedelta, timezone
+        cookie_manager.set(
+            DARK_MODE_COOKIE,
+            "1" if new_dark else "0",
+            expires_at=datetime.now(timezone.utc) + timedelta(days=365),
+            key="dark_mode_cookie_set",
+        )
+    except Exception:  # noqa: BLE001 - cookie failure is non-fatal
+        pass
+    st.rerun()
+
 # Sidebar contents for authenticated users: a compact dark stats panel + the
 # signed-in label + sign-out. Lives here (not in each page) so it survives
 # navigation. Stats queries are @st.cache_data(ttl=30) so the fetch is cheap.
@@ -193,27 +217,5 @@ if session:
         if st.button("Sign out", use_container_width=True, key="sidebar_signout"):
             sign_out()
             st.rerun()
-
-# Dark-mode toggle in the sidebar (works for both auth + guest views).
-# Persists via cookie so the choice survives reloads.
-with st.sidebar:
-    new_dark = st.toggle(
-        "Dark mode",
-        value=st.session_state.get(DARK_MODE_KEY, False),
-        key="dark_mode_toggle",
-    )
-    if new_dark != st.session_state.get(DARK_MODE_KEY):
-        st.session_state[DARK_MODE_KEY] = new_dark
-        try:
-            from datetime import datetime, timedelta, timezone
-            cookie_manager.set(
-                DARK_MODE_COOKIE,
-                "1" if new_dark else "0",
-                expires_at=datetime.now(timezone.utc) + timedelta(days=365),
-                key="dark_mode_cookie_set",
-            )
-        except Exception:  # noqa: BLE001 - cookie failure is non-fatal
-            pass
-        st.rerun()
 
 pg.run()

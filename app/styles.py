@@ -509,6 +509,22 @@ hr, [data-testid="stDivider"] {
 footer {
     visibility: hidden;
 }
+
+/* ----- Hide invisible utility components (cookie manager + github-link
+   target fix). They render as 0px iframes but their containers can take
+   small vertical space and cause flicker / layout shift on rerun. ------- */
+.element-container:has(iframe[height="0"]),
+.element-container:has(iframe[title*="extra_streamlit_components"]),
+.element-container:has(iframe[title*="CookieManager"]) {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+iframe[title*="extra_streamlit_components"],
+iframe[title*="CookieManager"] {
+    display: none !important;
+}
 </style>
 """
 
@@ -523,9 +539,11 @@ DARK_OVERRIDE_CSS = """
 }
 .main .block-container { background: transparent !important; }
 
-h1, h2, h3, h4, h5, h6, .stMarkdown, .stMarkdown p {
+h1, h2, h3, h4, h5, h6, .stMarkdown, .stMarkdown p,
+.stMarkdown li, .stMarkdown strong, .stMarkdown em, .stMarkdown a {
     color: #F1F5F9 !important;
 }
+.stMarkdown a { color: #60A5FA !important; }
 .stCaption, [data-testid="stCaptionContainer"],
 .stCaption *, [data-testid="stCaptionContainer"] * {
     color: #94A3B8 !important;
@@ -534,6 +552,35 @@ h1, h2, h3, h4, h5, h6, .stMarkdown, .stMarkdown p {
 .section-label {
     color: #94A3B8 !important;
     border-bottom-color: #1E293B !important;
+}
+
+/* Form widget labels (the "Domain", "Number of questions", "Choose one"
+   lead text above radios/checkboxes/inputs). Streamlit's default light-mode
+   color leaves these unreadable on a dark page. */
+[data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] p,
+.stRadio label, .stRadio label p,
+.stCheckbox label, .stCheckbox label p,
+.stSelectbox label, .stMultiSelect label,
+.stTextInput label, .stTextArea label, .stNumberInput label,
+label[data-baseweb="form-control-label"] {
+    color: #E2E8F0 !important;
+}
+
+/* Radio + checkbox OPTION labels (the answer text, e.g. "A. Attach another
+   EBS volume...") -- without this they render in default dim color. */
+.stRadio [role="radiogroup"] label,
+.stRadio [role="radiogroup"] label *,
+.stCheckbox [data-baseweb="checkbox"] *,
+[data-baseweb="radio"] *,
+[data-baseweb="checkbox"] * {
+    color: #F1F5F9 !important;
+}
+
+/* Selectbox / multiselect displayed value */
+.stSelectbox [data-baseweb="select"] *,
+.stMultiSelect [data-baseweb="select"] * {
+    color: #F1F5F9 !important;
 }
 
 /* Cards */
