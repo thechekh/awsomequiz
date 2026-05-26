@@ -18,7 +18,48 @@ from app.auth import (
     sign_out,
     verify_otp,
 )
+from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
 from app.styles import CUSTOM_CSS
+
+
+def _render_sidebar_mini_stats(session: dict) -> None:
+    """Compact dark stats panel at the top of the sidebar.
+
+    Shows the two highest-signal stats: overall accuracy + current streak.
+    Both helpers are @st.cache_data(ttl=30), so the cost is one cached lookup
+    per ~30s rather than a DB round-trip per rerun.
+    """
+    try:
+        cert = get_clf_certification()
+        if not cert:
+            return
+        summary = get_user_stats_summary(session["user"]["id"], cert["id"])
+        streak = get_practice_streak(session["user"]["id"])
+    except Exception:  # noqa: BLE001 - panel is decorative, never block render
+        return
+
+    accuracy = summary.get("overall_accuracy_pct", 0)
+    seen = summary.get("unique_seen", 0)
+    streak_text = f"{streak}d"
+    st.sidebar.markdown(
+        f"""
+        <div class="sidebar-mini-stats">
+          <div class="sidebar-mini-row">
+            <span class="sidebar-mini-label">Accuracy</span>
+            <span class="sidebar-mini-value">{accuracy}%</span>
+          </div>
+          <div class="sidebar-mini-row">
+            <span class="sidebar-mini-label">Streak</span>
+            <span class="sidebar-mini-value">{streak_text}</span>
+          </div>
+          <div class="sidebar-mini-row">
+            <span class="sidebar-mini-label">Seen</span>
+            <span class="sidebar-mini-value">{seen}</span>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.set_page_config(
     page_title="AWSomeQuiz",
@@ -101,10 +142,12 @@ else:
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
 
-# Sidebar sign-out for authenticated users. Lives here (not in each page) so
-# it survives navigation without each page having to render it.
+# Sidebar contents for authenticated users: a compact dark stats panel + the
+# signed-in label + sign-out. Lives here (not in each page) so it survives
+# navigation. Stats queries are @st.cache_data(ttl=30) so the fetch is cheap.
 if session:
     with st.sidebar:
+        _render_sidebar_mini_stats(session)
         st.divider()
         user_email = session["user"]["email"] if session.get("user") else "(unknown)"
         st.caption(f"Signed in as **{user_email}**")

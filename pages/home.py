@@ -1,7 +1,11 @@
 """Home / landing page (authenticated only).
 
-Shows the catalog at a glance, resume CTAs for any unfinished session across
-modes, and quick-start buttons.
+Layout:
+    1. Welcome line + one-paragraph intro.
+    2. Dark stat hero block -- certification, question count, pass threshold.
+    3. Resume banners (if any unfinished sessions).
+    4. Section: STUDY MODES  -> Practice / Timed / Review / Bookmarks.
+    5. Section: REFERENCE    -> Flashcards / Stats.
 """
 
 from __future__ import annotations
@@ -31,6 +35,54 @@ if not cert:
     st.warning("No CLF-C02 certification row found. Run `.\\dev.ps1 db-reset` to seed.")
     st.stop()
 
+st.markdown(
+    '<div class="welcome-intro">'
+    "Practice the AWS Certified Cloud Practitioner (CLF-C02) exam. "
+    "Mix free practice and full timed simulations, drill questions you got wrong, "
+    "or study with Anki-style flashcards. Your progress saves automatically across modes."
+    "</div>",
+    unsafe_allow_html=True,
+)
+
+# ---------------------------------------------------------------------------
+# Dark stat hero block (the artifact's "Our Proof Points" pattern)
+# ---------------------------------------------------------------------------
+
+supabase = get_supabase()
+q_count = (
+    supabase.table("questions")
+    .select("id", count="exact")
+    .eq("certification_id", cert["id"])
+    .execute()
+).count or 0
+
+st.markdown(
+    f"""
+    <div class="dark-stat-block">
+      <div class="dark-stat-block-title">{cert['code']} -- {cert['name']}</div>
+      <div class="dark-stat-row">
+        <div class="dark-stat-item">
+          <div class="dark-stat-label">Questions available</div>
+          <div class="dark-stat-value">{q_count}</div>
+        </div>
+        <div class="dark-stat-item">
+          <div class="dark-stat-label">Pass threshold</div>
+          <div class="dark-stat-value accent-emerald">{cert['pass_threshold_pct']}%</div>
+        </div>
+        <div class="dark-stat-item">
+          <div class="dark-stat-label">Exam duration</div>
+          <div class="dark-stat-value">{cert['duration_minutes']} min</div>
+        </div>
+        <div class="dark-stat-item">
+          <div class="dark-stat-label">Exam length</div>
+          <div class="dark-stat-value">{cert['question_count']} Q</div>
+        </div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 # ---------------------------------------------------------------------------
 # Resume banners across all modes
 # ---------------------------------------------------------------------------
@@ -58,11 +110,13 @@ for fetch_fn, key, label, page, level in RESUME_MODES:
     shown_any = True
 
 if shown_any:
-    st.divider()
+    st.write("")  # small spacer
 
 # ---------------------------------------------------------------------------
-# Quick-start CTAs
+# Study modes section
 # ---------------------------------------------------------------------------
+
+st.markdown('<div class="section-label">Study modes</div>', unsafe_allow_html=True)
 
 c1, c2 = st.columns(2)
 with c1:
@@ -87,6 +141,12 @@ with c4:
         st.switch_page("pages/bookmarks.py")
     st.caption("Manage saved questions and practice them.")
 
+# ---------------------------------------------------------------------------
+# Reference section
+# ---------------------------------------------------------------------------
+
+st.markdown('<div class="section-label">Reference &amp; insight</div>', unsafe_allow_html=True)
+
 c5, c6 = st.columns(2)
 with c5:
     if st.button("Flashcards", use_container_width=True):
@@ -96,22 +156,3 @@ with c6:
     if st.button("Stats", use_container_width=True):
         st.switch_page("pages/stats.py")
     st.caption("Accuracy trends, streaks, recent sessions.")
-
-st.divider()
-
-# ---------------------------------------------------------------------------
-# Catalog summary
-# ---------------------------------------------------------------------------
-
-supabase = get_supabase()
-q_count = (
-    supabase.table("questions")
-    .select("id", count="exact")
-    .eq("certification_id", cert["id"])
-    .execute()
-).count or 0
-
-m1, m2, m3 = st.columns(3)
-m1.metric("Certification", cert["code"])
-m2.metric("Questions available", q_count)
-m3.metric("Pass threshold", f"{cert['pass_threshold_pct']}%")

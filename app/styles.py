@@ -79,8 +79,12 @@ h3, .stMarkdown h3 {
     background: #FFFFFF;
     border: 1px solid #E5E7EB !important;
     border-radius: 8px !important;
-    box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.03);
+    padding: 1.25rem 1.5rem;
+    transition: box-shadow 0.15s ease;
+}
+[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
 }
 
 /* ----- Metric blocks ----------------------------------------------------- */
@@ -96,12 +100,81 @@ h3, .stMarkdown h3 {
 }
 [data-testid="stMetricValue"], [data-testid="stMetricValue"] div {
     color: #111827 !important;
-    font-size: 1.5rem !important;
+    font-size: 1.875rem !important;
     font-weight: 600 !important;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 [data-testid="stMetricDelta"] {
     font-size: 0.75rem !important;
+}
+
+/* ----- Section label (tiny uppercase muted heading) -------------------- */
+.section-label {
+    color: #6B7280;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+/* ----- Dark stat surface (the artifact's "Our Proof Points" pattern) --- */
+/* High-contrast block to anchor the page visually. */
+.dark-stat-block {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border: 1px solid #1E293B;
+    border-radius: 10px;
+    padding: 1.75rem 2rem;
+    color: #FFFFFF;
+    margin: 0.5rem 0 1.25rem 0;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18);
+}
+.dark-stat-block-title {
+    color: #94A3B8;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 1rem;
+}
+.dark-stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+    align-items: flex-end;
+}
+.dark-stat-item {
+    flex: 1 1 auto;
+    min-width: 140px;
+}
+.dark-stat-label {
+    color: #94A3B8;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+}
+.dark-stat-value {
+    color: #FFFFFF;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+.dark-stat-value.accent-emerald { color: #34D399; }
+.dark-stat-value.accent-amber   { color: #FBBF24; }
+
+/* ----- Welcome intro paragraph (top of home page) ----------------------- */
+.welcome-intro {
+    color: #4B5563;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+    max-width: 760px;
 }
 
 /* ----- Buttons ----------------------------------------------------------- */
@@ -162,12 +235,15 @@ h3, .stMarkdown h3 {
 }
 
 /* ----- Alerts (st.success / info / warning / error) --------------------- */
+/* Thicker left border for more visual presence, like the artifact's "Key
+   Pattern" amber banners. */
 .stAlert {
     border-radius: 6px !important;
     font-size: 0.9rem;
 }
 .stAlert [data-baseweb="notification"] {
     border-radius: 6px;
+    border-left-width: 4px !important;
 }
 
 /* ----- Inputs ------------------------------------------------------------ */
@@ -284,17 +360,20 @@ hr, [data-testid="stDivider"] {
 
 /* ----- Flashcard-specific (see pages/flashcards.py) --------------------- */
 .flashcard-front {
-    font-size: 1.4rem;
+    font-size: 1.75rem;
     font-weight: 500;
     color: #111827;
-    line-height: 1.45;
-    padding: 1.25rem 0;
+    line-height: 1.4;
+    padding: 2rem 0.5rem;
+    text-align: center;
+    letter-spacing: -0.01em;
 }
 .flashcard-back {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: #374151;
-    line-height: 1.6;
-    padding: 0.75rem 0;
+    line-height: 1.65;
+    padding: 1rem 0.5rem;
+    text-align: center;
 }
 .flashcard-category {
     display: inline-block;
@@ -307,6 +386,39 @@ hr, [data-testid="stDivider"] {
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     margin-bottom: 0.5rem;
+}
+
+/* ----- Sidebar mini-stats panel (top of sidebar, all auth pages) ------- */
+.sidebar-mini-stats {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin: 0 0 0.75rem 0;
+    color: #FFFFFF;
+}
+.sidebar-mini-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.2rem 0;
+}
+.sidebar-mini-row + .sidebar-mini-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.25rem;
+    padding-top: 0.45rem;
+}
+.sidebar-mini-label {
+    color: #94A3B8;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.sidebar-mini-value {
+    color: #FFFFFF;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 /* ----- Streamlit's "Deploy" / "Manage app" hamburger - dim it ----------- */
