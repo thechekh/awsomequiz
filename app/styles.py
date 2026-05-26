@@ -161,6 +161,14 @@ h3, .stMarkdown h3 {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
 }
 
+/* Hide the "Press Enter to submit form" hint that Streamlit shows below
+   text inputs inside a form. */
+[data-testid="InputInstructions"],
+[data-testid="stWidgetInstructions"],
+.stTextInput div[data-baseweb="form-control-counter"] {
+    display: none !important;
+}
+
 /* ----- Radio + Checkbox -------------------------------------------------- */
 .stRadio > div, .stCheckbox > label {
     font-size: 0.9rem;

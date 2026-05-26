@@ -34,18 +34,17 @@ if callback_err := st.session_state.pop("auth_callback_error", None):
     st.error(callback_err)
 
 # ---------------------------------------------------------------------------
-# GitHub OAuth button (top of page, above tabs)
+# GitHub OAuth button (centered above the tabs)
 # ---------------------------------------------------------------------------
 
 github_url = get_github_oauth_url()
 if github_url:
-    oauth_col, _ = st.columns([1, 1])
-    with oauth_col:
+    _, mid, _ = st.columns([1, 2, 1])
+    with mid:
         st.link_button(
             "Sign in with GitHub",
             github_url,
             use_container_width=True,
-            icon=":material/code:",
         )
     st.divider()
 
