@@ -270,8 +270,7 @@ hr, [data-testid="stDivider"] {
    a ::before pseudo-element INSIDE the label paragraph (so the icon ends
    up as inline content right next to the text, not as a separate flex
    sibling pinned to the button's left edge). */
-.stLinkButton a[href*="provider=github"] p::before,
-.stLinkButton a[href*="provider=github"] [data-testid="stMarkdownContainer"]::before {
+.stLinkButton a[href*="provider=github"] p::before {
     content: "";
     display: inline-block;
     width: 18px;
