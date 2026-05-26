@@ -95,6 +95,11 @@ if github_url:
                 <span>Sign in with GitHub</span>
             </a>
             <script>
+                // BroadcastChannel is the resilient way to signal between
+                // popup and parent tab. window.opener gets nulled during
+                // the OAuth redirect chain (cross-origin COOP), so opener-
+                // based signaling fails. A same-origin BroadcastChannel is
+                // not affected by cross-origin navigation history.
                 document.getElementById('gh-btn').addEventListener('click', function(e) {{
                     e.preventDefault();
                     const p = window.open(
@@ -102,18 +107,34 @@ if github_url:
                         'github_oauth',
                         'width=600,height=720,resizable=yes,scrollbars=yes'
                     );
-                    if (p) {{
-                        const i = setInterval(function() {{
-                            try {{
-                                if (p.closed) {{
-                                    clearInterval(i);
-                                    window.top.location.reload();
-                                }}
-                            }} catch (err) {{ /* ignore cross-origin */ }}
-                        }}, 500);
-                    }} else {{
+                    if (!p) {{
                         alert('Pop-up blocked. Please allow pop-ups for this site and try again.');
+                        return;
                     }}
+
+                    let reloaded = false;
+                    const ch = new BroadcastChannel('awsomequiz_oauth');
+                    const interval = setInterval(checkClosed, 600);
+
+                    function done() {{
+                        if (reloaded) return;
+                        reloaded = true;
+                        try {{ ch.close(); }} catch (_) {{}}
+                        clearInterval(interval);
+                        try {{ p.close(); }} catch (_) {{}}
+                        try {{ window.top.location.reload(); }} catch (_) {{}}
+                    }}
+
+                    function checkClosed() {{
+                        // Fallback: if BroadcastChannel doesn't fire (older
+                        // browsers, or popup closed without dispatching),
+                        // detect via popup.closed and reload anyway.
+                        try {{ if (p.closed) done(); }} catch (_) {{}}
+                    }}
+
+                    ch.addEventListener('message', function(ev) {{
+                        if (ev.data === 'oauth_done') done();
+                    }});
                 }});
             </script>
             </body></html>

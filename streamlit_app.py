@@ -123,19 +123,25 @@ def _handle_auth_callback() -> None:
                 "Sign-in callback failed (the link may have expired). Please try again."
             )
         else:
-            # If we landed here inside an OAuth popup window (opened by the
-            # GitHub button's window.open call), reload the opener tab and
-            # close this popup -- gives a same-tab UX without violating
-            # GitHub's frame-ancestors CSP.
+            # If we landed here in the OAuth popup, signal the parent tab
+            # via BroadcastChannel and self-close. We use BroadcastChannel
+            # because window.opener is nulled during the cross-origin OAuth
+            # redirect chain (Supabase -> GitHub -> back), so opener-based
+            # signaling never reaches the parent.
             components.html(
                 """
                 <script>
                   try {
-                    if (window.opener && !window.opener.closed) {
-                      window.opener.top.location.reload();
-                      setTimeout(() => window.close(), 150);
-                    }
-                  } catch (e) { /* same-origin checks already passed */ }
+                    const ch = new BroadcastChannel('awsomequiz_oauth');
+                    ch.postMessage('oauth_done');
+                    ch.close();
+                  } catch (e) { /* not a popup, or no BroadcastChannel */ }
+                  // Try every available method to close ourselves. window.close()
+                  // only works for windows opened by script, which a popup is.
+                  setTimeout(() => {
+                    try { window.top.close(); } catch (e) {}
+                    try { window.close(); } catch (e) {}
+                  }, 250);
                 </script>
                 """,
                 height=0,
