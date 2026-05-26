@@ -57,25 +57,47 @@ def pick_question_ids(
     certification_id: str,
     count: int | None,
     domain_ids: list[str] | None = None,
+    shuffle: bool = True,
 ) -> list[str]:
-    """Pick a randomized list of active question IDs.
+    """Pick a list of active question IDs.
 
-    `count=None` means "all matching". Shuffling is client-side because
-    PostgREST doesn't expose `random()` ordering; for <1000 questions per
-    certification this is negligible.
+    Args:
+        count: None means "all matching"; otherwise cap to `count`.
+        shuffle: True (default) returns random order; False returns
+                 questions sorted by external_id (the source's question_number,
+                 numerically when parseable) so the user can practice the whole
+                 set in deterministic order.
+
+    PostgREST doesn't expose `random()` or numeric cast in `order`, so both
+    shuffling and numeric sorting happen client-side. For <1000 questions
+    per certification this is negligible.
     """
     supabase = get_supabase()
     query = (
         supabase.table("questions")
-        .select("id")
+        .select("id, external_id")
         .eq("certification_id", certification_id)
         .eq("is_active", True)
     )
     if domain_ids:
         query = query.in_("domain_id", domain_ids)
     rows = query.limit(10000).execute().data or []
-    ids = [row["id"] for row in rows]
-    random.shuffle(ids)
+
+    if shuffle:
+        ids = [row["id"] for row in rows]
+        random.shuffle(ids)
+    else:
+        # Sort by external_id numerically when possible so Q2 < Q10 (lex
+        # order would put "10" before "2").
+        def _key(row: dict) -> tuple[int, str]:
+            ext = row.get("external_id") or ""
+            try:
+                return (0, f"{int(ext):010d}")
+            except (ValueError, TypeError):
+                return (1, ext)
+        rows.sort(key=_key)
+        ids = [row["id"] for row in rows]
+
     if count is not None:
         ids = ids[:count]
     return ids
@@ -284,6 +306,14 @@ def list_bookmarks(user_id: str, certification_id: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 REPORT_REASONS = ("incorrect_answer", "typo", "ambiguous", "outdated", "other")
+
+
+def format_started_at(iso_ts: str | None) -> str:
+    """Format a Postgres ISO timestamp like '2026-05-26T14:43:43.315096+00:00'
+    into a compact 'YYYY-MM-DD HH:MM:SS' display string. Returns '--' for None."""
+    if not iso_ts:
+        return "--"
+    return iso_ts[:19].replace("T", " ")
 
 
 # ---------------------------------------------------------------------------

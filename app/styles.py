@@ -11,6 +11,43 @@ Light-theme palette inspired by Claude's "Competitive Intelligence" artifact:
 Injected once in streamlit_app.py via `st.markdown(CUSTOM_CSS, unsafe_allow_html=True)`.
 """
 
+_GITHUB_LINK_FIX_JS = """
+<script>
+(function() {
+    // st.link_button defaults to target="_blank" so the GitHub OAuth flow
+    // opens in a new tab. We want same-tab navigation so the user comes
+    // back to the original tab signed in. This script (running in a
+    // Streamlit component iframe -- same origin) rewrites the parent-doc
+    // link's target to _self.
+    try {
+        const doc = window.parent.document;
+        const fixLinks = () => {
+            doc.querySelectorAll('a[href*="provider=github"]').forEach(a => {
+                if (a.target !== '_self') {
+                    a.target = '_self';
+                }
+            });
+        };
+        fixLinks();
+        const obs = new MutationObserver(fixLinks);
+        obs.observe(doc.body, { childList: true, subtree: true });
+    } catch (e) {
+        console.warn('GitHub link target rewrite failed:', e);
+    }
+})();
+</script>
+"""
+
+
+def github_link_fix_html() -> str:
+    """JS snippet to make the GitHub OAuth link open in the same tab.
+
+    Inject via `streamlit.components.v1.html(github_link_fix_html(), height=0)`
+    in streamlit_app.py so it runs on every rerun.
+    """
+    return _GITHUB_LINK_FIX_JS
+
+
 CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -388,6 +425,50 @@ hr, [data-testid="stDivider"] {
     margin-bottom: 0.5rem;
 }
 
+/* ----- Option rows (post-submit review) -------------------------------- */
+/* Custom row styling so correct (green) / wrong (red) / neutral (gray)
+   options all share the same left padding -- st.success/error have built-in
+   alert padding that shifted them rightward, which looked unaligned. */
+.opt-row {
+    padding: 0.6rem 0.85rem;
+    border-radius: 6px;
+    margin-bottom: 0.45rem;
+    border-left: 3px solid #E5E7EB;
+    background: #F9FAFB;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.opt-row.correct {
+    background: #ECFDF5;
+    border-left-color: #10B981;
+    color: #065F46;
+}
+.opt-row.wrong {
+    background: #FEF2F2;
+    border-left-color: #EF4444;
+    color: #991B1B;
+}
+.opt-row .opt-tag {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+.opt-explanation {
+    padding: 0.5rem 0.85rem 0.9rem 0.85rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #4B5563;
+}
+.opt-related {
+    padding: 0 0.85rem 0.5rem 0.85rem;
+    font-size: 0.875rem;
+    font-style: italic;
+    color: #6B7280;
+}
+
 /* ----- Sidebar mini-stats panel (top of sidebar, all auth pages) ------- */
 .sidebar-mini-stats {
     background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
@@ -427,6 +508,156 @@ hr, [data-testid="stDivider"] {
 }
 footer {
     visibility: hidden;
+}
+</style>
+"""
+
+
+# Injected AFTER CUSTOM_CSS when st.session_state["dark_mode"] is True.
+# Additive override -- only re-defines the rules that need to change for dark.
+DARK_OVERRIDE_CSS = """
+<style>
+.stApp, .main, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+    background: #0B1220 !important;
+    color: #E2E8F0 !important;
+}
+.main .block-container { background: transparent !important; }
+
+h1, h2, h3, h4, h5, h6, .stMarkdown, .stMarkdown p {
+    color: #F1F5F9 !important;
+}
+.stCaption, [data-testid="stCaptionContainer"],
+.stCaption *, [data-testid="stCaptionContainer"] * {
+    color: #94A3B8 !important;
+}
+.welcome-intro { color: #CBD5E1 !important; }
+.section-label {
+    color: #94A3B8 !important;
+    border-bottom-color: #1E293B !important;
+}
+
+/* Cards */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #111827 !important;
+    border-color: #1F2937 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+
+/* Metrics */
+[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] p {
+    color: #94A3B8 !important;
+}
+[data-testid="stMetricValue"], [data-testid="stMetricValue"] div {
+    color: #F1F5F9 !important;
+}
+
+/* Buttons */
+.stButton > button, .stDownloadButton > button, .stLinkButton > a, .stFormSubmitButton > button {
+    background: #1F2937 !important;
+    border-color: #374151 !important;
+    color: #F1F5F9 !important;
+}
+.stButton > button:hover, .stLinkButton > a:hover, .stFormSubmitButton > button:hover {
+    background: #374151 !important;
+    border-color: #4B5563 !important;
+}
+.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {
+    background: #3B82F6 !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+.stButton > button[kind="primary"]:hover, .stFormSubmitButton > button[kind="primary"]:hover {
+    background: #2563EB !important;
+}
+.stButton > button:disabled {
+    background: #1F2937 !important;
+    color: #6B7280 !important;
+    border-color: #374151 !important;
+}
+
+/* GitHub button text override (kept readable on dark bg) */
+.stLinkButton a[href*="provider=github"] p::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="%23F1F5F9"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>') !important;
+}
+
+/* Inputs */
+.stTextInput [data-baseweb="input"],
+.stTextArea [data-baseweb="textarea"],
+.stTextArea [data-baseweb="base-input"],
+.stNumberInput [data-baseweb="input"],
+.stSelectbox [data-baseweb="select"] > div,
+.stMultiSelect [data-baseweb="select"] > div {
+    background: #1F2937 !important;
+    border-color: #374151 !important;
+}
+.stTextInput [data-baseweb="input"]:hover,
+.stTextArea [data-baseweb="textarea"]:hover,
+.stNumberInput [data-baseweb="input"]:hover {
+    background: #374151 !important;
+    border-color: #4B5563 !important;
+}
+.stTextInput input, .stTextArea textarea, .stNumberInput input {
+    color: #F1F5F9 !important;
+    caret-color: #F1F5F9 !important;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: #0B1220 !important;
+    border-right-color: #1F2937 !important;
+}
+[data-testid="stSidebar"] * { color: #E2E8F0; }
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] { border-bottom-color: #1F2937 !important; }
+.stTabs [data-baseweb="tab"] { color: #94A3B8 !important; }
+.stTabs [aria-selected="true"][data-baseweb="tab"] {
+    color: #60A5FA !important;
+    border-bottom-color: #60A5FA !important;
+}
+
+/* Dividers */
+hr, [data-testid="stDivider"] { border-color: #1F2937 !important; }
+
+/* Dataframe */
+[data-testid="stDataFrame"], [data-testid="stTable"] {
+    background: #111827 !important;
+    border-color: #1F2937 !important;
+    color: #E2E8F0 !important;
+}
+
+/* Alerts */
+.stAlert [data-baseweb="notification"] {
+    background: #1F2937 !important;
+    color: #F1F5F9 !important;
+}
+
+/* Option rows (post-submit review) */
+.opt-row {
+    background: #111827;
+    border-left-color: #374151;
+    color: #E2E8F0;
+}
+.opt-row.correct {
+    background: #052E26;
+    border-left-color: #10B981;
+    color: #A7F3D0;
+}
+.opt-row.wrong {
+    background: #2A0B0B;
+    border-left-color: #EF4444;
+    color: #FECACA;
+}
+.opt-row .opt-tag { color: #94A3B8; }
+.opt-explanation { color: #CBD5E1; }
+.opt-related { color: #94A3B8; }
+
+/* Flashcards */
+.flashcard-front { color: #F1F5F9 !important; }
+.flashcard-back { color: #CBD5E1 !important; }
+.flashcard-category {
+    background: #1F2937 !important;
+    color: #94A3B8 !important;
 }
 </style>
 """

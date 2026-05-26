@@ -20,6 +20,7 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.queries import (
+    format_started_at,
     get_answered_question_ids,
     get_clf_certification,
     get_question_with_options,
@@ -172,20 +173,26 @@ def _render_review_row(row: dict) -> None:
             was_selected = o["id"] in row["selected_option_ids"]
             is_right = o["is_correct"]
             opt_marker = "✅" if is_right else "❌"
-            you = "  (your answer)" if was_selected else ""
-            line = f"{opt_marker} **{o['label']}. {o['text']}**{you}"
-            if is_right and was_selected:
-                st.success(line)
-            elif is_right:
-                st.success(line)
+            tag = '<span class="opt-tag">(your answer)</span>' if was_selected else ""
+            row_class = "opt-row"
+            if is_right:
+                row_class += " correct"
             elif was_selected:
-                st.error(line)
-            else:
-                st.write(line)
+                row_class += " wrong"
+            st.markdown(
+                f'<div class="{row_class}">{opt_marker} <b>{o["label"]}. {o["text"]}</b>{tag}</div>',
+                unsafe_allow_html=True,
+            )
             if o.get("explanation_detailed"):
-                st.markdown(o["explanation_detailed"])
+                st.markdown(
+                    f'<div class="opt-explanation">{o["explanation_detailed"]}</div>',
+                    unsafe_allow_html=True,
+                )
             if o.get("related_context"):
-                st.markdown(f"*Related:* {o['related_context']}")
+                st.markdown(
+                    f'<div class="opt-related">Related: {o["related_context"]}</div>',
+                    unsafe_allow_html=True,
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -222,7 +229,7 @@ if session is None:
         st.info(
             f"You have an unfinished exam: "
             f"**{answered_count}/{existing['question_count']}** answered, "
-            f"started {existing['started_at']}."
+            f"started {format_started_at(existing['started_at'])}."
         )
         c1, c2 = st.columns(2)
         if c1.button("Resume exam", type="primary"):

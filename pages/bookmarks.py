@@ -13,7 +13,12 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.components.runner import render_runner, render_summary
-from app.queries import delete_bookmark, get_clf_certification, list_bookmarks
+from app.queries import (
+    delete_bookmark,
+    format_started_at,
+    get_clf_certification,
+    list_bookmarks,
+)
 from app.session import (
     abandon_session,
     get_active_bookmarked_session,
@@ -55,7 +60,7 @@ existing = get_active_bookmarked_session(user["id"])
 if existing:
     st.info(
         f"Unfinished **bookmarked** session: "
-        f"started {existing['started_at']}."
+        f"started {format_started_at(existing['started_at'])}."
     )
     c1, c2 = st.columns(2)
     if c1.button("Resume", type="primary"):

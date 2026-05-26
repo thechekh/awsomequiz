@@ -63,9 +63,15 @@ def start_practice_session(
     certification_id: str,
     count: int | None,
     domain_ids: list[str] | None = None,
+    shuffle: bool = True,
 ) -> dict:
-    """Create a practice session with a pre-picked random question sequence."""
-    qids = pick_question_ids(certification_id, count, domain_ids)
+    """Create a practice session.
+
+    shuffle=True (default): random order. shuffle=False: questions in their
+    natural source order (by external_id) -- lets the user work through the
+    whole set sequentially.
+    """
+    qids = pick_question_ids(certification_id, count, domain_ids, shuffle=shuffle)
     return _create_session_row(user_id, certification_id, "practice", qids, domain_ids)
 
 

@@ -18,8 +18,6 @@ INDEX_KEY = "guest_index"
 ANSWERS_KEY = "guest_answers"
 SUMMARY_KEY = "guest_summary"
 
-DEFAULT_COUNT = 10
-
 
 def _clear_guest_state() -> None:
     for k in (QUEUE_KEY, INDEX_KEY, ANSWERS_KEY, SUMMARY_KEY):
@@ -29,12 +27,13 @@ def _clear_guest_state() -> None:
             st.session_state.pop(k, None)
 
 
-def _start_guest_session(count: int) -> None:
+def _start_guest_session() -> None:
+    """Start a guest session with ALL active questions in random order."""
     cert = get_clf_certification()
     if not cert:
         st.error("Question bank not seeded.")
         return
-    ids = pick_question_ids(cert["id"], count)
+    ids = pick_question_ids(cert["id"], count=None)  # all questions, shuffled
     if not ids:
         st.error("No questions available.")
         return
@@ -83,25 +82,12 @@ if summary := st.session_state.get(SUMMARY_KEY):
     st.stop()
 
 # ---------------------------------------------------------------------------
-# Picker
+# Auto-start: dive straight into all questions in random order
 # ---------------------------------------------------------------------------
 
 queue = st.session_state.get(QUEUE_KEY)
 if queue is None:
-    with st.form("guest_picker"):
-        count_choice = st.radio(
-            "Number of questions",
-            options=[10, 25, 50],
-            horizontal=True,
-            index=0,
-        )
-        start = st.form_submit_button(
-            "Start practice", type="primary", use_container_width=True
-        )
-    if st.button("Or sign in to unlock all modes", key="guest_picker_signin"):
-        st.switch_page("pages/login.py")
-    if start:
-        _start_guest_session(int(count_choice))
+    _start_guest_session()
     st.stop()
 
 # ---------------------------------------------------------------------------
@@ -185,21 +171,26 @@ else:
         was_selected = o["id"] in selected_ids
         is_right = o["is_correct"]
         marker = "✅" if is_right else "❌"
-        you = "  (your answer)" if was_selected else ""
-        line = f"{marker} **{o['label']}. {o['text']}**{you}"
-        if is_right and was_selected:
-            st.success(line)
-        elif is_right:
-            st.success(line)
+        tag = '<span class="opt-tag">(your answer)</span>' if was_selected else ""
+        row_class = "opt-row"
+        if is_right:
+            row_class += " correct"
         elif was_selected:
-            st.error(line)
-        else:
-            st.write(line)
+            row_class += " wrong"
+        st.markdown(
+            f'<div class="{row_class}">{marker} <b>{o["label"]}. {o["text"]}</b>{tag}</div>',
+            unsafe_allow_html=True,
+        )
         if o.get("explanation_detailed"):
-            st.markdown(o["explanation_detailed"])
+            st.markdown(
+                f'<div class="opt-explanation">{o["explanation_detailed"]}</div>',
+                unsafe_allow_html=True,
+            )
         if o.get("related_context"):
-            st.markdown(f"*Related:* {o['related_context']}")
-        st.write("")
+            st.markdown(
+                f'<div class="opt-related">Related: {o["related_context"]}</div>',
+                unsafe_allow_html=True,
+            )
 
     next_label = "Finish session" if index + 1 == total else "Next question"
     if st.button(next_label, type="primary", key=f"guest_next_{qid}", use_container_width=True):

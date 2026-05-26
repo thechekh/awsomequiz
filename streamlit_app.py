@@ -10,6 +10,7 @@ Two responsibilities:
 from __future__ import annotations
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 import extra_streamlit_components as stx
 
@@ -23,7 +24,10 @@ from app.auth import (
     verify_otp,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
-from app.styles import CUSTOM_CSS
+from app.styles import CUSTOM_CSS, DARK_OVERRIDE_CSS, github_link_fix_html
+
+DARK_MODE_KEY = "dark_mode"
+DARK_MODE_COOKIE = "awsomequiz_dark"
 
 
 def _render_sidebar_mini_stats(session: dict) -> None:
@@ -79,7 +83,24 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 # of every script run (not inside a cached function). We stash the instance
 # in session_state so app/auth.py helpers can read/write cookies without
 # re-declaring the widget (which would duplicate the key).
-st.session_state[COOKIE_MANAGER_KEY] = stx.CookieManager(key="awsomequiz_cookies")
+cookie_manager = stx.CookieManager(key="awsomequiz_cookies")
+st.session_state[COOKIE_MANAGER_KEY] = cookie_manager
+
+# Dark-mode preference: try cookie first (so the choice survives reloads),
+# fall back to whatever's in session_state, default light.
+if DARK_MODE_KEY not in st.session_state:
+    try:
+        cookie_val = cookie_manager.get(DARK_MODE_COOKIE)
+        st.session_state[DARK_MODE_KEY] = (cookie_val == "1")
+    except Exception:  # noqa: BLE001 - cookie not yet ready on first render
+        st.session_state[DARK_MODE_KEY] = False
+
+if st.session_state.get(DARK_MODE_KEY):
+    st.markdown(DARK_OVERRIDE_CSS, unsafe_allow_html=True)
+
+# Rewrite st.link_button's target so the GitHub OAuth link stays in the
+# same tab (link_button defaults to target=_blank). Invisible iframe.
+components.html(github_link_fix_html(), height=0)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
@@ -172,5 +193,27 @@ if session:
         if st.button("Sign out", use_container_width=True, key="sidebar_signout"):
             sign_out()
             st.rerun()
+
+# Dark-mode toggle in the sidebar (works for both auth + guest views).
+# Persists via cookie so the choice survives reloads.
+with st.sidebar:
+    new_dark = st.toggle(
+        "Dark mode",
+        value=st.session_state.get(DARK_MODE_KEY, False),
+        key="dark_mode_toggle",
+    )
+    if new_dark != st.session_state.get(DARK_MODE_KEY):
+        st.session_state[DARK_MODE_KEY] = new_dark
+        try:
+            from datetime import datetime, timedelta, timezone
+            cookie_manager.set(
+                DARK_MODE_COOKIE,
+                "1" if new_dark else "0",
+                expires_at=datetime.now(timezone.utc) + timedelta(days=365),
+                key="dark_mode_cookie_set",
+            )
+        except Exception:  # noqa: BLE001 - cookie failure is non-fatal
+            pass
+        st.rerun()
 
 pg.run()

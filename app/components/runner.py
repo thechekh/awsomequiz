@@ -134,21 +134,26 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
             was_selected = o["id"] in selected_ids
             is_right = o["is_correct"]
             marker = "✅" if is_right else "❌"
-            you = "  (your answer)" if was_selected else ""
-            line = f"{marker} **{o['label']}. {o['text']}**{you}"
-            if is_right and was_selected:
-                st.success(line)
-            elif is_right:
-                st.success(line)
+            tag = '<span class="opt-tag">(your answer)</span>' if was_selected else ""
+            row_class = "opt-row"
+            if is_right:
+                row_class += " correct"
             elif was_selected:
-                st.error(line)
-            else:
-                st.write(line)
+                row_class += " wrong"
+            st.markdown(
+                f'<div class="{row_class}">{marker} <b>{o["label"]}. {o["text"]}</b>{tag}</div>',
+                unsafe_allow_html=True,
+            )
             if o.get("explanation_detailed"):
-                st.markdown(o["explanation_detailed"])
+                st.markdown(
+                    f'<div class="opt-explanation">{o["explanation_detailed"]}</div>',
+                    unsafe_allow_html=True,
+                )
             if o.get("related_context"):
-                st.markdown(f"*Related:* {o['related_context']}")
-            st.write("")
+                st.markdown(
+                    f'<div class="opt-related">Related: {o["related_context"]}</div>',
+                    unsafe_allow_html=True,
+                )
 
         next_label = "Finish session" if index + 1 == total else "Next question"
         if st.button(

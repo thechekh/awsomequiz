@@ -13,6 +13,7 @@ import streamlit as st
 from app.auth import apply_session_to_client, current_user
 from app.components.runner import render_runner, render_summary
 from app.queries import (
+    format_started_at,
     get_answered_question_ids,
     get_clf_certification,
     list_domains,
@@ -53,7 +54,7 @@ if session is None:
         st.info(
             f"You have an unfinished session: "
             f"**{answered}/{existing['question_count']}** answered, "
-            f"started {existing['started_at']}."
+            f"started {format_started_at(existing['started_at'])}."
         )
         c1, c2 = st.columns(2)
         if c1.button("Resume", type="primary"):
@@ -82,6 +83,17 @@ if session is None:
             options=[10, 25, 50, "All"],
             horizontal=True,
         )
+        order_choice = st.radio(
+            "Order",
+            options=["Sequential", "Random"],
+            horizontal=True,
+            index=0,
+            help=(
+                "Sequential: questions in their natural source order -- pick "
+                "this to work through the whole set in order. "
+                "Random: shuffled each session."
+            ),
+        )
         start = st.form_submit_button(
             "Start practice", type="primary", use_container_width=True
         )
@@ -92,8 +104,11 @@ if session is None:
             else None
         )
         count = None if count_choice == "All" else int(count_choice)
+        shuffle = order_choice == "Random"
         try:
-            new_session = start_practice_session(user["id"], cert["id"], count, domain_ids)
+            new_session = start_practice_session(
+                user["id"], cert["id"], count, domain_ids, shuffle=shuffle,
+            )
         except ValueError as exc:
             st.error(str(exc))
             st.stop()
