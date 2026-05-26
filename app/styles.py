@@ -8,16 +8,12 @@ Light-theme palette inspired by Claude's "Competitive Intelligence" artifact:
 - Blue (#2563EB) primary, emerald for "correct", red for "wrong",
   amber for warnings, slate-900 dark blocks for emphasis
 
-Injected once in streamlit_app.py via `st.markdown(CUSTOM_CSS, unsafe_allow_html=True)`.
+Use `render_combined_css(dark: bool)` in streamlit_app.py to inject CSS in a
+SINGLE st.markdown call. Splitting into two st.markdown calls (base + dark
+override) was causing the dark-mode toggle to shift page content because
+the conditional second markdown adds an extra element to the DOM whose
+wrapper takes a few pixels of padding.
 """
-
-# Note on GitHub OAuth UX: st.link_button defaults to target="_blank" (new tab).
-# We tried rewriting it to "_self" via JS to keep auth in the same tab, but
-# Streamlit renders link_button inside a sandboxed iframe and GitHub refuses
-# to be framed (Content-Security-Policy: frame-ancestors 'none'). So same-tab
-# navigation is impossible from inside the Streamlit iframe. The OAuth flow
-# now completes in the new tab; the cookie-based session persists, so
-# reloading the original tab will pick up the signed-in state too.
 
 
 CUSTOM_CSS = """
@@ -502,6 +498,19 @@ iframe[title*="CookieManager"] {
     height: 0 !important;
 }
 
+/* Style-only st.markdown injections (CSS, JS, hidden helpers) shouldn't
+   take page space. Their `.stMarkdown` wrapper would otherwise add ~16px
+   of vertical padding and cause layout shift when one is added/removed
+   (e.g. dark-mode toggle). */
+.stMarkdown:has(> style),
+.element-container:has(> .stMarkdown > style),
+.stMarkdown:has(> script) {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+}
+
 /* Lock the height of the top header row (the columns wrapping the Dark
    mode toggle) so the page below can't shift even by a pixel when the
    toggle state changes. */
@@ -632,10 +641,11 @@ label[data-baseweb="form-control-label"] {
     caret-color: #F1F5F9 !important;
 }
 
-/* Sidebar */
+/* Sidebar (slightly lighter than page bg so it's visible -- before this
+   both bg's were #0B1220 and the sidebar looked invisible/hidden). */
 [data-testid="stSidebar"] {
-    background: #0B1220 !important;
-    border-right-color: #1F2937 !important;
+    background: #111827 !important;
+    border-right: 1px solid #1F2937 !important;
 }
 [data-testid="stSidebar"] * { color: #E2E8F0; }
 
@@ -690,5 +700,66 @@ hr, [data-testid="stDivider"] { border-color: #1F2937 !important; }
     background: #1F2937 !important;
     color: #94A3B8 !important;
 }
+</style>
+"""
+
+
+# ---------------------------------------------------------------------------
+# Combined-CSS renderer (single injection avoids layout shift on dark toggle).
+# ---------------------------------------------------------------------------
+
+
+def render_combined_css(dark: bool) -> str:
+    """Return a single <style> block with light base + optional dark overrides.
+
+    Why one block: each st.markdown call adds an element to the DOM. Even
+    with empty visible content, its wrapper takes ~10-20px of padding. Using
+    a single injection means the same number of DOM elements regardless of
+    theme, so toggling doesn't shift content.
+    """
+    # Strip the <style>...</style> wrappers and join the contents.
+    light_body = CUSTOM_CSS.replace("<style>", "").replace("</style>", "").strip()
+    if not dark:
+        return f"<style>\n{light_body}\n</style>"
+    dark_body = DARK_OVERRIDE_CSS.replace("<style>", "").replace("</style>", "").strip()
+    return f"<style>\n{light_body}\n\n/* === DARK MODE OVERRIDES === */\n{dark_body}\n</style>"
+
+
+# ---------------------------------------------------------------------------
+# Popup-OAuth GitHub button CSS (the link is rendered via raw HTML in
+# pages/login.py so we can attach a window.open onclick handler -- needed for
+# same-tab UX since st.link_button defaults to target=_blank and we can't
+# rewrite the target from inside Streamlit's iframe sandbox).
+# ---------------------------------------------------------------------------
+
+
+GITHUB_BUTTON_CSS = """
+<style>
+.github-signin-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #D1D5DB;
+    background: #FFFFFF;
+    color: #111827 !important;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.github-signin-btn:hover {
+    border-color: #9CA3AF;
+    background: #FAFAFA;
+    color: #111827 !important;
+    text-decoration: none !important;
+}
+.github-signin-btn:active { background: #F3F4F6; }
+.github-signin-btn svg { flex-shrink: 0; }
 </style>
 """

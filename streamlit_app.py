@@ -10,6 +10,7 @@ Two responsibilities:
 from __future__ import annotations
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 import extra_streamlit_components as stx
 
@@ -23,7 +24,7 @@ from app.auth import (
     verify_otp,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
-from app.styles import CUSTOM_CSS, DARK_OVERRIDE_CSS
+from app.styles import GITHUB_BUTTON_CSS, render_combined_css
 
 DARK_MODE_KEY = "dark_mode"
 DARK_MODE_COOKIE = "awsomequiz_dark"
@@ -75,9 +76,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Inject the global CSS once; cheap and idempotent across reruns.
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
 # CookieManager is a Streamlit widget; it has to be instantiated at the top
 # of every script run (not inside a cached function). We stash the instance
 # in session_state so app/auth.py helpers can read/write cookies without
@@ -94,8 +92,15 @@ if DARK_MODE_KEY not in st.session_state:
     except Exception:  # noqa: BLE001 - cookie not yet ready on first render
         st.session_state[DARK_MODE_KEY] = False
 
-if st.session_state.get(DARK_MODE_KEY):
-    st.markdown(DARK_OVERRIDE_CSS, unsafe_allow_html=True)
+# Single CSS injection (combines light base + optional dark overrides). This
+# matters because toggling dark used to add/remove a SECOND st.markdown,
+# whose wrapper shifted page content by ~16px. One injection = stable DOM.
+st.markdown(
+    render_combined_css(bool(st.session_state.get(DARK_MODE_KEY))),
+    unsafe_allow_html=True,
+)
+# GitHub custom-button CSS stays in its own block (purely additive, never toggles).
+st.markdown(GITHUB_BUTTON_CSS, unsafe_allow_html=True)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
@@ -116,6 +121,24 @@ def _handle_auth_callback() -> None:
         if result is None:
             st.session_state[AUTH_CALLBACK_ERROR_KEY] = (
                 "Sign-in callback failed (the link may have expired). Please try again."
+            )
+        else:
+            # If we landed here inside an OAuth popup window (opened by the
+            # GitHub button's window.open call), reload the opener tab and
+            # close this popup -- gives a same-tab UX without violating
+            # GitHub's frame-ancestors CSP.
+            components.html(
+                """
+                <script>
+                  try {
+                    if (window.opener && !window.opener.closed) {
+                      window.opener.top.location.reload();
+                      setTimeout(() => window.close(), 150);
+                    }
+                  } catch (e) { /* same-origin checks already passed */ }
+                </script>
+                """,
+                height=0,
             )
         st.rerun()
 
