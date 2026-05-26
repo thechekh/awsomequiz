@@ -171,27 +171,52 @@ h3, .stMarkdown h3 {
 }
 
 /* ----- Inputs ------------------------------------------------------------ */
-/* Three-state pattern so the text cursor stays visible:
-   default = gray-50 (#F9FAFB), hover = gray-100 (#F3F4F6), focus = white.
-   Keeps a clear difference between empty and active field on white cards. */
-.stTextInput input, .stTextArea textarea, .stNumberInput input,
+/* Style the BaseWeb wrapper (not the inner <input>) so the eye-icon button
+   inside the password field inherits the same bg. Inner input is set to
+   transparent so it shows the wrapper bg through it. Caret stays dark
+   against the white wrapper. */
+.stTextInput [data-baseweb="input"],
+.stTextArea [data-baseweb="textarea"],
+.stTextArea [data-baseweb="base-input"],
+.stNumberInput [data-baseweb="input"],
 .stSelectbox [data-baseweb="select"] > div,
 .stMultiSelect [data-baseweb="select"] > div {
     border-radius: 6px !important;
-    border-color: #E5E7EB !important;
-    background: #F9FAFB !important;
-    color: #111827 !important;
+    border: 1px solid #D1D5DB !important;
+    background: #FFFFFF !important;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
-.stTextInput input:hover, .stTextArea textarea:hover, .stNumberInput input:hover,
+.stTextInput [data-baseweb="input"]:hover,
+.stTextArea [data-baseweb="textarea"]:hover,
+.stTextArea [data-baseweb="base-input"]:hover,
+.stNumberInput [data-baseweb="input"]:hover,
 .stSelectbox [data-baseweb="select"]:hover > div,
 .stMultiSelect [data-baseweb="select"]:hover > div {
-    background: #F3F4F6 !important;
-    border-color: #D1D5DB !important;
+    border-color: #9CA3AF !important;
+    background: #FAFAFA !important;
 }
-.stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {
+.stTextInput [data-baseweb="input"]:focus-within,
+.stTextArea [data-baseweb="textarea"]:focus-within,
+.stTextArea [data-baseweb="base-input"]:focus-within,
+.stNumberInput [data-baseweb="input"]:focus-within {
     border-color: #2563EB !important;
     background: #FFFFFF !important;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+/* The actual <input>/<textarea> goes transparent so the wrapper's bg + the
+   eye-icon button (same parent) read as one continuous field. Also kill the
+   default focus outline since the wrapper already shows focus. */
+.stTextInput input, .stTextArea textarea, .stNumberInput input {
+    background: transparent !important;
+    border: none !important;
+    color: #111827 !important;
+    caret-color: #111827 !important;
+}
+.stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
 }
 
 /* Hide the "Press Enter to submit form" hint that Streamlit shows below
@@ -218,6 +243,40 @@ hr, [data-testid="stDivider"] {
     border: 1px solid #E5E7EB;
     border-radius: 6px;
     background: #FFFFFF;
+}
+
+/* ----- GitHub sign-in button (custom HTML in pages/login.py) ----------- */
+/* Material Symbols doesn't include brand logos, so the GitHub octocat is
+   rendered as inline SVG inside a hand-rolled <a> instead of via st.link_button.
+   Styled to visually match the rest of the Streamlit button system. */
+.github-signin-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #D1D5DB;
+    background: #FFFFFF;
+    color: #111827 !important;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+.github-signin-btn:hover {
+    border-color: #9CA3AF;
+    background: #FAFAFA;
+    color: #111827 !important;
+    text-decoration: none !important;
+}
+.github-signin-btn:active {
+    background: #F3F4F6;
+}
+.github-signin-btn svg {
+    flex-shrink: 0;
 }
 
 /* ----- Flashcard-specific (see pages/flashcards.py) --------------------- */
