@@ -1,8 +1,10 @@
 """Login page. Three tabs: Sign in / Register / Forgot password.
 
-Plus a "Sign in with Google" button that's only enabled if the Supabase Google
-provider is configured. If it isn't, the button shows a help caption pointing
-to the setup steps.
+Plus a "Sign in with GitHub" button at the top. The button renders whenever
+supabase-py returns an OAuth URL (which it always does, regardless of whether
+GitHub is configured server-side) -- so configure the provider in Supabase
+dashboard before publishing this page; otherwise users will see a 400 error
+from Supabase on click.
 """
 
 from __future__ import annotations
@@ -10,7 +12,7 @@ from __future__ import annotations
 import streamlit as st
 
 from app.auth import (
-    get_google_oauth_url,
+    get_github_oauth_url,
     reset_password_request,
     sign_in,
     sign_up,
@@ -32,33 +34,20 @@ if callback_err := st.session_state.pop("auth_callback_error", None):
     st.error(callback_err)
 
 # ---------------------------------------------------------------------------
-# Google OAuth button (top of page, above tabs)
+# GitHub OAuth button (top of page, above tabs)
 # ---------------------------------------------------------------------------
 
-google_url = get_google_oauth_url()
-oauth_col, _ = st.columns([1, 1])
-with oauth_col:
-    if google_url:
+github_url = get_github_oauth_url()
+if github_url:
+    oauth_col, _ = st.columns([1, 1])
+    with oauth_col:
         st.link_button(
-            "Sign in with Google",
-            google_url,
+            "Sign in with GitHub",
+            github_url,
             use_container_width=True,
-            icon=":material/account_circle:",
+            icon=":material/code:",
         )
-    else:
-        st.button(
-            "Sign in with Google (not configured)",
-            use_container_width=True,
-            disabled=True,
-            help=(
-                "Google OAuth isn't enabled in this Supabase project. "
-                "Set `[auth.external.google] enabled = true` in `supabase/config.toml`, "
-                "fill `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` / `_SECRET` in `.env`, "
-                "then `supabase stop && supabase start`."
-            ),
-        )
-
-st.divider()
+    st.divider()
 
 signin_tab, register_tab, forgot_tab = st.tabs(["Sign in", "Register", "Forgot password"])
 

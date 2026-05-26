@@ -179,28 +179,30 @@ def verify_otp(token_hash: str, otp_type: OtpType) -> dict | None:
 
 
 # ---------------------------------------------------------------------------
-# OAuth (Google)
+# OAuth (GitHub)
 # ---------------------------------------------------------------------------
 
 
-def get_google_oauth_url() -> str | None:
-    """Return the URL to redirect the user to for Google OAuth, or None on failure.
+def get_github_oauth_url() -> str | None:
+    """Return the URL to redirect the user to for GitHub OAuth, or None on failure.
 
-    Returns None if the Google provider is disabled in supabase/config.toml (or
-    if credentials are unset). Errors are swallowed so the login UI can render
-    a disabled state instead of crashing.
+    Note: supabase-py.sign_in_with_oauth returns a URL regardless of whether
+    the provider is actually enabled server-side -- it just constructs the
+    request URL. So a non-None return here doesn't *prove* GitHub is configured;
+    the actual validation happens when the user clicks through and Supabase
+    rejects unsupported providers.
     """
     client = get_supabase()
     try:
         resp = client.auth.sign_in_with_oauth({
-            "provider": "google",
+            "provider": "github",
             "options": {
                 "redirect_to": site_url(),
                 "skip_browser_redirect": True,
             },
         })
         return getattr(resp, "url", None)
-    except Exception:  # noqa: BLE001 - Google may be disabled; show disabled UI instead of erroring
+    except Exception:  # noqa: BLE001 - swallow client errors so the page can hide the button
         return None
 
 

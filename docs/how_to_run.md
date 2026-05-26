@@ -175,8 +175,8 @@ Expected output: `Verified: 915 questions, 3755 options in Postgres`.
    - Make sure **Enable email signup** is on.
    - Turn **Confirm email** ON for production (verification required before sign-in).
    - Customize the email templates if you like (the defaults work).
-3. *(Optional)* **Authentication -> Providers -> Google**:
-   - See "Enable Google OAuth (optional)" below.
+3. *(Optional)* **Authentication -> Providers -> GitHub**:
+   - See "Enable GitHub OAuth (optional)" below.
 
 ### Step 6: Deploy to Streamlit Community Cloud
 
@@ -208,21 +208,23 @@ Expected output: `Verified: 915 questions, 3755 options in Postgres`.
 
 You're live.
 
-### Enable Google OAuth (optional)
+### Enable GitHub OAuth (optional)
 
-1. **Google Cloud Console** (<https://console.cloud.google.com>):
-   - Create a project (or use an existing one).
-   - **APIs & Services -> OAuth consent screen**: External, fill in app name, support email, etc.
-   - **APIs & Services -> Credentials -> Create credentials -> OAuth client ID**:
-     - Application type: **Web application**.
-     - Authorized redirect URI: `https://abcdefg.supabase.co/auth/v1/callback` (the *Supabase* callback, not your app).
-   - Copy the **Client ID** and **Client Secret**.
-2. **Supabase dashboard -> Authentication -> Providers -> Google**:
+GitHub OAuth is the easiest social provider to wire up -- no consent screen / app verification dance like Google requires.
+
+1. **GitHub OAuth App** (<https://github.com/settings/developers>):
+   - Click **New OAuth App**.
+   - **Application name:** anything (e.g. `AWSomeQuiz`)
+   - **Homepage URL:** your Streamlit URL (e.g. `https://<your-app>.streamlit.app`)
+   - **Authorization callback URL:** `https://<your-project>.supabase.co/auth/v1/callback` (the *Supabase* callback, not your app)
+   - Click **Register application**.
+   - Copy the **Client ID** -> click **Generate a new client secret** -> copy that too.
+2. **Supabase dashboard -> Authentication -> Providers -> GitHub**:
    - Enable.
-   - Paste Client ID + Secret.
+   - Paste Client ID + Client secret.
    - Save.
-3. The Streamlit app auto-detects Google via `get_google_oauth_url()`; the disabled button on the Sign-in page becomes active. No code change or redeploy needed.
-4. Test: click **Sign in with Google** -> redirects through Google -> back to your app, signed in.
+3. The Sign-in-with-GitHub button on the Login page calls `get_github_oauth_url()`, which always returns a URL -- so the button is always shown. Validation actually happens server-side: if GitHub is enabled in Supabase, clicking goes through; if not, Supabase returns a 400 error to the user. **Configure step 2 before publishing the page.**
+4. Test: click **Sign in with GitHub** -> redirects to GitHub authorize page -> "Authorize <your-app>" -> back to your app, signed in.
 
 ### Updating the deployment
 
@@ -321,7 +323,8 @@ If AWS updates CLF-C02 questions and you have a fresh SQLite:
 | App loads but "SUPABASE_URL must be set" | Re-check Streamlit Cloud secrets (they're TOML; quote strings) |
 | Sign-up email never arrives | Supabase free-tier sends from a generic address that often goes to spam. Check spam. To use your own SMTP, configure in **Supabase -> Authentication -> Email Settings** |
 | Verification link 404s back to your app | The link's `redirect_to` doesn't match the **Redirect URLs** allow-list in **Supabase -> Authentication -> URL Configuration**. Add it. |
-| Google OAuth: "redirect_uri_mismatch" | Add `https://<your-project>.supabase.co/auth/v1/callback` to the Google Cloud OAuth client's authorized redirect URIs (Step 1 of "Enable Google OAuth") |
+| GitHub OAuth: "redirect_uri mismatch" or "The redirect_uri MUST match the registered callback URL" | Set the GitHub OAuth App's **Authorization callback URL** to exactly `https://<your-project>.supabase.co/auth/v1/callback` -- no trailing slash, no path |
+| GitHub OAuth: 400 "Unsupported provider: provider is not enabled" | Enable GitHub in Supabase dashboard -> Authentication -> Providers -> GitHub. Then save Client ID + secret from the GitHub OAuth App. |
 | Supabase project "paused" message | Free-tier projects pause after 7 days of inactivity. Click **Restore project** in the dashboard. Practice + auth resume immediately |
 | App is slow / cold-starts | Streamlit Community Cloud spins down idle apps. First hit after ~10 min idle takes ~30 s. Pay tier ($$) for always-on |
 

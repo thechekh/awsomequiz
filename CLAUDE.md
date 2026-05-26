@@ -22,7 +22,7 @@ making scope decisions.
 |---|-------|:-:|---|
 | 1 | Postgres schema + RLS | DONE | `supabase/migrations/0001_schema.sql`, `0002_policies.sql`, `supabase/seed.sql` |
 | 2 | SQLite -> Supabase migration + Docker dev setup | DONE | `scripts/migrate_sqlite_to_supabase.py`, `docker/Dockerfile`, `docker-compose.yml`, `Makefile`, `dev.ps1` |
-| 3 | Auth E2E | DONE | `app/auth.py`, `app/db.py` (PKCE), `streamlit_app.py` gate via `st.navigation`, `pages/login.py` (3 tabs + Google button), `pages/home.py`, `pages/account.py`, `pages/reset_password.py`. Email/password register/login/logout/reset all working; Google OAuth wired (disabled-by-default in config). |
+| 3 | Auth E2E | DONE | `app/auth.py`, `app/db.py` (PKCE), `streamlit_app.py` gate via `st.navigation`, `pages/login.py` (3 tabs + GitHub button), `pages/home.py`, `pages/account.py`, `pages/reset_password.py`. Email/password register/login/logout/reset all working; GitHub OAuth via Supabase provider (was Google originally, swapped post-deploy because GitHub doesn't need Google Cloud Console). |
 | 4 | Free-practice vertical | DONE | `pages/practice.py`, `app/session.py`, `app/queries.py`, `supabase/migrations/0003_session_questions.sql` (adds `exam_sessions.question_ids uuid[]`). Picker -> question runner with per-question review -> session summary. Bookmark toggle, report dialog, resume of incomplete sessions all working. |
 | 5 | Timed exam | DONE | `pages/timed_exam.py`, `start_timed_session()` + `get_active_timed_session()` in `app/session.py`, `get_review_bundle()` in `app/queries.py`, `supabase/migrations/0004_stats_handle_updates.sql` (trigger now fires on UPDATE too, so revising answers keeps `question_stats` correct). `record_answer` now UPSERTs. 65Q/90min runner: sidebar grid, `st.fragment(run_every="1s")` timer with auto-submit, server-derived deadline, end-of-exam review (Wrong / Correct / All tabs). |
 | 6 | Other review modes | DONE | `pages/review.py` (Weak / Missed tabs), `pages/bookmarks.py` (list + Practice all). Runner factored into `app/components/runner.py` and reused across practice / review / bookmarks. New `pick_weak_area_question_ids` / `pick_missed_question_ids` / `pick_bookmarked_question_ids` + `list_bookmarks` / `delete_bookmark` in `app/queries.py`. New `start_weak_areas_session` / `start_missed_session` / `start_bookmarked_session` in `app/session.py`. |
@@ -47,7 +47,7 @@ User opted out of these during clarification — re-confirm before adding.
 ```
 streamlit_app.py             # auth gate: handles ?code= and ?token_hash= callbacks, routes via st.navigation
 pages/
-  login.py                   # Sign in / Register / Forgot password tabs + Google OAuth button -- DONE
+  login.py                   # Sign in / Register / Forgot password tabs + GitHub OAuth button -- DONE
   home.py                    # Authenticated landing: resume banners for all modes + 4 quick-start CTAs -- DONE
   practice.py                # Free practice (picker + runner delegate) -- DONE
   timed_exam.py              # Timed exam runner (timer fragment, grid, no per-Q feedback, end review) -- DONE
@@ -75,7 +75,7 @@ questions/                   # CSV sources for the flashcard decks
   aws_framework.csv          # aspect,description,framework (WAF / CAF / Migration Strategies)
   aws_service.csv            # service,description (~155 AWS services)
 supabase/
-  config.toml                # Supabase CLI config (Google OAuth disabled by default)
+  config.toml                # Supabase CLI config (GitHub OAuth disabled by default)
   migrations/0001_schema.sql            # 10 tables + indexes + 3 triggers -- DONE
   migrations/0002_policies.sql          # RLS on every table -- DONE
   migrations/0003_session_questions.sql # exam_sessions.question_ids column -- DONE
@@ -217,7 +217,7 @@ The product brief is fully implemented. There is no "next phase" in the roadmap.
 
 - PKCE flow is enabled in `app/db.py` (`ClientOptions(flow_type="pkce")`) so OAuth + reset links return a `code` we can `exchange_code_for_session` for. Email confirmation links use `verify_otp` with `token_hash + type` -- both handled in `streamlit_app.py` `_handle_auth_callback()`.
 - Session lives in `st.session_state["supabase_session"]` as a dict (not the raw `Session` model -- Streamlit serializes it across reruns). `app/auth.apply_session_to_client()` must be called on every rerun before queries that need RLS.
-- Google OAuth: button is in `pages/login.py` and disabled when `get_google_oauth_url()` returns None (i.e. provider isn't configured in `supabase/config.toml`). To enable locally: set `[auth.external.google] enabled = true`, fill `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` + `_SECRET` in `.env`, `supabase stop && supabase start`. User has NOT yet created the Google Cloud OAuth client -- guide them when they ask.
+- GitHub OAuth: button in `pages/login.py` calls `get_github_oauth_url()` which always returns a URL (supabase-py doesn't validate provider availability server-side -- it just builds the request URL). So the button always renders when a URL is generated. Validation happens when the user clicks: if GitHub isn't enabled in Supabase, they get a 400 "Unsupported provider" error. To enable: GitHub OAuth App at <https://github.com/settings/developers> -> Supabase dashboard -> Auth -> Providers -> GitHub -> paste Client ID + Secret. (No Google Cloud Console / consent screen needed; this was swapped from Google for that reason.)
 - Email confirmations are `false` locally (instant signup). For prod, flip `[auth.email] enable_confirmations = true`. Either way, Inbucket at http://localhost:54324 catches signup/reset emails locally.
 - `profiles` row is auto-created by the `on_auth_user_created` trigger -- don't insert on signup, just read/update via `pages/account.py`.
 

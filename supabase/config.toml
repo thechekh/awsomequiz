@@ -47,13 +47,13 @@ enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
 
-# Google OAuth is configured per-environment via env vars in the dashboard
-# (or via `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` env for local CLI).
-# Disabled by default locally — flip to true and populate via .env when ready.
-[auth.external.google]
+# GitHub OAuth is configured per-environment via env vars in the dashboard
+# (or via `SUPABASE_AUTH_EXTERNAL_GITHUB_CLIENT_ID` env for local CLI).
+# Disabled by default locally -- flip to true and populate via .env when ready.
+[auth.external.github]
 enabled = false
-client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
-secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GITHUB_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET)"
 redirect_uri = ""
 
 [storage]

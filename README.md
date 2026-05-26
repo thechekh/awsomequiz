@@ -6,7 +6,7 @@ Streamlit frontend, Supabase backend (Postgres + Auth), Docker for local dev.
 > **Status:** Feature-complete (Phases 1-7). Phase 8 is production deploy verification -- the walkthrough lives in [docs/how_to_run.md](docs/how_to_run.md). See [CLAUDE.md](CLAUDE.md) for the roadmap and [docs/BRIEF.md](docs/BRIEF.md) for the original product brief.
 
 ## Features
-- Email/password + Google OAuth (toggleable) via Supabase Auth
+- Email/password + GitHub OAuth via Supabase Auth
 - **Free practice** mode: pick domain + count, per-question feedback with detailed explanations
 - **Timed exam** simulation: 65 questions / 90 minutes / 70% pass, with countdown + end-of-exam review
 - **Weak areas** / **Missed questions** review modes
@@ -213,23 +213,20 @@ To test the full verification flow:
 
 Then flip `enable_confirmations` back to `false` for daily dev.
 
-### Test Google OAuth (optional)
+### Test GitHub OAuth (optional)
 
-The Sign-in-with-Google button is disabled by default because no Google Cloud OAuth client is configured. To enable:
+To wire up the Sign-in-with-GitHub button locally:
 
-1. Create a Google Cloud project at https://console.cloud.google.com/
-2. Enable the "Google+ API" (or just the OAuth consent screen)
-3. Create OAuth 2.0 credentials -> Web application
-   - Authorized redirect URI: `http://localhost:54321/auth/v1/callback` (local)
-   - Add `https://<your-project>.supabase.co/auth/v1/callback` later for prod
-4. Copy the client ID and secret into your `.env`:
+1. https://github.com/settings/developers -> **New OAuth App**
+2. Application name `awsomequiz-local`, Homepage URL `http://localhost:8501`, Authorization callback URL `http://localhost:54321/auth/v1/callback` (the local Supabase callback). Register, copy Client ID + generate/copy Client secret.
+3. Copy the Client ID and Client secret into your `.env`:
    ```
-   SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=...
-   SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=...
+   SUPABASE_AUTH_EXTERNAL_GITHUB_CLIENT_ID=...
+   SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET=...
    ```
-5. Edit `supabase/config.toml`: `[auth.external.google] enabled = true`.
-6. `.\dev.ps1 db-down && .\dev.ps1 db-up` to restart.
-7. The Sign-in-with-Google button is now active. Clicking it redirects to Google -> back to the app -> signed in.
+4. Edit `supabase/config.toml`: `[auth.external.github] enabled = true`.
+5. `.\dev.ps1 db-down && .\dev.ps1 db-up` to restart Supabase so the config reloads.
+6. Sign-in-with-GitHub button is now active. Click -> redirects to GitHub -> back to the app, signed in.
 
 ---
 
@@ -273,7 +270,7 @@ Runs all of `db-up` -> `db-reset` -> `migrate-sqlite` -> `app-docker` in sequenc
 .
 ├── streamlit_app.py             # Auth gate + multi-page router via st.navigation
 ├── pages/
-│   ├── login.py                 # Sign in / Register / Forgot password / Google OAuth
+│   ├── login.py                 # Sign in / Register / Forgot password / GitHub OAuth
 │   ├── home.py                  # Dashboard with resume CTAs + quick-start
 │   ├── practice.py              # Free practice mode
 │   ├── timed_exam.py            # 65Q / 90min CLF-C02 simulation
