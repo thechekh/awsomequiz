@@ -131,16 +131,19 @@ if queue is not None:
 
     with st.container(border=True):
         if card.get("category"):
-            st.caption(card["category"])
+            st.markdown(
+                f"<span class='flashcard-category'>{card['category']}</span>",
+                unsafe_allow_html=True,
+            )
         st.markdown(
-            f"<div style='font-size: 1.4rem; padding: 1.5rem 0;'>{card['front']}</div>",
+            f"<div class='flashcard-front'>{card['front']}</div>",
             unsafe_allow_html=True,
         )
         flipped = st.session_state.get(FLIPPED_KEY, False)
         if flipped:
             st.divider()
             st.markdown(
-                f"<div style='font-size: 1.1rem; padding: 0.5rem 0;'>{card['back']}</div>",
+                f"<div class='flashcard-back'>{card['back']}</div>",
                 unsafe_allow_html=True,
             )
 

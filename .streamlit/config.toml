@@ -1,9 +1,9 @@
 [theme]
-base = "dark"
-primaryColor = "#A855F7"
-backgroundColor = "#0F0A1E"
-secondaryBackgroundColor = "#1E1438"
-textColor = "#E0D9F0"
+base = "light"
+primaryColor = "#2563EB"               # blue-600  -- buttons, links, focus rings
+backgroundColor = "#F9FAFB"            # gray-50   -- page background
+secondaryBackgroundColor = "#FFFFFF"   # white     -- cards, sidebar, inputs
+textColor = "#111827"                  # gray-900
 font = "sans serif"
 
 [server]

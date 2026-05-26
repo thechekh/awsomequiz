@@ -18,6 +18,7 @@ from app.auth import (
     sign_out,
     verify_otp,
 )
+from app.styles import CUSTOM_CSS
 
 st.set_page_config(
     page_title="AWSomeQuiz",
@@ -25,6 +26,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Inject the global CSS once; cheap and idempotent across reruns.
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
