@@ -58,8 +58,12 @@ github_url = get_github_oauth_url()
 if github_url:
     _, mid, _ = st.columns([1, 2, 1])
     with mid:
+        # target="_top" breaks out of Streamlit's component iframe -- without
+        # it the browser tries to load github.com *inside* the iframe and
+        # GitHub's frame-ancestors CSP blocks it.
         st.markdown(
-            f'<a href="{github_url}" class="github-signin-btn" target="_self">'
+            f'<a href="{github_url}" class="github-signin-btn" target="_top" '
+            f'rel="noopener noreferrer">'
             f'{GITHUB_LOGO_SVG}<span>Sign in with GitHub</span></a>',
             unsafe_allow_html=True,
         )
