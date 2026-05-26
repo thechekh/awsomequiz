@@ -15,8 +15,31 @@ CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-html, body, [class*="st-"], .stApp, [data-testid="stAppViewContainer"] {
+html, body, .stApp {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Preserve Material Symbols icon font on Streamlit's :material/<name>: spans.
+   Without this, the broader Inter font rule above cascades down and the
+   icon ligature renders as literal text (e.g. "code" instead of <> glyph). */
+.material-icons,
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp,
+[class*="material-icons"],
+[class*="material-symbols"],
+[class*="MaterialSymbols"] {
+    font-family: 'Material Symbols Outlined', 'Material Symbols Rounded',
+                 'Material Symbols Sharp', 'Material Icons' !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    font-feature-settings: 'liga' !important;
+    -webkit-font-feature-settings: 'liga' !important;
+    -webkit-font-smoothing: antialiased !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
 }
 
 /* Page chrome */
@@ -148,16 +171,26 @@ h3, .stMarkdown h3 {
 }
 
 /* ----- Inputs ------------------------------------------------------------ */
+/* Three-state pattern so the text cursor stays visible:
+   default = gray-50 (#F9FAFB), hover = gray-100 (#F3F4F6), focus = white.
+   Keeps a clear difference between empty and active field on white cards. */
 .stTextInput input, .stTextArea textarea, .stNumberInput input,
 .stSelectbox [data-baseweb="select"] > div,
-.stMultiSelect [data-baseweb="select"] > div,
-[data-baseweb="input"] {
+.stMultiSelect [data-baseweb="select"] > div {
     border-radius: 6px !important;
+    border-color: #E5E7EB !important;
+    background: #F9FAFB !important;
+    color: #111827 !important;
+}
+.stTextInput input:hover, .stTextArea textarea:hover, .stNumberInput input:hover,
+.stSelectbox [data-baseweb="select"]:hover > div,
+.stMultiSelect [data-baseweb="select"]:hover > div {
+    background: #F3F4F6 !important;
     border-color: #D1D5DB !important;
-    background: #FFFFFF !important;
 }
 .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {
     border-color: #2563EB !important;
+    background: #FFFFFF !important;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
 }
 

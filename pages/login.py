@@ -45,6 +45,7 @@ if github_url:
             "Sign in with GitHub",
             github_url,
             use_container_width=True,
+            icon=":material/code:",
         )
     st.divider()
 
