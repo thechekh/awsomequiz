@@ -219,6 +219,23 @@ h3, .stMarkdown h3 {
     outline: none !important;
 }
 
+/* Password reveal (eye) button + any other inline button inside the input
+   wrapper. BaseWeb renders these with their own hover/focus bg, which appears
+   as a stray gray block next to the field. Force everything transparent so
+   the wrapper bg reads as one continuous field. */
+.stTextInput [data-baseweb="input"] > div,
+.stTextInput [data-baseweb="input"] button {
+    background: transparent !important;
+}
+.stTextInput [data-baseweb="input"] button,
+.stTextInput [data-baseweb="input"] button:hover,
+.stTextInput [data-baseweb="input"] button:focus,
+.stTextInput [data-baseweb="input"] button:active {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
 /* Hide the "Press Enter to submit form" hint that Streamlit shows below
    text inputs inside a form. */
 [data-testid="InputInstructions"],
