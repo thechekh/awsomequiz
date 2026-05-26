@@ -54,6 +54,12 @@ if github_url:
         )
     st.divider()
 
+# Guest mode -- try the practice runner without an account. No progress saved.
+_, gmid, _ = st.columns([1, 2, 1])
+with gmid:
+    if st.button("Practice as guest (no signup)", use_container_width=True, key="guest_cta"):
+        st.switch_page("pages/guest_practice.py")
+
 signin_tab, register_tab, forgot_tab = st.tabs(["Sign in", "Register", "Forgot password"])
 
 # ---------------------------------------------------------------------------

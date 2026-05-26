@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import os
 import time
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 import streamlit as st
@@ -19,7 +20,72 @@ import streamlit as st
 from app.db import get_supabase
 
 SESSION_KEY = "supabase_session"
+COOKIE_NAME = "awsomequiz_rt"
+COOKIE_MAX_AGE_DAYS = 30
 OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
+
+
+# ---------------------------------------------------------------------------
+# Browser-cookie persistence (so login survives page reloads)
+# ---------------------------------------------------------------------------
+#
+# Streamlit's st.session_state is per-tab and doesn't reliably survive a hard
+# reload on Streamlit Cloud. To persist login across reloads we stash the
+# Supabase refresh_token in a first-party cookie via extra-streamlit-components'
+# CookieManager and rehydrate the session on each cold start.
+
+
+@st.cache_resource
+def _cookie_manager():
+    """Single CookieManager instance for the whole app (cached across reruns)."""
+    import extra_streamlit_components as stx
+    return stx.CookieManager(key="awsomequiz_cookie_manager")
+
+
+def _save_refresh_cookie(refresh_token: str) -> None:
+    if not refresh_token:
+        return
+    expires_at = datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)
+    try:
+        _cookie_manager().set(
+            COOKIE_NAME, refresh_token, expires_at=expires_at, key="cookie_set"
+        )
+    except Exception:  # noqa: BLE001 - never block sign-in on cookie failure
+        pass
+
+
+def _read_refresh_cookie() -> str | None:
+    try:
+        return _cookie_manager().get(COOKIE_NAME)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _delete_refresh_cookie() -> None:
+    try:
+        _cookie_manager().delete(COOKIE_NAME, key="cookie_delete")
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def restore_session_from_cookie() -> dict | None:
+    """If no session in st.session_state but a refresh-token cookie exists,
+    exchange it for a fresh session via Supabase. Called from streamlit_app.py
+    on every cold start.
+    """
+    if st.session_state.get(SESSION_KEY):
+        return st.session_state[SESSION_KEY]
+    refresh_token = _read_refresh_cookie()
+    if not refresh_token:
+        return None
+    try:
+        client = get_supabase()
+        resp = client.auth.refresh_session(refresh_token)
+        if resp.session:
+            return _store_session(resp.session)
+    except Exception:  # noqa: BLE001 - bad / expired token
+        _delete_refresh_cookie()
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -48,11 +114,16 @@ def _session_to_dict(session) -> dict:
 def _store_session(session) -> dict:
     d = _session_to_dict(session)
     st.session_state[SESSION_KEY] = d
+    # Persist the refresh token in a cookie so the user stays signed in after
+    # closing the tab / reloading. Access tokens are short-lived; we only
+    # store the long-lived refresh token.
+    _save_refresh_cookie(d.get("refresh_token") or "")
     return d
 
 
 def _clear_session() -> None:
     st.session_state.pop(SESSION_KEY, None)
+    _delete_refresh_cookie()
 
 
 def get_session() -> dict | None:

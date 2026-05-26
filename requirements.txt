@@ -8,3 +8,4 @@ psycopg[binary]>=3.2,<4.0
 python-dotenv>=1.0,<2.0
 pydantic>=2.9,<3.0
 pandas>=2.2,<3.0
+extra-streamlit-components>=0.1.71,<0.2

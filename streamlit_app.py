@@ -15,6 +15,7 @@ from app.auth import (
     apply_session_to_client,
     exchange_code,
     get_session,
+    restore_session_from_cookie,
     sign_out,
     verify_otp,
 )
@@ -118,6 +119,11 @@ def _handle_auth_callback() -> None:
 
 _handle_auth_callback()
 
+# If st.session_state has no session (e.g. after a page reload, which wipes
+# session_state on Streamlit Cloud), try to restore from the refresh-token
+# cookie. No-op if the cookie isn't present.
+restore_session_from_cookie()
+
 session = get_session()
 apply_session_to_client()
 
@@ -138,6 +144,9 @@ else:
         # Hidden from nav (position="hidden" below) but URL-routable so the
         # password-reset email link works.
         st.Page("pages/reset_password.py", title="Reset password", url_path="reset_password"),
+        # Guest practice -- reachable via the button on the Login page or
+        # by direct URL. Hidden from nav too (nothing else routes here).
+        st.Page("pages/guest_practice.py", title="Practice as guest", url_path="guest_practice"),
     ]
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
