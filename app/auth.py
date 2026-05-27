@@ -96,8 +96,20 @@ def restore_session_from_cookie() -> dict | None:
     if st.session_state.get(SESSION_KEY):
         return st.session_state[SESSION_KEY]
 
+    # TEMP DEBUG: surface what headers we see
+    try:
+        headers = st.context.headers
+        cookie_header = headers.get("Cookie") or headers.get("cookie") or "(none)"
+        cookie_keys = [c.strip().split("=")[0] for c in cookie_header.split(";") if c.strip()]
+        st.session_state["_refresh_debug_headers"] = (
+            f"cookie_keys={cookie_keys}; raw_len={len(cookie_header)}"
+        )
+    except Exception as e:  # noqa: BLE001
+        st.session_state["_refresh_debug_headers"] = f"headers err: {type(e).__name__}: {e!r}"
+
     refresh_token = _read_refresh_cookie()
     if not refresh_token:
+        st.session_state["_refresh_debug"] = "no refresh_token in cookies"
         return None
 
     try:

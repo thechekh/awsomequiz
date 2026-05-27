@@ -35,6 +35,8 @@ if callback_err := st.session_state.pop("auth_callback_error", None):
 
 # TEMP DEBUG: surface why a refresh-cookie-backed restore failed, so we can
 # diagnose the "cookie persists but session not restored" symptom.
+if headers_debug := st.session_state.pop("_refresh_debug_headers", None):
+    st.info(f"headers debug: {headers_debug}")
 if refresh_debug := st.session_state.pop("_refresh_debug", None):
     st.warning(f"refresh debug: {refresh_debug}")
 
