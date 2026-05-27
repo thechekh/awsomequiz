@@ -22,7 +22,7 @@ from app.auth import apply_session_to_client, current_user
 from app.queries import (
     format_started_at,
     get_answered_question_ids,
-    get_clf_certification,
+    get_current_certification,
     get_question_with_options,
     get_review_bundle,
     get_user_answer,
@@ -204,7 +204,7 @@ if not user:
     st.switch_page("pages/login.py")
 
 apply_session_to_client()
-cert = get_clf_certification()
+cert = get_current_certification()
 
 st.title("Timed exam")
 

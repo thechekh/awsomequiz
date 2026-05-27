@@ -16,7 +16,7 @@ from app.components.runner import render_runner, render_summary
 from app.queries import (
     delete_bookmark,
     format_started_at,
-    get_clf_certification,
+    get_current_certification,
     list_bookmarks,
 )
 from app.session import (
@@ -37,7 +37,7 @@ user = current_user()
 if not user:
     st.switch_page("pages/login.py")
 apply_session_to_client()
-cert = get_clf_certification()
+cert = get_current_certification()
 
 st.title("Bookmarks")
 

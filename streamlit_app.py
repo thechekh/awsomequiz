@@ -25,10 +25,44 @@ from app.cookies import (
     read_cookie_from_headers,
     write_cookie,
 )
-from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
+from app.queries import (
+    get_current_certification,
+    get_practice_streak,
+    get_user_stats_summary,
+    list_certifications_with_questions,
+    set_current_certification,
+)
 from app.styles import render_combined_css
 
 DARK_MODE_COOKIE = "awsomequiz_dark"
+
+
+def _render_sidebar_cert_picker() -> None:
+    """Compact cert switcher at the top of the sidebar.
+
+    Only renders when 2+ certs have question banks loaded -- a single-cert
+    deployment doesn't need a selector. Picker writes through to
+    set_current_certification (session_state + profiles.current_cert_code)
+    and reruns so downstream pages re-read with the new cert.
+    """
+    available = list_certifications_with_questions()
+    if not available:
+        return
+    current = get_current_certification()
+    current_code = current["code"] if current else available[0]["code"]
+    if len(available) == 1:
+        st.sidebar.caption(f"**{available[0]['code']}** -- {available[0]['name']}")
+        return
+    chosen = st.sidebar.selectbox(
+        "Certification",
+        options=[c["code"] for c in available],
+        format_func=lambda code: next(c["name"] for c in available if c["code"] == code),
+        index=next((i for i, c in enumerate(available) if c["code"] == current_code), 0),
+        key="sidebar_cert_picker",
+    )
+    if chosen != current_code:
+        set_current_certification(chosen)
+        st.rerun()
 
 
 def _render_sidebar_mini_stats(session: dict) -> None:
@@ -39,7 +73,7 @@ def _render_sidebar_mini_stats(session: dict) -> None:
     per ~30s rather than a DB round-trip per rerun.
     """
     try:
-        cert = get_clf_certification()
+        cert = get_current_certification()
         if not cert:
             return
         summary = get_user_stats_summary(session["user"]["id"], cert["id"])
@@ -245,6 +279,7 @@ if session:
         height=0,
     )
     with st.sidebar:
+        _render_sidebar_cert_picker()
         _render_sidebar_mini_stats(session)
         st.divider()
         user_email = session["user"]["email"] if session.get("user") else "(unknown)"

@@ -15,7 +15,7 @@ from app.components.runner import render_runner, render_summary
 from app.queries import (
     format_started_at,
     get_answered_question_ids,
-    get_clf_certification,
+    get_current_certification,
     list_domains,
 )
 from app.session import (
@@ -73,7 +73,7 @@ if session is None:
         st.stop()
 
 if session is None:
-    cert = get_clf_certification()
+    cert = get_current_certification()
     domains = list_domains(cert["id"])
     domain_labels = ["All"] + [d["name"] for d in domains]
     with st.form("practice_picker"):

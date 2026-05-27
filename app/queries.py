@@ -22,17 +22,104 @@ CACHE_TTL_QUESTION = 5 * 60     # 5 min: question text / options
 # ---------------------------------------------------------------------------
 
 
+CURRENT_CERT_CODE_KEY = "current_cert_code"
+DEFAULT_CERT_CODE = "CLF-C02"
+
+_CERT_FIELDS = "id, code, name, question_count, duration_minutes, pass_threshold_pct"
+
+
 @st.cache_data(ttl=CACHE_TTL_REFERENCE)
-def get_clf_certification() -> dict:
-    """Return the CLF-C02 certification row."""
+def get_certification_by_code(code: str) -> dict | None:
+    """Fetch one certification row by its code (CLF-C02, DVA-C02, ...). None if missing."""
     supabase = get_supabase()
+    rows = (
+        supabase.table("certifications")
+        .select(_CERT_FIELDS)
+        .eq("code", code)
+        .limit(1)
+        .execute()
+    ).data or []
+    return rows[0] if rows else None
+
+
+@st.cache_data(ttl=CACHE_TTL_REFERENCE)
+def list_certifications_with_questions() -> list[dict]:
+    """Return certifications that have at least one active question.
+
+    Two round-trips (distinct cert IDs from `questions`, then look those IDs
+    up in `certifications`). Cached at the reference TTL because adding a
+    question bank to a cert is a deploy-time event, not a per-request thing.
+    """
+    supabase = get_supabase()
+    rows = (
+        supabase.table("questions")
+        .select("certification_id")
+        .eq("is_active", True)
+        .limit(10000)
+        .execute()
+    ).data or []
+    cert_ids = list({r["certification_id"] for r in rows})
+    if not cert_ids:
+        return []
     return (
         supabase.table("certifications")
-        .select("id, code, name, question_count, duration_minutes, pass_threshold_pct")
-        .eq("code", "CLF-C02")
-        .single()
+        .select(_CERT_FIELDS)
+        .in_("id", cert_ids)
+        .order("code")
         .execute()
-    ).data
+    ).data or []
+
+
+def get_current_certification() -> dict | None:
+    """Return the cert the user is currently practicing.
+
+    Resolution order:
+      1. session_state[CURRENT_CERT_CODE_KEY] (set by the picker UI)
+      2. profiles.current_cert_code (logged-in users, persisted across sessions)
+      3. DEFAULT_CERT_CODE fallback (CLF-C02)
+
+    The resolved code is cached in session_state so subsequent calls skip
+    the profile lookup. None if the resolved cert doesn't exist (e.g. a
+    stale cookie pointing at a deleted cert -- caller should re-prompt).
+    """
+    code = st.session_state.get(CURRENT_CERT_CODE_KEY)
+    if not code:
+        # Defer the import: queries -> auth -> queries would otherwise circle.
+        from app.auth import current_user
+
+        user = current_user()
+        if user:
+            supabase = get_supabase()
+            rows = (
+                supabase.table("profiles")
+                .select("current_cert_code")
+                .eq("id", user["id"])
+                .limit(1)
+                .execute()
+            ).data or []
+            if rows and rows[0].get("current_cert_code"):
+                code = rows[0]["current_cert_code"]
+        if not code:
+            code = DEFAULT_CERT_CODE
+        st.session_state[CURRENT_CERT_CODE_KEY] = code
+    return get_certification_by_code(code)
+
+
+def set_current_certification(code: str) -> None:
+    """Switch the active cert. Updates session_state and (if logged in) profile."""
+    st.session_state[CURRENT_CERT_CODE_KEY] = code
+    from app.auth import current_user
+
+    user = current_user()
+    if user:
+        supabase = get_supabase()
+        supabase.table("profiles").update(
+            {"current_cert_code": code},
+        ).eq("id", user["id"]).execute()
+    # Cache invalidation: the per-cert stats summaries pin to the old cert id;
+    # the new cert is a different row so cache lookups won't collide, but the
+    # sidebar's mini-stats panel reads the OLD value once before the next
+    # render -- a single rerun after this call fixes that. Callers handle it.
 
 
 @st.cache_data(ttl=CACHE_TTL_REFERENCE)

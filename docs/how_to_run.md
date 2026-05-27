@@ -275,17 +275,21 @@ Free options:
 - **Streamlit Cloud logs**: app dashboard -> Manage app -> Logs. Streams stdout/stderr.
 - **Inbucket** is local-only; in prod, Supabase sends real emails via its built-in SMTP relay. To use your own SMTP (recommended once you have >10 users so it doesn't go to spam): **Supabase -> Authentication -> Email Settings -> Custom SMTP**.
 
-### Adding a second certification (SAA / DVA)
+### Loading questions for an additional certification
 
-Schema already supports this:
+All 13 AWS certs already exist as rows in `public.certifications` (seeded by
+`supabase/migrations/0007_more_certifications.sql` + `seed.sql`). The picker
+on the Login page + sidebar filters to certs that have at least one active
+question via `list_certifications_with_questions()`, so a cert is invisible
+to users until you load its question bank:
 
-1. Get a SQLite dump with the same `tests / test_questions / questions / answer_options` shape.
-2. `INSERT INTO certifications (code, name, question_count, duration_minutes, pass_threshold_pct) VALUES ('SAA-C03', ...)` in the Supabase SQL editor.
-3. `INSERT INTO domains (certification_id, code, name, weight, display_order)` for each SAA domain.
-4. Run `migrate_sqlite_to_supabase.py --sqlite saa.db --certification-code SAA-C03`.
-5. In the app, add a cert picker to the Home page (currently hardcoded to CLF-C02 in `app/queries.get_clf_certification`).
+1. Get a SQLite dump matching the existing `tests / test_questions / questions / answer_options` shape (or a JSON file in the project's import format).
+2. (Optional) `INSERT INTO domains (certification_id, code, name, weight, display_order)` for the cert's official domain weights.
+3. Run `migrate_sqlite_to_supabase.py --sqlite dva.db --certification-code DVA-C02` (or the JSON loader, when one exists).
 
-The runner / session / stats code is already certification-agnostic.
+That's it -- once at least one row lands in `questions` for that cert, it
+shows up in the picker. The runner / session / stats code reads through
+`get_current_certification()` so no per-cert hardcoding is needed.
 
 ### Migrating from CLF-C02 to a refreshed dump
 

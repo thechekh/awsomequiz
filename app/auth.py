@@ -122,11 +122,22 @@ def _store_session(session) -> dict:
     # closing the tab / reloading. Access tokens are short-lived; we only
     # store the long-lived refresh token.
     _save_refresh_cookie(d.get("refresh_token") or "")
+    # If a cert was picked pre-login (guest picker on /login) or switched
+    # in this session, persist it to profiles.current_cert_code so future
+    # sign-ins on a fresh browser pick up the same cert.
+    from app.queries import CURRENT_CERT_CODE_KEY, set_current_certification
+    if cert_code := st.session_state.get(CURRENT_CERT_CODE_KEY):
+        set_current_certification(cert_code)
     return d
 
 
 def _clear_session() -> None:
     st.session_state.pop(SESSION_KEY, None)
+    # Drop the cached current-cert so a new sign-in re-resolves from the
+    # next user's profile (or default). Deferred import to dodge the
+    # auth <-> queries circular at module load.
+    from app.queries import CURRENT_CERT_CODE_KEY
+    st.session_state.pop(CURRENT_CERT_CODE_KEY, None)
     _delete_refresh_cookie()
 
 

@@ -17,7 +17,7 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.queries import (
-    get_clf_certification,
+    get_current_certification,
     get_per_domain_accuracy,
     get_practice_streak,
     get_session_history,
@@ -41,7 +41,7 @@ user = current_user()
 if not user:
     st.switch_page("pages/login.py")
 apply_session_to_client()
-cert = get_clf_certification()
+cert = get_current_certification()
 
 st.title("Stats")
 

@@ -14,7 +14,7 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.db import get_supabase
-from app.queries import get_answered_question_ids, get_clf_certification
+from app.queries import get_answered_question_ids, get_current_certification
 from app.session import (
     get_active_bookmarked_session,
     get_active_practice_session,
@@ -27,7 +27,7 @@ if not user:
     st.switch_page("pages/login.py")
 
 apply_session_to_client()
-cert = get_clf_certification()
+cert = get_current_certification()
 
 st.title(f"Welcome, {user['email']}")
 

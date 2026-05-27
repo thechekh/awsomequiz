@@ -13,7 +13,7 @@ from app.auth import apply_session_to_client, current_user
 from app.components.runner import render_runner, render_summary
 from app.queries import (
     get_answered_question_ids,
-    get_clf_certification,
+    get_current_certification,
     pick_missed_question_ids,
     pick_weak_area_question_ids,
 )
@@ -44,7 +44,7 @@ user = current_user()
 if not user:
     st.switch_page("pages/login.py")
 apply_session_to_client()
-cert = get_clf_certification()
+cert = get_current_certification()
 
 st.title("Review")
 

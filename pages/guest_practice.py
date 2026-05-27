@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import streamlit as st
 
-from app.queries import get_clf_certification, get_question_with_options, pick_question_ids
+from app.queries import get_current_certification, get_question_with_options, pick_question_ids
 
 QUEUE_KEY = "guest_queue"
 INDEX_KEY = "guest_index"
@@ -29,7 +29,7 @@ def _clear_guest_state() -> None:
 
 def _start_guest_session() -> None:
     """Start a guest session with ALL active questions in random order."""
-    cert = get_clf_certification()
+    cert = get_current_certification()
     if not cert:
         st.error("Question bank not seeded.")
         return

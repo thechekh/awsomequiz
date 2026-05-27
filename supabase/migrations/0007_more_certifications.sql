@@ -1,13 +1,14 @@
--- Seed all AWS certifications and CLF-C02's four official domains.
--- Idempotent: ON CONFLICT upserts on natural keys, so re-running just refreshes.
--- Production gets these via supabase/migrations/0006_more_certifications.sql;
--- seed.sql runs only on `supabase db reset` (local dev) so it has to mirror
--- the migration's certifications list to keep prod and dev consistent.
+-- Add the remaining 12 AWS certifications + per-user current-cert preference.
+-- Idempotent: ON CONFLICT upserts on natural keys, ADD COLUMN IF NOT EXISTS.
 --
--- Question banks are loaded separately via scripts/migrate_sqlite_to_supabase.py
--- (or the JSON loader). A cert with no questions still exists as a row but
--- doesn't show up in the picker UI (list_certifications_with_questions filters
--- to certs that have at least one active question).
+-- Only CLF-C02 (and eventually DVA-C02) have questions seeded. The picker
+-- UI uses `list_certifications_with_questions()` which filters to certs
+-- that have at least one active question row, so the metadata rows below
+-- don't accidentally show up as "practice now" options until their
+-- question bank is loaded.
+--
+-- Official duration / question_count / pass threshold are from the AWS
+-- exam guides as of 2026-05. If AWS changes them, update via an upsert.
 
 insert into public.certifications (code, name, question_count, duration_minutes, pass_threshold_pct)
 values
@@ -34,18 +35,8 @@ on conflict (code) do update set
   duration_minutes  = excluded.duration_minutes,
   pass_threshold_pct = excluded.pass_threshold_pct;
 
-with cert as (
-  select id from public.certifications where code = 'CLF-C02'
-)
-insert into public.domains (certification_id, code, name, weight, display_order)
-select cert.id, v.code, v.name, v.weight, v.display_order
-from cert, (values
-  ('cloud-concepts',            'Cloud Concepts',                24, 1),
-  ('security-and-compliance',   'Security and Compliance',       30, 2),
-  ('cloud-technology-services', 'Cloud Technology and Services', 34, 3),
-  ('billing-pricing-support',   'Billing, Pricing, and Support', 12, 4)
-) as v(code, name, weight, display_order)
-on conflict (certification_id, code) do update set
-  name          = excluded.name,
-  weight        = excluded.weight,
-  display_order = excluded.display_order;
+-- Per-user preference: which cert is "current". NULL means "use the app
+-- default" (CLF-C02). Stored in profiles rather than a new table so we
+-- don't pay the cost of an extra round-trip to look it up.
+alter table public.profiles
+  add column if not exists current_cert_code text references public.certifications(code) on delete set null;
