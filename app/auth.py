@@ -105,7 +105,15 @@ def restore_session_from_cookie() -> dict | None:
         resp = client.auth.refresh_session(refresh_token)
         if resp.session:
             return _store_session(resp.session)
-    except Exception:  # noqa: BLE001 - bad / expired token
+        st.session_state["_refresh_debug"] = (
+            f"refresh_session returned no session; "
+            f"token_len={len(refresh_token)} token_preview={refresh_token[:6]}..."
+        )
+    except Exception as e:  # noqa: BLE001 - bad / expired token
+        st.session_state["_refresh_debug"] = (
+            f"refresh_session raised {type(e).__name__}: {e!r} "
+            f"token_len={len(refresh_token)} token_preview={refresh_token[:6]}..."
+        )
         _delete_refresh_cookie()
     return None
 
