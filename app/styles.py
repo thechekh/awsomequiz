@@ -485,8 +485,10 @@ footer {
    containers that share the .element-container class. ------------------- */
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="extra_streamlit_components"]),
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="CookieManager"]),
+[data-testid="stAppViewContainer"] .element-container:has(iframe[height="0"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
-[data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]) {
+[data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]),
+[data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[height="0"]) {
     display: none !important;
     height: 0 !important;
     min-height: 0 !important;
@@ -497,25 +499,23 @@ footer {
 /* And as a fallback, hide the raw iframes themselves (this rule is safe
    to apply everywhere -- the wrapper visibility is what matters above). */
 iframe[title*="extra_streamlit_components"],
-iframe[title*="CookieManager"] {
+iframe[title*="CookieManager"],
+iframe[height="0"] {
     display: none !important;
     height: 0 !important;
 }
 
 /* Force the sidebar to render. Streamlit's auto-collapse for
    position="hidden" navigation (used on the unauth pages) sometimes carries
-   over to authenticated reruns. Explicitly keep the sidebar slot visible
-   whenever it has content. */
-[data-testid="stSidebar"] {
-    display: block !important;
+   over to authenticated reruns. We deliberately do NOT override the
+   collapsed state here -- Streamlit's own CSS keeps the toggle arrow
+   visible (in a small strip) when aria-expanded="false". A previous
+   revision zeroed the width on collapse, which on some Streamlit builds
+   also hid the re-expand toggle, leaving users with no visible sidebar
+   and no way back. */
+[data-testid="stSidebar"][aria-expanded="true"] {
     min-width: 244px !important;
     width: 244px !important;
-}
-[data-testid="stSidebar"][aria-expanded="false"] {
-    /* If the user has collapsed it manually, respect that -- the toggle
-       arrow still appears so they can re-expand. */
-    min-width: 0 !important;
-    width: 0 !important;
 }
 
 /* Style-only st.markdown injections (CSS, JS, hidden helpers) shouldn't

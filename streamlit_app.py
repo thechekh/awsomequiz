@@ -10,6 +10,7 @@ Two responsibilities:
 from __future__ import annotations
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 import extra_streamlit_components as stx
 
@@ -206,6 +207,47 @@ if new_dark != st.session_state.get(DARK_MODE_KEY):
 # signed-in label + sign-out. Lives here (not in each page) so it survives
 # navigation. Stats queries are @st.cache_data(ttl=30) so the fetch is cheap.
 if session:
+    # initial_sidebar_state="expanded" on st.set_page_config only takes
+    # effect on cold load. After login (a rerun, not a cold load), the
+    # sidebar may stay collapsed from the prior position="hidden" unauth
+    # render. Reach into the parent document from this 0-height iframe and
+    # click the expand control once per browser session. We must use
+    # components.v1.html because st.markdown strips <script>.
+    components.html(
+        """
+        <script>
+        (function () {
+            const flag = '__awsomequizExpanded';
+            const tryExpand = () => {
+                try {
+                    if (window.parent[flag]) return true;
+                    const doc = window.parent.document;
+                    const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+                    if (!sidebar) return false;
+                    if (sidebar.getAttribute('aria-expanded') !== 'false') {
+                        window.parent[flag] = true;
+                        return true;
+                    }
+                    const ctrl =
+                        doc.querySelector('[data-testid="stSidebarCollapsedControl"] button') ||
+                        doc.querySelector('[data-testid="collapsedControl"] button');
+                    if (ctrl) {
+                        ctrl.click();
+                        window.parent[flag] = true;
+                        return true;
+                    }
+                } catch (_) {}
+                return false;
+            };
+            if (!tryExpand()) {
+                const t = setInterval(() => { if (tryExpand()) clearInterval(t); }, 200);
+                setTimeout(() => clearInterval(t), 4000);
+            }
+        })();
+        </script>
+        """,
+        height=0,
+    )
     with st.sidebar:
         _render_sidebar_mini_stats(session)
         st.divider()
