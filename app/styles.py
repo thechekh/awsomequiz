@@ -480,11 +480,13 @@ footer {
 
 /* ----- Hide invisible utility components (cookie manager). Renders as a
    small iframe whose container can take vertical space and cause flicker
-   / layout shift on dark-mode toggle rerun. ------------------------------ */
-.element-container:has(iframe[title*="extra_streamlit_components"]),
-.element-container:has(iframe[title*="CookieManager"]),
-[data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
-[data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]) {
+   / layout shift on dark-mode toggle rerun. Scoped to the MAIN app area
+   only -- a broad :has() rule was inadvertently collapsing sidebar
+   containers that share the .element-container class. ------------------- */
+[data-testid="stAppViewContainer"] .element-container:has(iframe[title*="extra_streamlit_components"]),
+[data-testid="stAppViewContainer"] .element-container:has(iframe[title*="CookieManager"]),
+[data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
+[data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]) {
     display: none !important;
     height: 0 !important;
     min-height: 0 !important;
@@ -492,10 +494,28 @@ footer {
     padding: 0 !important;
     line-height: 0 !important;
 }
+/* And as a fallback, hide the raw iframes themselves (this rule is safe
+   to apply everywhere -- the wrapper visibility is what matters above). */
 iframe[title*="extra_streamlit_components"],
 iframe[title*="CookieManager"] {
     display: none !important;
     height: 0 !important;
+}
+
+/* Force the sidebar to render. Streamlit's auto-collapse for
+   position="hidden" navigation (used on the unauth pages) sometimes carries
+   over to authenticated reruns. Explicitly keep the sidebar slot visible
+   whenever it has content. */
+[data-testid="stSidebar"] {
+    display: block !important;
+    min-width: 244px !important;
+    width: 244px !important;
+}
+[data-testid="stSidebar"][aria-expanded="false"] {
+    /* If the user has collapsed it manually, respect that -- the toggle
+       arrow still appears so they can re-expand. */
+    min-width: 0 !important;
+    width: 0 !important;
 }
 
 /* Style-only st.markdown injections (CSS, JS, hidden helpers) shouldn't
