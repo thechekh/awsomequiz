@@ -9,15 +9,13 @@ Two responsibilities:
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+import json
+from urllib.parse import unquote
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-import extra_streamlit_components as stx
-
 from app.auth import (
-    COOKIE_MANAGER_KEY,
     COOKIE_MAX_AGE_DAYS,
     COOKIE_NAME,
     DARK_MODE_KEY,
@@ -82,55 +80,70 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# CookieManager is a Streamlit widget; it has to be instantiated at the top
-# of every script run (not inside a cached function). We stash the instance
-# in session_state so app/auth.py helpers can read/write cookies without
-# re-declaring the widget (which would duplicate the key).
-cookie_manager = stx.CookieManager(key="awsomequiz_cookies")
-st.session_state[COOKIE_MANAGER_KEY] = cookie_manager
+# Cookie I/O bypasses extra-streamlit-components' CookieManager. Its React
+# bundle (2.*.chunk.js) reliably aborts on Streamlit Cloud (net::ERR_ABORTED),
+# so .set() never reaches a working handler -- confirmed by Playwright:
+# neither awsomequiz_rt nor awsomequiz_dark land, even with display:block
+# forcing the iframe to stay mounted. Inline JS in components.html has no
+# external chunks to fetch, so the write is synchronous and lands before
+# any rerun unmounts the iframe. Reads come from st.context.headers, which
+# is the live HTTP request and doesn't depend on any iframe loading.
+
+def _write_cookie_via_js(name: str, value: str, max_age_days: int) -> None:
+    """Set a first-party cookie by injecting inline JS into a height-0 iframe."""
+    components.html(
+        f"""
+        <script>
+        try {{
+            const k = {json.dumps(name)};
+            const v = encodeURIComponent({json.dumps(value)});
+            document.cookie =
+                k + "=" + v + "; max-age={int(max_age_days * 86400)}"
+                + "; path=/; SameSite=Lax; Secure";
+        }} catch (e) {{}}
+        </script>
+        """,
+        height=0,
+    )
 
 
-# ---------------------------------------------------------------------------
-# Refresh-token cookie ops live HERE (top of streamlit_app.py) because page
-# callbacks (login.py form -> sign_in -> _save_refresh_cookie -> st.rerun)
-# tear down their DOM positions before the cookie write can complete --
-# the iframe never lands the document.cookie call. By rendering the cookie
-# operation at this stable position on the post-rerun script run, the
-# iframe stays mounted for the full home-page render and the write
-# completes reliably. auth._save_refresh_cookie / _delete_refresh_cookie
-# just queue the request into session_state; we process it here.
-# ---------------------------------------------------------------------------
+def _delete_cookie_via_js(name: str) -> None:
+    """Clear a first-party cookie by setting max-age=0 from a same-origin iframe."""
+    components.html(
+        f"""
+        <script>
+        try {{
+            const k = {json.dumps(name)};
+            document.cookie = k + "=; max-age=0; path=/; SameSite=Lax; Secure";
+        }} catch (e) {{}}
+        </script>
+        """,
+        height=0,
+    )
+
+
+def _read_cookie_from_headers(name: str) -> str | None:
+    try:
+        headers = st.context.headers
+    except Exception:  # noqa: BLE001 - context may not be ready in tests
+        return None
+    cookie_header = headers.get("Cookie") or headers.get("cookie") or ""
+    for chunk in cookie_header.split(";"):
+        chunk = chunk.strip()
+        if chunk.startswith(f"{name}="):
+            return unquote(chunk[len(name) + 1:])
+    return None
+
 
 _pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
 _pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
 if _pending_save:
-    # Mirror the dark-mode cookie pattern EXACTLY: stable key, no extra
-    # kwargs (no same_site, no path -- the library defaults work and
-    # adding extras was burning the call). Same pattern that successfully
-    # writes awsomequiz_dark also writes awsomequiz_rt from here.
-    try:
-        cookie_manager.set(
-            COOKIE_NAME,
-            _pending_save,
-            expires_at=datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS),
-            key="refresh_cookie_set",
-        )
-    except Exception:  # noqa: BLE001 - cookie failure must not block render
-        pass
+    _write_cookie_via_js(COOKIE_NAME, _pending_save, COOKIE_MAX_AGE_DAYS)
 elif _pending_delete:
-    try:
-        cookie_manager.delete(COOKIE_NAME, key="refresh_cookie_delete")
-    except Exception:  # noqa: BLE001
-        pass
+    _delete_cookie_via_js(COOKIE_NAME)
 
-# Dark-mode preference: try cookie first (so the choice survives reloads),
-# fall back to whatever's in session_state, default light.
 if DARK_MODE_KEY not in st.session_state:
-    try:
-        cookie_val = cookie_manager.get(DARK_MODE_COOKIE)
-        st.session_state[DARK_MODE_KEY] = (cookie_val == "1")
-    except Exception:  # noqa: BLE001 - cookie not yet ready on first render
-        st.session_state[DARK_MODE_KEY] = False
+    st.session_state[DARK_MODE_KEY] = _read_cookie_from_headers(DARK_MODE_COOKIE) == "1"
 
 # Single CSS injection (combines light base + optional dark overrides). This
 # matters because toggling dark used to add/remove a SECOND st.markdown,
@@ -231,16 +244,7 @@ with toggle_col:
     )
 if new_dark != st.session_state.get(DARK_MODE_KEY):
     st.session_state[DARK_MODE_KEY] = new_dark
-    try:
-        from datetime import datetime, timedelta, timezone
-        cookie_manager.set(
-            DARK_MODE_COOKIE,
-            "1" if new_dark else "0",
-            expires_at=datetime.now(timezone.utc) + timedelta(days=365),
-            key="dark_mode_cookie_set",
-        )
-    except Exception:  # noqa: BLE001 - cookie failure is non-fatal
-        pass
+    _write_cookie_via_js(DARK_MODE_COOKIE, "1" if new_dark else "0", 365)
     st.rerun()
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the

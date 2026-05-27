@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import os
 import time
-from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 import streamlit as st
@@ -25,16 +24,12 @@ COOKIE_MAX_AGE_DAYS = 30
 DARK_MODE_KEY = "dark_mode"  # Shared so pages can render theme-aware UI bits.
 OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 
-# CookieManager (from extra-streamlit-components, used for dark-mode persistence)
-# is instantiated at the top of streamlit_app.py and stashed in session_state
-# under this key so other modules can access it without re-declaring the widget.
-COOKIE_MANAGER_KEY = "_cookie_manager"
-
 # ---------------------------------------------------------------------------
 # Browser-cookie persistence for the Supabase refresh token (login survives
 # page reloads). The actual document.cookie write happens in streamlit_app.py
-# at the top of the script -- the helpers below just queue the request via
-# session_state. See _save_refresh_cookie for why.
+# at the top of the script via inline-JS components.html (CookieManager's
+# React chunk aborts on Streamlit Cloud). The helpers below just queue the
+# request via session_state. See _save_refresh_cookie for why.
 # ---------------------------------------------------------------------------
 
 PENDING_SAVE_KEY = "_pending_refresh_cookie_save"
