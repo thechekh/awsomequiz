@@ -12,7 +12,11 @@ from __future__ import annotations
 import streamlit as st
 
 from app.auth import (
+    COOKIE_MAX_AGE_DAYS,
+    COOKIE_NAME,
     DARK_MODE_KEY,
+    PENDING_DELETE_KEY,
+    PENDING_SAVE_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -21,6 +25,7 @@ from app.auth import (
     verify_otp,
 )
 from app.cookies import (
+    delete_cookie,
     read_cookie_from_headers,
     write_cookie,
 )
@@ -34,6 +39,7 @@ from app.queries import (
 from app.styles import render_combined_css
 
 DARK_MODE_COOKIE = "awsomequiz_dark"
+_PENDING_DARK_WRITE_KEY = "_pending_dark_cookie_write"
 
 
 def _render_sidebar_cert_picker() -> None:
@@ -109,6 +115,22 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Drain any queued cookie write/delete BEFORE anything else can call st.rerun().
+# Callers (auth flows, dark-mode toggle) queue into session_state instead of
+# writing inline because the immediately-following rerun discards UI elements
+# (including st.html script injections) registered in the same script run.
+# Rendering here, at the top of the file, means the JS lands before the user
+# can trigger another rerun.
+_pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
+_pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
+if _pending_save:
+    write_cookie(COOKIE_NAME, _pending_save, COOKIE_MAX_AGE_DAYS)
+elif _pending_delete:
+    delete_cookie(COOKIE_NAME)
+_pending_dark = st.session_state.pop(_PENDING_DARK_WRITE_KEY, None)
+if _pending_dark is not None:
+    write_cookie(DARK_MODE_COOKIE, _pending_dark, 365)
 
 if DARK_MODE_KEY not in st.session_state:
     st.session_state[DARK_MODE_KEY] = read_cookie_from_headers(DARK_MODE_COOKIE) == "1"
@@ -216,7 +238,10 @@ with toggle_col:
     )
 if new_dark != st.session_state.get(DARK_MODE_KEY):
     st.session_state[DARK_MODE_KEY] = new_dark
-    write_cookie(DARK_MODE_COOKIE, "1" if new_dark else "0", 365)
+    # Queue rather than write inline -- the st.rerun() below discards any
+    # st.html element registered after this point. The top-of-script drain
+    # picks up the queued write on the next run.
+    st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
     st.rerun()
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the

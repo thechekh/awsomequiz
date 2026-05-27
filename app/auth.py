@@ -17,10 +17,8 @@ from typing import Literal
 import streamlit as st
 
 from app.cookies import (
-    delete_cookie,
     read_cookie_client_side,
     read_cookie_from_headers,
-    write_cookie,
 )
 from app.db import get_supabase
 
@@ -33,16 +31,25 @@ OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 # ---------------------------------------------------------------------------
 # Browser-cookie persistence for the Supabase refresh token (login survives
 # page reloads). All cookie I/O is JS-based -- see app/cookies.py for the
-# rationale. Reads check the URL relay set up by streamlit_app.py and fall
-# back to st.context.headers for local dev (where the Cookie header IS
-# delivered to the app).
+# rationale. Reads check the cookie_reader custom component (production) and
+# fall back to st.context.headers for local dev. Writes/deletes are queued
+# into session_state instead of fired inline because callers (login form,
+# OAuth callback) immediately call st.rerun(), which discards any UI element
+# (including st.html script injections) registered in the current script run.
+# The top of streamlit_app.py drains the queue at a stable position BEFORE
+# any rerun can fire, so the cookie operation always lands.
 # ---------------------------------------------------------------------------
+
+PENDING_SAVE_KEY = "_pending_refresh_cookie_save"
+PENDING_DELETE_KEY = "_pending_refresh_cookie_delete"
 
 
 def _save_refresh_cookie(refresh_token: str) -> None:
     if not refresh_token:
         return
-    write_cookie(COOKIE_NAME, refresh_token, COOKIE_MAX_AGE_DAYS)
+    st.session_state[PENDING_SAVE_KEY] = refresh_token
+    # If a delete was queued earlier in the same run, the save wins.
+    st.session_state.pop(PENDING_DELETE_KEY, None)
 
 
 def _read_refresh_cookie() -> str | None:
@@ -64,7 +71,8 @@ def _read_refresh_cookie() -> str | None:
 
 
 def _delete_refresh_cookie() -> None:
-    delete_cookie(COOKIE_NAME)
+    st.session_state[PENDING_DELETE_KEY] = True
+    st.session_state.pop(PENDING_SAVE_KEY, None)
 
 
 def restore_session_from_cookie() -> dict | None:
