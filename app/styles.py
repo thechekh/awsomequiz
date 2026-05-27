@@ -488,12 +488,19 @@ footer {
    the CookieManager -- it can't read/write cookies, so refresh tokens
    don't persist across page reloads. Move them visually off-flow with
    absolute positioning instead so they stay functional. */
+/* CRITICAL: must override extra_streamlit_components' own injected CSS, which
+   does `.element-container:has(iframe[height="0"]) { display: none; }` (no
+   !important). display:none prevents the iframe's JS from running per HTML
+   spec, which means cookie set/get calls silently fail. We force display:block
+   !important and push the container off-screen instead. */
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="extra_streamlit_components"]),
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="CookieManager"]),
 [data-testid="stAppViewContainer"] .element-container:has(iframe[height="0"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[height="0"]) {
+    display: block !important;
+    visibility: visible !important;
     position: absolute !important;
     left: -9999px !important;
     top: -9999px !important;
@@ -504,10 +511,11 @@ footer {
     margin: 0 !important;
     padding: 0 !important;
 }
-/* Same treatment for raw iframes (these need to stay loaded too). */
+/* Same treatment for raw iframes -- keep them loaded but visually offscreen. */
 iframe[title*="extra_streamlit_components"],
 iframe[title*="CookieManager"],
 iframe[height="0"] {
+    display: block !important;
     visibility: hidden !important;
     height: 1px !important;
     width: 1px !important;
