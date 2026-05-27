@@ -9,24 +9,23 @@ Two responsibilities:
 
 from __future__ import annotations
 
-import json
-from urllib.parse import unquote
-
 import streamlit as st
 import streamlit.components.v1 as components
 
 from app.auth import (
-    COOKIE_MAX_AGE_DAYS,
     COOKIE_NAME,
     DARK_MODE_KEY,
-    PENDING_DELETE_KEY,
-    PENDING_SAVE_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
     restore_session_from_cookie,
     sign_out,
     verify_otp,
+)
+from app.cookies import (
+    read_cookie_from_headers,
+    trigger_relay,
+    write_cookie,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
 from app.styles import render_combined_css
@@ -80,70 +79,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Cookie I/O bypasses extra-streamlit-components' CookieManager. Its React
-# bundle (2.*.chunk.js) reliably aborts on Streamlit Cloud (net::ERR_ABORTED),
-# so .set() never reaches a working handler -- confirmed by Playwright:
-# neither awsomequiz_rt nor awsomequiz_dark land, even with display:block
-# forcing the iframe to stay mounted. Inline JS in components.html has no
-# external chunks to fetch, so the write is synchronous and lands before
-# any rerun unmounts the iframe. Reads come from st.context.headers, which
-# is the live HTTP request and doesn't depend on any iframe loading.
-
-def _write_cookie_via_js(name: str, value: str, max_age_days: int) -> None:
-    """Set a first-party cookie by injecting inline JS into a height-0 iframe."""
-    components.html(
-        f"""
-        <script>
-        try {{
-            const k = {json.dumps(name)};
-            const v = encodeURIComponent({json.dumps(value)});
-            document.cookie =
-                k + "=" + v + "; max-age={int(max_age_days * 86400)}"
-                + "; path=/; SameSite=Lax; Secure";
-        }} catch (e) {{}}
-        </script>
-        """,
-        height=0,
-    )
-
-
-def _delete_cookie_via_js(name: str) -> None:
-    """Clear a first-party cookie by setting max-age=0 from a same-origin iframe."""
-    components.html(
-        f"""
-        <script>
-        try {{
-            const k = {json.dumps(name)};
-            document.cookie = k + "=; max-age=0; path=/; SameSite=Lax; Secure";
-        }} catch (e) {{}}
-        </script>
-        """,
-        height=0,
-    )
-
-
-def _read_cookie_from_headers(name: str) -> str | None:
-    try:
-        headers = st.context.headers
-    except Exception:  # noqa: BLE001 - context may not be ready in tests
-        return None
-    cookie_header = headers.get("Cookie") or headers.get("cookie") or ""
-    for chunk in cookie_header.split(";"):
-        chunk = chunk.strip()
-        if chunk.startswith(f"{name}="):
-            return unquote(chunk[len(name) + 1:])
-    return None
-
-
-_pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
-_pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
-if _pending_save:
-    _write_cookie_via_js(COOKIE_NAME, _pending_save, COOKIE_MAX_AGE_DAYS)
-elif _pending_delete:
-    _delete_cookie_via_js(COOKIE_NAME)
-
 if DARK_MODE_KEY not in st.session_state:
-    st.session_state[DARK_MODE_KEY] = _read_cookie_from_headers(DARK_MODE_COOKIE) == "1"
+    st.session_state[DARK_MODE_KEY] = read_cookie_from_headers(DARK_MODE_COOKIE) == "1"
 
 # Single CSS injection (combines light base + optional dark overrides). This
 # matters because toggling dark used to add/remove a SECOND st.markdown,
@@ -202,10 +139,14 @@ _handle_auth_callback()
 
 # If st.session_state has no session (e.g. after a page reload, which wipes
 # session_state on Streamlit Cloud), try to restore from the refresh-token
-# cookie. No-op if the cookie isn't present.
+# cookie. Streamlit Cloud's proxy strips the Cookie header before it reaches
+# the WebSocket upgrade, so restore_session_from_cookie() returns None on
+# the cold load -- the relay below then asks JS to read document.cookie and
+# bounce the value back as ?__rt_relay=, which the next script run picks up.
 restore_session_from_cookie()
-
 session = get_session()
+if not session:
+    trigger_relay(COOKIE_NAME)
 apply_session_to_client()
 
 if session:
@@ -244,7 +185,7 @@ with toggle_col:
     )
 if new_dark != st.session_state.get(DARK_MODE_KEY):
     st.session_state[DARK_MODE_KEY] = new_dark
-    _write_cookie_via_js(DARK_MODE_COOKIE, "1" if new_dark else "0", 365)
+    write_cookie(DARK_MODE_COOKIE, "1" if new_dark else "0", 365)
     st.rerun()
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the

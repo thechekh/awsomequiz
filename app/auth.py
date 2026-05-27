@@ -16,6 +16,12 @@ from typing import Literal
 
 import streamlit as st
 
+from app.cookies import (
+    delete_cookie,
+    read_cookie_from_headers,
+    read_relay_param,
+    write_cookie,
+)
 from app.db import get_supabase
 
 SESSION_KEY = "supabase_session"
@@ -26,63 +32,36 @@ OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 
 # ---------------------------------------------------------------------------
 # Browser-cookie persistence for the Supabase refresh token (login survives
-# page reloads). The actual document.cookie write happens in streamlit_app.py
-# at the top of the script via inline-JS components.html (CookieManager's
-# React chunk aborts on Streamlit Cloud). The helpers below just queue the
-# request via session_state. See _save_refresh_cookie for why.
+# page reloads). All cookie I/O is JS-based -- see app/cookies.py for the
+# rationale. Reads check the URL relay set up by streamlit_app.py and fall
+# back to st.context.headers for local dev (where the Cookie header IS
+# delivered to the app).
 # ---------------------------------------------------------------------------
-
-PENDING_SAVE_KEY = "_pending_refresh_cookie_save"
-PENDING_DELETE_KEY = "_pending_refresh_cookie_delete"
 
 
 def _save_refresh_cookie(refresh_token: str) -> None:
-    """Queue a refresh-token cookie write for streamlit_app.py to perform.
-
-    Direct cm.set() / components.html(...) calls from this module are at
-    unstable DOM positions (login.py form callbacks, page bodies) -- the
-    immediately-following st.rerun() tears down those positions before
-    the cookie iframe can process the write, so the cookie never lands.
-    streamlit_app.py runs from the top on every rerun, so any cookie
-    operation rendered there has a stable DOM position and survives the
-    transition from login -> home.
-    """
     if not refresh_token:
         return
-    st.session_state[PENDING_SAVE_KEY] = refresh_token
-    # If a delete was queued earlier in the same run, the save wins.
-    st.session_state.pop(PENDING_DELETE_KEY, None)
+    write_cookie(COOKIE_NAME, refresh_token, COOKIE_MAX_AGE_DAYS)
 
 
 def _read_refresh_cookie() -> str | None:
-    """Read the refresh token from the HTTP request headers.
+    """Return the refresh token from the URL relay or request headers.
 
-    Server-side and synchronous. Doesn't depend on the CookieManager iframe
-    having loaded, which solves the cold-load race where the iframe hadn't
-    sent cookies back to Python yet on the first script run after a refresh.
+    Streamlit Cloud's proxy strips Cookie from the WebSocket upgrade, so
+    st.context.headers is empty in prod. The relay (a JS-driven URL hop
+    set up in streamlit_app.py) reads document.cookie client-side and
+    bounces the value back via ?__rt_relay=, which we pick up here.
+    Locally the header path still works.
     """
-    try:
-        headers = st.context.headers
-    except Exception:  # noqa: BLE001 - st.context may not be ready in some test contexts
-        return None
-    cookie_header = headers.get("Cookie") or headers.get("cookie") or ""
-    for chunk in cookie_header.split(";"):
-        chunk = chunk.strip()
-        if chunk.startswith(f"{COOKIE_NAME}="):
-            from urllib.parse import unquote
-            return unquote(chunk[len(COOKIE_NAME) + 1:])
-    return None
+    relay = read_relay_param()
+    if relay:
+        return relay
+    return read_cookie_from_headers(COOKIE_NAME)
 
 
 def _delete_refresh_cookie() -> None:
-    """Queue a refresh-token cookie deletion for streamlit_app.py to perform.
-
-    Same reasoning as _save_refresh_cookie: page-callback DOM positions
-    are torn down before the cookie operation can complete; queue and
-    let the stable top of streamlit_app.py do the work.
-    """
-    st.session_state[PENDING_DELETE_KEY] = True
-    st.session_state.pop(PENDING_SAVE_KEY, None)
+    delete_cookie(COOKIE_NAME)
 
 
 def restore_session_from_cookie() -> dict | None:
@@ -96,24 +75,8 @@ def restore_session_from_cookie() -> dict | None:
     if st.session_state.get(SESSION_KEY):
         return st.session_state[SESSION_KEY]
 
-    # TEMP DEBUG: try BOTH st.context.headers AND st.context.cookies
-    try:
-        headers = st.context.headers
-        cookie_header = headers.get("Cookie") or headers.get("cookie") or "(none)"
-        header_keys = list(headers.keys())
-        ctx_cookies = getattr(st.context, "cookies", None)
-        ctx_cookie_keys = list(ctx_cookies.keys()) if ctx_cookies else "(no st.context.cookies attr)"
-        st.session_state["_refresh_debug_headers"] = (
-            f"raw_Cookie_header_len={len(cookie_header)} "
-            f"all_header_keys={header_keys[:15]} "
-            f"ctx_cookie_keys={ctx_cookie_keys}"
-        )
-    except Exception as e:  # noqa: BLE001
-        st.session_state["_refresh_debug_headers"] = f"headers err: {type(e).__name__}: {e!r}"
-
     refresh_token = _read_refresh_cookie()
     if not refresh_token:
-        st.session_state["_refresh_debug"] = "no refresh_token in cookies"
         return None
 
     try:
@@ -121,15 +84,7 @@ def restore_session_from_cookie() -> dict | None:
         resp = client.auth.refresh_session(refresh_token)
         if resp.session:
             return _store_session(resp.session)
-        st.session_state["_refresh_debug"] = (
-            f"refresh_session returned no session; "
-            f"token_len={len(refresh_token)} token_preview={refresh_token[:6]}..."
-        )
-    except Exception as e:  # noqa: BLE001 - bad / expired token
-        st.session_state["_refresh_debug"] = (
-            f"refresh_session raised {type(e).__name__}: {e!r} "
-            f"token_len={len(refresh_token)} token_preview={refresh_token[:6]}..."
-        )
+    except Exception:  # noqa: BLE001 - bad / expired token
         _delete_refresh_cookie()
     return None
 

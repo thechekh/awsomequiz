@@ -22,6 +22,7 @@ def test_app_modules_import() -> None:
     for name in (
         "app",
         "app.auth",
+        "app.cookies",
         "app.db",
         "app.queries",
         "app.session",
