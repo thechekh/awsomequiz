@@ -10,12 +10,14 @@ client out of sync.
 
 from __future__ import annotations
 
+import json
 import os
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from app.db import get_supabase
 
@@ -51,51 +53,78 @@ def _cookie_manager():
 
 
 def _save_refresh_cookie(refresh_token: str) -> None:
+    """Write the refresh token to a browser cookie via direct JS injection.
+
+    We bypass extra-streamlit-components' CookieManager.set() here because
+    its iframe-roundtrip race is fatal for our use case: the refresh-token
+    set is followed immediately by st.rerun() that unmounts the login page
+    (the iframe is torn down before it can process the set message), so
+    the cookie never actually lands in the browser. A direct JS write via
+    a 0-height components.html runs document.cookie = "..." on iframe load
+    -- effectively synchronous in the browser, no message passing needed.
+    """
     if not refresh_token:
         return
-    cm = _cookie_manager()
-    if cm is None:
-        return
     expires_at = datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)
-    try:
-        # same_site="lax" + explicit path="/" are required for the cookie
-        # to ride through the Streamlit Cloud shell -> app-iframe load on
-        # a hard refresh. Default "strict" + iframe context can result in
-        # the browser dropping the cookie on full-page navigation.
-        cm.set(
-            COOKIE_NAME,
-            refresh_token,
-            expires_at=expires_at,
-            same_site="lax",
-            path="/",
-            key="cookie_set",
-        )
-    except Exception:  # noqa: BLE001 - never block sign-in on cookie failure
-        pass
+    expires_str = expires_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    # JSON-encode for safe interpolation into the JS literal (escapes quotes
+    # and any control characters that could break out of the string).
+    token_js = json.dumps(refresh_token)
+    name_js = json.dumps(COOKIE_NAME)
+    expires_js = json.dumps(expires_str)
+    components.html(
+        f"""<script>
+        (function () {{
+            try {{
+                var doc = (window.parent && window.parent.document) || document;
+                doc.cookie = {name_js} + "=" + encodeURIComponent({token_js})
+                    + "; path=/; expires=" + {expires_js}
+                    + "; SameSite=Lax; Secure";
+            }} catch (e) {{}}
+        }})();
+        </script>""",
+        height=0,
+    )
 
 
 def _read_refresh_cookie() -> str | None:
-    cm = _cookie_manager()
-    if cm is None:
-        return None
+    """Read the refresh token from the HTTP request headers.
+
+    Server-side and synchronous. Doesn't depend on the CookieManager iframe
+    having loaded, which solves the cold-load race where the iframe hadn't
+    sent cookies back to Python yet on the first script run after a refresh.
+    """
     try:
-        return cm.get(COOKIE_NAME)
-    except Exception:  # noqa: BLE001
+        headers = st.context.headers
+    except Exception:  # noqa: BLE001 - st.context may not be ready in some test contexts
         return None
+    cookie_header = headers.get("Cookie") or headers.get("cookie") or ""
+    for chunk in cookie_header.split(";"):
+        chunk = chunk.strip()
+        if chunk.startswith(f"{COOKIE_NAME}="):
+            from urllib.parse import unquote
+            return unquote(chunk[len(COOKIE_NAME) + 1:])
+    return None
 
 
 def _delete_refresh_cookie() -> None:
-    cm = _cookie_manager()
-    if cm is None:
-        return
-    try:
-        cm.delete(COOKIE_NAME, key="cookie_delete")
-    except Exception:  # noqa: BLE001
-        pass
+    """Expire the refresh-token cookie via direct JS injection.
 
-
-_COOKIE_LOAD_RETRY_KEY = "_cookie_load_retry"
-_COOKIE_LOAD_MAX_RETRIES = 2
+    Matches _save_refresh_cookie's approach so sign-out works reliably
+    across page transitions (which also trigger st.rerun()).
+    """
+    name_js = json.dumps(COOKIE_NAME)
+    components.html(
+        f"""<script>
+        (function () {{
+            try {{
+                var doc = (window.parent && window.parent.document) || document;
+                doc.cookie = {name_js} + "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+            }} catch (e) {{}}
+        }})();
+        </script>""",
+        height=0,
+    )
 
 
 def restore_session_from_cookie() -> dict | None:
@@ -103,34 +132,15 @@ def restore_session_from_cookie() -> dict | None:
     exchange it for a fresh session via Supabase. Called from streamlit_app.py
     on every cold start.
 
-    Handles the CookieManager async-load race: on the first script run after
-    a page reload the iframe hasn't sent cookies back yet, so cm.get_all()
-    is empty. If we have NO cookies at all (vs. having cookies but not the
-    refresh one), trigger a single short rerun to give the iframe time to
-    catch up. Bounded retries so an unauth user doesn't loop forever.
+    Synchronous: _read_refresh_cookie now reads from st.context.headers, so
+    no CookieManager-iframe-loading race to manage.
     """
     if st.session_state.get(SESSION_KEY):
         return st.session_state[SESSION_KEY]
 
-    cm = _cookie_manager()
     refresh_token = _read_refresh_cookie()
-
     if not refresh_token:
-        # Distinguish "no cookies at all" (iframe not loaded) from
-        # "cookies loaded but no refresh cookie" (genuine sign-out).
-        try:
-            all_cookies = cm.get_all() if cm is not None else {}
-        except Exception:  # noqa: BLE001
-            all_cookies = {}
-        retries = st.session_state.get(_COOKIE_LOAD_RETRY_KEY, 0)
-        if not all_cookies and retries < _COOKIE_LOAD_MAX_RETRIES:
-            st.session_state[_COOKIE_LOAD_RETRY_KEY] = retries + 1
-            time.sleep(0.4)  # let the CookieManager iframe respond
-            st.rerun()
         return None
-
-    # Cookies loaded -- reset retry counter so subsequent calls don't wait.
-    st.session_state.pop(_COOKIE_LOAD_RETRY_KEY, None)
 
     try:
         client = get_supabase()
