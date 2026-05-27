@@ -10,14 +10,12 @@ client out of sync.
 
 from __future__ import annotations
 
-import json
 import os
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 from app.db import get_supabase
 
@@ -27,64 +25,38 @@ COOKIE_MAX_AGE_DAYS = 30
 DARK_MODE_KEY = "dark_mode"  # Shared so pages can render theme-aware UI bits.
 OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 
-
-# ---------------------------------------------------------------------------
-# Browser-cookie persistence (so login survives page reloads)
-# ---------------------------------------------------------------------------
-#
-# Streamlit's st.session_state is per-tab and doesn't reliably survive a hard
-# reload on Streamlit Cloud. To persist login across reloads we stash the
-# Supabase refresh_token in a first-party cookie via extra-streamlit-components'
-# CookieManager and rehydrate the session on each cold start.
-#
-# The CookieManager IS A WIDGET, so it cannot be wrapped in @st.cache_resource
-# (Streamlit throws CachedWidgetWarning). Instead it's instantiated once per
-# script run at the top of streamlit_app.py and the instance is stashed in
-# session_state under COOKIE_MANAGER_KEY for these helpers to read.
-
-
+# CookieManager (from extra-streamlit-components, used for dark-mode persistence)
+# is instantiated at the top of streamlit_app.py and stashed in session_state
+# under this key so other modules can access it without re-declaring the widget.
 COOKIE_MANAGER_KEY = "_cookie_manager"
 
+# ---------------------------------------------------------------------------
+# Browser-cookie persistence for the Supabase refresh token (login survives
+# page reloads). The actual document.cookie write happens in streamlit_app.py
+# at the top of the script -- the helpers below just queue the request via
+# session_state. See _save_refresh_cookie for why.
+# ---------------------------------------------------------------------------
 
-def _cookie_manager():
-    """Return the CookieManager instance owned by streamlit_app.py (or None
-    if it hasn't been instantiated yet on this rerun)."""
-    return st.session_state.get(COOKIE_MANAGER_KEY)
+PENDING_SAVE_KEY = "_pending_refresh_cookie_save"
+PENDING_DELETE_KEY = "_pending_refresh_cookie_delete"
 
 
 def _save_refresh_cookie(refresh_token: str) -> None:
-    """Write the refresh token to a browser cookie via direct JS injection.
+    """Queue a refresh-token cookie write for streamlit_app.py to perform.
 
-    We bypass extra-streamlit-components' CookieManager.set() here because
-    its iframe-roundtrip race is fatal for our use case: the refresh-token
-    set is followed immediately by st.rerun() that unmounts the login page
-    (the iframe is torn down before it can process the set message), so
-    the cookie never actually lands in the browser. A direct JS write via
-    a 0-height components.html runs document.cookie = "..." on iframe load
-    -- effectively synchronous in the browser, no message passing needed.
+    Direct cm.set() / components.html(...) calls from this module are at
+    unstable DOM positions (login.py form callbacks, page bodies) -- the
+    immediately-following st.rerun() tears down those positions before
+    the cookie iframe can process the write, so the cookie never lands.
+    streamlit_app.py runs from the top on every rerun, so any cookie
+    operation rendered there has a stable DOM position and survives the
+    transition from login -> home.
     """
     if not refresh_token:
         return
-    expires_at = datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)
-    expires_str = expires_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    # JSON-encode for safe interpolation into the JS literal (escapes quotes
-    # and any control characters that could break out of the string).
-    token_js = json.dumps(refresh_token)
-    name_js = json.dumps(COOKIE_NAME)
-    expires_js = json.dumps(expires_str)
-    components.html(
-        f"""<script>
-        (function () {{
-            try {{
-                var doc = (window.parent && window.parent.document) || document;
-                doc.cookie = {name_js} + "=" + encodeURIComponent({token_js})
-                    + "; path=/; expires=" + {expires_js}
-                    + "; SameSite=Lax; Secure";
-            }} catch (e) {{}}
-        }})();
-        </script>""",
-        height=0,
-    )
+    st.session_state[PENDING_SAVE_KEY] = refresh_token
+    # If a delete was queued earlier in the same run, the save wins.
+    st.session_state.pop(PENDING_DELETE_KEY, None)
 
 
 def _read_refresh_cookie() -> str | None:
@@ -108,23 +80,14 @@ def _read_refresh_cookie() -> str | None:
 
 
 def _delete_refresh_cookie() -> None:
-    """Expire the refresh-token cookie via direct JS injection.
+    """Queue a refresh-token cookie deletion for streamlit_app.py to perform.
 
-    Matches _save_refresh_cookie's approach so sign-out works reliably
-    across page transitions (which also trigger st.rerun()).
+    Same reasoning as _save_refresh_cookie: page-callback DOM positions
+    are torn down before the cookie operation can complete; queue and
+    let the stable top of streamlit_app.py do the work.
     """
-    name_js = json.dumps(COOKIE_NAME)
-    components.html(
-        f"""<script>
-        (function () {{
-            try {{
-                var doc = (window.parent && window.parent.document) || document;
-                doc.cookie = {name_js} + "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
-            }} catch (e) {{}}
-        }})();
-        </script>""",
-        height=0,
-    )
+    st.session_state[PENDING_DELETE_KEY] = True
+    st.session_state.pop(PENDING_SAVE_KEY, None)
 
 
 def restore_session_from_cookie() -> dict | None:

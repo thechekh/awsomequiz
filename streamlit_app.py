@@ -9,6 +9,9 @@ Two responsibilities:
 
 from __future__ import annotations
 
+import json
+from datetime import datetime, timedelta, timezone
+
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -16,7 +19,11 @@ import extra_streamlit_components as stx
 
 from app.auth import (
     COOKIE_MANAGER_KEY,
+    COOKIE_MAX_AGE_DAYS,
+    COOKIE_NAME,
     DARK_MODE_KEY,
+    PENDING_DELETE_KEY,
+    PENDING_SAVE_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -82,6 +89,49 @@ st.set_page_config(
 # re-declaring the widget (which would duplicate the key).
 cookie_manager = stx.CookieManager(key="awsomequiz_cookies")
 st.session_state[COOKIE_MANAGER_KEY] = cookie_manager
+
+
+# ---------------------------------------------------------------------------
+# Refresh-token cookie ops live HERE (top of streamlit_app.py) because page
+# callbacks (login.py form -> sign_in -> _save_refresh_cookie -> st.rerun)
+# tear down their DOM positions before the cookie write can complete --
+# the iframe never lands the document.cookie call. By rendering the cookie
+# operation at this stable position on the post-rerun script run, the
+# iframe stays mounted for the full home-page render and the write
+# completes reliably. auth._save_refresh_cookie / _delete_refresh_cookie
+# just queue the request into session_state; we process it here.
+# ---------------------------------------------------------------------------
+
+_pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
+_pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
+if _pending_save:
+    _expires_str = (datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)).strftime(
+        "%a, %d %b %Y %H:%M:%S GMT"
+    )
+    components.html(
+        f"""<script>
+        (function () {{
+            try {{
+                var doc = (window.parent && window.parent.document) || document;
+                doc.cookie = {json.dumps(COOKIE_NAME)} + "=" + encodeURIComponent({json.dumps(_pending_save)})
+                    + "; path=/; expires={_expires_str}; SameSite=Lax; Secure";
+            }} catch (e) {{}}
+        }})();
+        </script>""",
+        height=0,
+    )
+elif _pending_delete:
+    components.html(
+        f"""<script>
+        (function () {{
+            try {{
+                var doc = (window.parent && window.parent.document) || document;
+                doc.cookie = {json.dumps(COOKIE_NAME)} + "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+            }} catch (e) {{}}
+        }})();
+        </script>""",
+        height=0,
+    )
 
 # Dark-mode preference: try cookie first (so the choice survives reloads),
 # fall back to whatever's in session_state, default light.
