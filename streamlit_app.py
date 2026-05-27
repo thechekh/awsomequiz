@@ -9,6 +9,8 @@ Two responsibilities:
 
 from __future__ import annotations
 
+import json
+
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -16,7 +18,9 @@ import extra_streamlit_components as stx
 
 from app.auth import (
     COOKIE_MANAGER_KEY,
+    COOKIE_NAME,
     DARK_MODE_KEY,
+    SESSION_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -124,24 +128,30 @@ def _handle_auth_callback() -> None:
             )
         else:
             # If we landed here in the OAuth popup, signal the parent tab
-            # via BroadcastChannel and self-close. We use BroadcastChannel
-            # because window.opener is nulled during the cross-origin OAuth
-            # redirect chain (Supabase -> GitHub -> back), so opener-based
-            # signaling never reaches the parent.
+            # via BroadcastChannel and self-close. We pass the refresh_token
+            # in the message so the parent can write the cookie itself
+            # before reloading -- relying on the popup's own CookieManager
+            # to persist before close raced and lost ~50% of the time.
+            session = st.session_state.get(SESSION_KEY) or {}
+            payload = json.dumps({
+                "event": "oauth_done",
+                "refresh_token": session.get("refresh_token") or "",
+                "cookie_name": COOKIE_NAME,
+            })
             components.html(
-                """
+                f"""
                 <script>
-                  try {
+                  try {{
                     const ch = new BroadcastChannel('awsomequiz_oauth');
-                    ch.postMessage('oauth_done');
+                    ch.postMessage({payload});
                     ch.close();
-                  } catch (e) { /* not a popup, or no BroadcastChannel */ }
-                  // Try every available method to close ourselves. window.close()
-                  // only works for windows opened by script, which a popup is.
-                  setTimeout(() => {
-                    try { window.top.close(); } catch (e) {}
-                    try { window.close(); } catch (e) {}
-                  }, 250);
+                  }} catch (e) {{ /* no BroadcastChannel support */ }}
+                  // Try to close ourselves. window.close() only works for
+                  // windows opened by script (popups are; regular tabs aren't).
+                  setTimeout(() => {{
+                    try {{ window.top.close(); }} catch (e) {{}}
+                    try {{ window.close(); }} catch (e) {{}}
+                  }}, 350);
                 </script>
                 """,
                 height=0,

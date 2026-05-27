@@ -98,8 +98,13 @@ if github_url:
                 // BroadcastChannel is the resilient way to signal between
                 // popup and parent tab. window.opener gets nulled during
                 // the OAuth redirect chain (cross-origin COOP), so opener-
-                // based signaling fails. A same-origin BroadcastChannel is
+                // based signaling fails. Same-origin BroadcastChannel is
                 // not affected by cross-origin navigation history.
+                //
+                // The popup also INCLUDES the refresh_token in its message
+                // so we (the parent) can write the cookie ourselves before
+                // reloading. Relying on the popup to persist the cookie
+                // before closing raced and lost.
                 document.getElementById('gh-btn').addEventListener('click', function(e) {{
                     e.preventDefault();
                     const p = window.open(
@@ -112,13 +117,22 @@ if github_url:
                         return;
                     }}
 
-                    let reloaded = false;
+                    let handled = false;
                     const ch = new BroadcastChannel('awsomequiz_oauth');
                     const interval = setInterval(checkClosed, 600);
 
+                    function writeCookie(name, value) {{
+                        if (!name || !value) return;
+                        const days = 30;
+                        const exp = new Date(Date.now() + days * 86400000).toUTCString();
+                        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+                        document.cookie = name + '=' + encodeURIComponent(value)
+                            + '; expires=' + exp + '; path=/; SameSite=Lax' + secure;
+                    }}
+
                     function done() {{
-                        if (reloaded) return;
-                        reloaded = true;
+                        if (handled) return;
+                        handled = true;
                         try {{ ch.close(); }} catch (_) {{}}
                         clearInterval(interval);
                         try {{ p.close(); }} catch (_) {{}}
@@ -126,14 +140,19 @@ if github_url:
                     }}
 
                     function checkClosed() {{
-                        // Fallback: if BroadcastChannel doesn't fire (older
-                        // browsers, or popup closed without dispatching),
-                        // detect via popup.closed and reload anyway.
+                        // Fallback: popup closed (manually or otherwise)
+                        // without sending a message. Reload anyway so the
+                        // user isn't stuck on a stale page; cookie may not
+                        // be set, in which case they see the login again.
                         try {{ if (p.closed) done(); }} catch (_) {{}}
                     }}
 
                     ch.addEventListener('message', function(ev) {{
-                        if (ev.data === 'oauth_done') done();
+                        const data = ev.data || {{}};
+                        if (data.event === 'oauth_done') {{
+                            writeCookie(data.cookie_name, data.refresh_token);
+                            done();
+                        }}
                     }});
                 }});
             </script>
