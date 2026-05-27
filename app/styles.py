@@ -725,41 +725,10 @@ def render_combined_css(dark: bool) -> str:
     return f"<style>\n{light_body}\n\n/* === DARK MODE OVERRIDES === */\n{dark_body}\n</style>"
 
 
-# ---------------------------------------------------------------------------
-# Popup-OAuth GitHub button CSS (the link is rendered via raw HTML in
-# pages/login.py so we can attach a window.open onclick handler -- needed for
-# same-tab UX since st.link_button defaults to target=_blank and we can't
-# rewrite the target from inside Streamlit's iframe sandbox).
-# ---------------------------------------------------------------------------
-
-
-GITHUB_BUTTON_CSS = """
-<style>
-.github-signin-btn {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.55rem 1rem;
-    border-radius: 6px;
-    border: 1px solid #D1D5DB;
-    background: #FFFFFF;
-    color: #111827 !important;
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none !important;
-    cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
-}
-.github-signin-btn:hover {
-    border-color: #9CA3AF;
-    background: #FAFAFA;
-    color: #111827 !important;
-    text-decoration: none !important;
-}
-.github-signin-btn:active { background: #F3F4F6; }
-.github-signin-btn svg { flex-shrink: 0; }
-</style>
-"""
+# Note: we tried a popup-based same-tab OAuth flow (custom HTML button +
+# window.open + BroadcastChannel cookie hand-off). It kept losing the session
+# across the popup -> parent boundary (cookie write race, COOP nulled opener,
+# inconsistent window.close behavior across browsers). Reverted to the
+# default st.link_button which opens in a new tab and reliably signs the
+# user in there. The .github-signin-btn class CSS that was here is no
+# longer used and has been removed.

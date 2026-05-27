@@ -9,18 +9,13 @@ Two responsibilities:
 
 from __future__ import annotations
 
-import json
-
 import streamlit as st
-import streamlit.components.v1 as components
 
 import extra_streamlit_components as stx
 
 from app.auth import (
     COOKIE_MANAGER_KEY,
-    COOKIE_NAME,
     DARK_MODE_KEY,
-    SESSION_KEY,
     apply_session_to_client,
     exchange_code,
     get_session,
@@ -29,7 +24,7 @@ from app.auth import (
     verify_otp,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
-from app.styles import GITHUB_BUTTON_CSS, render_combined_css
+from app.styles import render_combined_css
 
 DARK_MODE_COOKIE = "awsomequiz_dark"
 
@@ -103,8 +98,6 @@ st.markdown(
     render_combined_css(bool(st.session_state.get(DARK_MODE_KEY))),
     unsafe_allow_html=True,
 )
-# GitHub custom-button CSS stays in its own block (purely additive, never toggles).
-st.markdown(GITHUB_BUTTON_CSS, unsafe_allow_html=True)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
@@ -125,36 +118,6 @@ def _handle_auth_callback() -> None:
         if result is None:
             st.session_state[AUTH_CALLBACK_ERROR_KEY] = (
                 "Sign-in callback failed (the link may have expired). Please try again."
-            )
-        else:
-            # If we landed here in the OAuth popup, signal the parent tab
-            # via BroadcastChannel and self-close. We pass the refresh_token
-            # in the message so the parent can write the cookie itself
-            # before reloading -- relying on the popup's own CookieManager
-            # to persist before close raced and lost ~50% of the time.
-            session = st.session_state.get(SESSION_KEY) or {}
-            payload = json.dumps({
-                "event": "oauth_done",
-                "refresh_token": session.get("refresh_token") or "",
-                "cookie_name": COOKIE_NAME,
-            })
-            components.html(
-                f"""
-                <script>
-                  try {{
-                    const ch = new BroadcastChannel('awsomequiz_oauth');
-                    ch.postMessage({payload});
-                    ch.close();
-                  }} catch (e) {{ /* no BroadcastChannel support */ }}
-                  // Try to close ourselves. window.close() only works for
-                  // windows opened by script (popups are; regular tabs aren't).
-                  setTimeout(() => {{
-                    try {{ window.top.close(); }} catch (e) {{}}
-                    try {{ window.close(); }} catch (e) {{}}
-                  }}, 350);
-                </script>
-                """,
-                height=0,
             )
         st.rerun()
 
