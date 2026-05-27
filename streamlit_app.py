@@ -9,7 +9,6 @@ Two responsibilities:
 
 from __future__ import annotations
 
-import uuid
 from datetime import datetime, timedelta, timezone
 
 import streamlit as st
@@ -105,28 +104,22 @@ st.session_state[COOKIE_MANAGER_KEY] = cookie_manager
 _pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
 _pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
 if _pending_save:
-    # cookie_manager.set is a proper Streamlit component, NOT a sandboxed
-    # components.html (which renders with null origin -- window.parent.document
-    # access is cross-origin and SecurityError throws). Unique key forces a
-    # fresh component instance so the set actually fires (cm.set short-circuits
-    # if the key was previously used in this session).
+    # Mirror the dark-mode cookie pattern EXACTLY: stable key, no extra
+    # kwargs (no same_site, no path -- the library defaults work and
+    # adding extras was burning the call). Same pattern that successfully
+    # writes awsomequiz_dark also writes awsomequiz_rt from here.
     try:
         cookie_manager.set(
             COOKIE_NAME,
             _pending_save,
             expires_at=datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS),
-            same_site="lax",
-            path="/",
-            key=f"refresh_cookie_save_{uuid.uuid4().hex[:8]}",
+            key="refresh_cookie_set",
         )
     except Exception:  # noqa: BLE001 - cookie failure must not block render
         pass
 elif _pending_delete:
     try:
-        cookie_manager.delete(
-            COOKIE_NAME,
-            key=f"refresh_cookie_delete_{uuid.uuid4().hex[:8]}",
-        )
+        cookie_manager.delete(COOKIE_NAME, key="refresh_cookie_delete")
     except Exception:  # noqa: BLE001
         pass
 
