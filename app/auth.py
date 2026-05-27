@@ -58,7 +58,18 @@ def _save_refresh_cookie(refresh_token: str) -> None:
         return
     expires_at = datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)
     try:
-        cm.set(COOKIE_NAME, refresh_token, expires_at=expires_at, key="cookie_set")
+        # same_site="lax" + explicit path="/" are required for the cookie
+        # to ride through the Streamlit Cloud shell -> app-iframe load on
+        # a hard refresh. Default "strict" + iframe context can result in
+        # the browser dropping the cookie on full-page navigation.
+        cm.set(
+            COOKIE_NAME,
+            refresh_token,
+            expires_at=expires_at,
+            same_site="lax",
+            path="/",
+            key="cookie_set",
+        )
     except Exception:  # noqa: BLE001 - never block sign-in on cookie failure
         pass
 
@@ -83,16 +94,44 @@ def _delete_refresh_cookie() -> None:
         pass
 
 
+_COOKIE_LOAD_RETRY_KEY = "_cookie_load_retry"
+_COOKIE_LOAD_MAX_RETRIES = 2
+
+
 def restore_session_from_cookie() -> dict | None:
     """If no session in st.session_state but a refresh-token cookie exists,
     exchange it for a fresh session via Supabase. Called from streamlit_app.py
     on every cold start.
+
+    Handles the CookieManager async-load race: on the first script run after
+    a page reload the iframe hasn't sent cookies back yet, so cm.get_all()
+    is empty. If we have NO cookies at all (vs. having cookies but not the
+    refresh one), trigger a single short rerun to give the iframe time to
+    catch up. Bounded retries so an unauth user doesn't loop forever.
     """
     if st.session_state.get(SESSION_KEY):
         return st.session_state[SESSION_KEY]
+
+    cm = _cookie_manager()
     refresh_token = _read_refresh_cookie()
+
     if not refresh_token:
+        # Distinguish "no cookies at all" (iframe not loaded) from
+        # "cookies loaded but no refresh cookie" (genuine sign-out).
+        try:
+            all_cookies = cm.get_all() if cm is not None else {}
+        except Exception:  # noqa: BLE001
+            all_cookies = {}
+        retries = st.session_state.get(_COOKIE_LOAD_RETRY_KEY, 0)
+        if not all_cookies and retries < _COOKIE_LOAD_MAX_RETRIES:
+            st.session_state[_COOKIE_LOAD_RETRY_KEY] = retries + 1
+            time.sleep(0.4)  # let the CookieManager iframe respond
+            st.rerun()
         return None
+
+    # Cookies loaded -- reset retry counter so subsequent calls don't wait.
+    st.session_state.pop(_COOKIE_LOAD_RETRY_KEY, None)
+
     try:
         client = get_supabase()
         resp = client.auth.refresh_session(refresh_token)

@@ -483,42 +483,53 @@ footer {
    / layout shift on dark-mode toggle rerun. Scoped to the MAIN app area
    only -- a broad :has() rule was inadvertently collapsing sidebar
    containers that share the .element-container class. ------------------- */
+/* CRITICAL: do NOT use display:none on these containers. iframes inside a
+   display:none parent don't load scripts per the HTML spec, which breaks
+   the CookieManager -- it can't read/write cookies, so refresh tokens
+   don't persist across page reloads. Move them visually off-flow with
+   absolute positioning instead so they stay functional. */
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="extra_streamlit_components"]),
 [data-testid="stAppViewContainer"] .element-container:has(iframe[title*="CookieManager"]),
 [data-testid="stAppViewContainer"] .element-container:has(iframe[height="0"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="extra_streamlit_components"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[title*="CookieManager"]),
 [data-testid="stAppViewContainer"] [data-testid="stCustomComponentV1"]:has(iframe[height="0"]) {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    line-height: 0 !important;
 }
-/* And as a fallback, hide the raw iframes themselves (this rule is safe
-   to apply everywhere -- the wrapper visibility is what matters above). */
+/* Same treatment for raw iframes (these need to stay loaded too). */
 iframe[title*="extra_streamlit_components"],
 iframe[title*="CookieManager"],
 iframe[height="0"] {
-    display: none !important;
-    height: 0 !important;
+    visibility: hidden !important;
+    height: 1px !important;
+    width: 1px !important;
 }
 
-/* Force the sidebar visible. After login (rerun, not cold load), Streamlit
-   leaves the sidebar at aria-expanded="false" -- positioned off-screen
-   (transform translateX or left: -300px) with width 1px. The auto-rendered
-   expand button isn't always reliably visible across Streamlit versions,
-   so we override the collapsed positioning unconditionally. Users can
-   collapse by clicking the in-sidebar collapse button; React state will
-   flip aria-expanded back to false, but our CSS keeps it pinned visible.
-   That's an acceptable trade for "navigation always visible after login". */
-[data-testid="stSidebar"] {
+/* Sidebar widths. Apply our override ONLY in the expanded state -- the
+   collapsed state needs Streamlit's own off-screen slide intact so the
+   user can actually toggle. We rely on the JS expand-on-login below to
+   click stExpandSidebarButton after auth so the user lands on
+   aria-expanded="true" without intervention. */
+[data-testid="stSidebar"][aria-expanded="true"] {
     min-width: 244px !important;
     width: 244px !important;
-    left: 0 !important;
-    transform: none !important;
-    margin-left: 0 !important;
+}
+/* Ensure the auto-rendered expand button (visible when collapsed) is
+   reachable. Streamlit positions it near the top-left of the main area. */
+[data-testid="stExpandSidebarButton"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 1000 !important;
 }
 
 /* Style-only st.markdown injections (CSS, JS, hidden helpers) shouldn't

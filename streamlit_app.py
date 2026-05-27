@@ -209,41 +209,52 @@ if new_dark != st.session_state.get(DARK_MODE_KEY):
 if session:
     # initial_sidebar_state="expanded" on st.set_page_config only takes
     # effect on cold load. After login (a rerun, not a cold load), the
-    # sidebar may stay collapsed from the prior position="hidden" unauth
-    # render. Reach into the parent document from this 0-height iframe and
-    # click the expand control once per browser session. We must use
-    # components.v1.html because st.markdown strips <script>.
+    # sidebar stays collapsed from the prior position="hidden" unauth
+    # render. Poll for the expand button from this iframe and click it
+    # once per browser session. components.v1.html is required because
+    # st.markdown strips <script>.
     components.html(
         """
         <script>
         (function () {
-            const flag = '__awsomequizExpanded';
+            const flag = '__awsomequizExpandClicked';
+            const findClickable = (doc) => {
+                const candidates = [
+                    '[data-testid="stExpandSidebarButton"] button',
+                    '[data-testid="stExpandSidebarButton"]',
+                    'button[data-testid="stExpandSidebarButton"]',
+                    '[data-testid="stSidebarCollapsedControl"] button',
+                    '[data-testid="collapsedControl"] button',
+                ];
+                for (const sel of candidates) {
+                    const el = doc.querySelector(sel);
+                    if (el && (el.tagName === 'BUTTON' || el.querySelector('button') || el.click)) {
+                        return el.tagName === 'BUTTON' ? el : (el.querySelector('button') || el);
+                    }
+                }
+                return null;
+            };
             const tryExpand = () => {
                 try {
-                    if (window.parent[flag]) return true;
                     const doc = window.parent.document;
+                    if (window.parent[flag]) return true;
                     const sidebar = doc.querySelector('[data-testid="stSidebar"]');
-                    if (!sidebar) return false;
-                    if (sidebar.getAttribute('aria-expanded') !== 'false') {
+                    if (sidebar && sidebar.getAttribute('aria-expanded') === 'true') {
                         window.parent[flag] = true;
                         return true;
                     }
-                    const ctrl =
-                        doc.querySelector('[data-testid="stExpandSidebarButton"]') ||
-                        doc.querySelector('[data-testid="stExpandSidebarButton"] button') ||
-                        doc.querySelector('[data-testid="stSidebarCollapsedControl"] button') ||
-                        doc.querySelector('[data-testid="collapsedControl"] button');
-                    if (ctrl) {
-                        ctrl.click();
+                    const btn = findClickable(doc);
+                    if (btn) {
+                        btn.click();
                         window.parent[flag] = true;
                         return true;
                     }
-                } catch (_) {}
+                } catch (_) { return true; /* cross-origin -- give up silently */ }
                 return false;
             };
             if (!tryExpand()) {
-                const t = setInterval(() => { if (tryExpand()) clearInterval(t); }, 200);
-                setTimeout(() => clearInterval(t), 4000);
+                const t = setInterval(() => { if (tryExpand()) clearInterval(t); }, 150);
+                setTimeout(() => clearInterval(t), 6000);
             }
         })();
         </script>
