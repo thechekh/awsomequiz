@@ -59,7 +59,7 @@ q_count = (
 st.markdown(
     f"""
     <div class="dark-stat-block">
-      <div class="dark-stat-block-title">{cert['code']} -- {cert['name']}</div>
+      <div class="dark-stat-block-title">{cert['code']} — {cert['name']}</div>
       <div class="dark-stat-row">
         <div class="dark-stat-item">
           <div class="dark-stat-label">Questions available</div>

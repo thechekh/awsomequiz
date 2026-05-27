@@ -56,12 +56,12 @@ def _render_sidebar_cert_picker() -> None:
     current = get_current_certification()
     current_code = current["code"] if current else available[0]["code"]
     if len(available) == 1:
-        st.sidebar.caption(f"**{available[0]['code']}** -- {available[0]['name']}")
+        st.sidebar.caption(f"**{available[0]['code']} — {available[0]['name']}**")
         return
     chosen = st.sidebar.selectbox(
         "Certification",
         options=[c["code"] for c in available],
-        format_func=lambda code: next(c["name"] for c in available if c["code"] == code),
+        format_func=lambda code: f"{code} — {next(c['name'] for c in available if c['code'] == code)}",
         index=next((i for i, c in enumerate(available) if c["code"] == current_code), 0),
         key="sidebar_cert_picker",
     )

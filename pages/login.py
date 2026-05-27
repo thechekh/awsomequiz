@@ -17,11 +17,6 @@ from app.auth import (
     sign_in,
     sign_up,
 )
-from app.queries import (
-    get_current_certification,
-    list_certifications_with_questions,
-    set_current_certification,
-)
 
 
 def _friendly_error(exc: Exception) -> str:
@@ -38,37 +33,9 @@ st.caption("Sign in to start practicing.")
 if callback_err := st.session_state.pop("auth_callback_error", None):
     st.error(callback_err)
 
-# ---------------------------------------------------------------------------
-# Certification picker. Sets the cert for both the guest-practice flow AND
-# the post-signin experience (the value lives in session_state and is
-# persisted to profiles.current_cert_code on signin via set_current_certification).
-# Only certs with at least one active question show up here -- the metadata
-# rows for the 11 not-yet-loaded certs stay out of the picker so visitors
-# don't pick one and land on an empty question bank.
-# ---------------------------------------------------------------------------
-
-available_certs = list_certifications_with_questions()
-if available_certs:
-    current_cert = get_current_certification()
-    current_code = current_cert["code"] if current_cert else available_certs[0]["code"]
-    _, cmid, _ = st.columns([1, 2, 1])
-    with cmid:
-        if len(available_certs) == 1:
-            st.caption(f"**Practicing:** {available_certs[0]['name']}")
-        else:
-            chosen_code = st.selectbox(
-                "Certification",
-                options=[c["code"] for c in available_certs],
-                format_func=lambda code: next(c["name"] for c in available_certs if c["code"] == code),
-                index=next(
-                    (i for i, c in enumerate(available_certs) if c["code"] == current_code),
-                    0,
-                ),
-                key="login_cert_picker",
-            )
-            if chosen_code != current_code:
-                set_current_certification(chosen_code)
-                st.rerun()
+# Note: cert selection for guests happens on the Guest Practice page itself
+# (after they click "Practice as guest"), not here -- keeps the Login page
+# focused on auth. Logged-in users switch via the sidebar picker.
 
 # ---------------------------------------------------------------------------
 # GitHub OAuth button (centered above the tabs)

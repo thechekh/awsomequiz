@@ -11,7 +11,13 @@ from __future__ import annotations
 
 import streamlit as st
 
-from app.queries import get_current_certification, get_question_with_options, pick_question_ids
+from app.queries import (
+    get_current_certification,
+    get_question_with_options,
+    list_certifications_with_questions,
+    pick_question_ids,
+    set_current_certification,
+)
 
 QUEUE_KEY = "guest_queue"
 INDEX_KEY = "guest_index"
@@ -82,12 +88,37 @@ if summary := st.session_state.get(SUMMARY_KEY):
     st.stop()
 
 # ---------------------------------------------------------------------------
-# Auto-start: dive straight into all questions in random order
+# Certification picker (shown ONLY before the session has started). Guests
+# pick their exam here rather than on Login so the Login page stays focused
+# on auth. The choice writes through to session_state via
+# set_current_certification; profile persistence kicks in only on sign-in.
 # ---------------------------------------------------------------------------
 
 queue = st.session_state.get(QUEUE_KEY)
 if queue is None:
-    _start_guest_session()
+    available = list_certifications_with_questions()
+    if not available:
+        st.error("No certifications have a question bank loaded yet.")
+        st.stop()
+    current = get_current_certification()
+    current_code = current["code"] if current else available[0]["code"]
+    st.markdown("**Which exam do you want to practice?**")
+    if len(available) == 1:
+        st.caption(f"Practicing: **{available[0]['code']} — {available[0]['name']}**")
+    else:
+        chosen = st.selectbox(
+            "Certification",
+            options=[c["code"] for c in available],
+            format_func=lambda code: f"{code} — {next(c['name'] for c in available if c['code'] == code)}",
+            index=next((i for i, c in enumerate(available) if c["code"] == current_code), 0),
+            key="guest_cert_picker",
+            label_visibility="collapsed",
+        )
+        if chosen != current_code:
+            set_current_certification(chosen)
+            st.rerun()
+    if st.button("Start practice", type="primary", use_container_width=True):
+        _start_guest_session()
     st.stop()
 
 # ---------------------------------------------------------------------------

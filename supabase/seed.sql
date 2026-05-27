@@ -23,11 +23,10 @@ values
   -- Professional
   ('SAP-C02',  'AWS Certified Solutions Architect - Professional',       75, 180, 75),
   ('DOP-C02',  'AWS Certified DevOps Engineer - Professional',           75, 180, 75),
-  ('AIP-P01',  'AWS Certified Generative AI Developer - Professional',   75, 180, 75),
+  ('AIP-C01',  'AWS Certified Generative AI Developer - Professional',   75, 180, 75),
   -- Specialty
   ('ANS-C01',  'AWS Certified Advanced Networking - Specialty',          65, 170, 75),
-  ('MLS-C01',  'AWS Certified Machine Learning - Specialty',             65, 180, 75),
-  ('SCS-C02',  'AWS Certified Security - Specialty',                     65, 170, 75)
+  ('SCS-C03',  'AWS Certified Security - Specialty',                     65, 170, 75)
 on conflict (code) do update set
   name              = excluded.name,
   question_count    = excluded.question_count,
