@@ -32,12 +32,12 @@ cert = get_current_certification()
 st.title(f"Welcome, {user['email']}")
 
 if not cert:
-    st.warning("No CLF-C02 certification row found. Run `.\\dev.ps1 db-reset` to seed.")
+    st.warning("No certifications seeded. Run `.\\dev.ps1 db-reset` to seed.")
     st.stop()
 
 st.markdown(
-    '<div class="welcome-intro">'
-    "Practice the AWS Certified Cloud Practitioner (CLF-C02) exam. "
+    f'<div class="welcome-intro">'
+    f"Practice the {cert['name']} ({cert['code']}) exam. "
     "Mix free practice and full timed simulations, drill questions you got wrong, "
     "or study with Anki-style flashcards. Your progress saves automatically across modes."
     "</div>",
@@ -128,7 +128,7 @@ with c2:
         st.switch_page("pages/timed_exam.py")
     st.caption(
         f"{cert['question_count']}Q / {cert['duration_minutes']} min. "
-        f"Mirrors real CLF-C02 (pass at {cert['pass_threshold_pct']}%)."
+        f"Mirrors the real {cert['code']} exam (pass at {cert['pass_threshold_pct']}%)."
     )
 
 c3, c4 = st.columns(2)

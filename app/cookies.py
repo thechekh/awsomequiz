@@ -7,14 +7,14 @@ before the WebSocket upgrade reaches the app, so st.context.headers is
 useless for reads in prod.
 
 Workarounds in this module:
- - write/delete: inject inline JS into a height-0 components.html iframe.
-   No external chunks to fetch, so the write is synchronous within the
-   iframe load.
- - read: a URL hop. trigger_relay() injects JS that reads document.cookie
-   and reloads the page with the value as ?__rt_relay=. read_relay_param()
-   picks the value up server-side and clears the param. Each write also
-   clears the JS sessionStorage flag so future browser refreshes re-trigger
-   the relay.
+ - write/delete: inject inline JS via `st.html(unsafe_allow_javascript=True)`,
+   which embeds the script directly into the parent page DOM (no iframe).
+   document.cookie writes therefore land on the top-level awsomequiz.streamlit.app
+   origin synchronously when the script tag mounts.
+ - read: the cookie_reader custom component (Streamlit declare_component) reads
+   document.cookie inside its iframe and sends the value back via the standard
+   component-value postMessage protocol. No top-navigation needed (which the
+   components.html sandbox blocked).
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ _cookie_reader = components.declare_component(
 
 def write_cookie(name: str, value: str, max_age_days: int) -> None:
     """Set a first-party cookie via inline JS injection."""
-    components.html(
+    st.html(
         f"""
         <script>
         try {{
@@ -47,13 +47,13 @@ def write_cookie(name: str, value: str, max_age_days: int) -> None:
         }} catch (e) {{}}
         </script>
         """,
-        height=0,
+        unsafe_allow_javascript=True,
     )
 
 
 def delete_cookie(name: str) -> None:
     """Clear a first-party cookie by setting max-age=0."""
-    components.html(
+    st.html(
         f"""
         <script>
         try {{
@@ -62,7 +62,7 @@ def delete_cookie(name: str) -> None:
         }} catch (e) {{}}
         </script>
         """,
-        height=0,
+        unsafe_allow_javascript=True,
     )
 
 

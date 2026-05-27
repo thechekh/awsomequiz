@@ -1,4 +1,6 @@
-"""Timed exam page: CLF-C02 simulation (65 questions, 90 min, 70% pass).
+"""Timed exam page: full-exam simulation. Duration / question count / pass
+threshold all come from the active certification row (CLF-C02 = 90 min, 65 Q,
+70%; DVA-C02 = 130 min, 65 Q, 72%; etc.).
 
 State machine:
   1. Summary in state    -> render review screen with explanations.
@@ -243,7 +245,7 @@ if session is None:
 
 if session is None:
     st.markdown(
-        f"Mirrors the real CLF-C02 exam:\n\n"
+        f"Mirrors the real **{cert['code']}** exam:\n\n"
         f"- **{cert['question_count']} questions**, **{cert['duration_minutes']} minutes**\n"
         f"- Pass threshold: **{cert['pass_threshold_pct']}%**\n"
         f"- No per-question feedback during the exam\n"

@@ -10,7 +10,6 @@ Two responsibilities:
 from __future__ import annotations
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 from app.auth import (
     DARK_MODE_KEY,
@@ -227,15 +226,16 @@ if session:
     # initial_sidebar_state="expanded" on st.set_page_config only takes
     # effect on cold load. After login (a rerun, not a cold load), the
     # sidebar stays collapsed from the prior position="hidden" unauth
-    # render. Poll for the expand button from this iframe and click it
-    # once per browser session. components.v1.html is required because
-    # st.markdown strips <script>.
-    components.html(
+    # render. Poll for the expand button from the page DOM and click it
+    # once per browser session. st.html with unsafe_allow_javascript=True
+    # is required because st.markdown strips <script>; the modern
+    # replacement for components.v1.html (deprecated 2026-06-01).
+    st.html(
         """
         <script>
         (function () {
             const flag = '__awsomequizExpandClicked';
-            const findClickable = (doc) => {
+            const findClickable = () => {
                 const candidates = [
                     '[data-testid="stExpandSidebarButton"] button',
                     '[data-testid="stExpandSidebarButton"]',
@@ -244,7 +244,7 @@ if session:
                     '[data-testid="collapsedControl"] button',
                 ];
                 for (const sel of candidates) {
-                    const el = doc.querySelector(sel);
+                    const el = document.querySelector(sel);
                     if (el && (el.tagName === 'BUTTON' || el.querySelector('button') || el.click)) {
                         return el.tagName === 'BUTTON' ? el : (el.querySelector('button') || el);
                     }
@@ -253,20 +253,19 @@ if session:
             };
             const tryExpand = () => {
                 try {
-                    const doc = window.parent.document;
-                    if (window.parent[flag]) return true;
-                    const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+                    if (window[flag]) return true;
+                    const sidebar = document.querySelector('[data-testid="stSidebar"]');
                     if (sidebar && sidebar.getAttribute('aria-expanded') === 'true') {
-                        window.parent[flag] = true;
+                        window[flag] = true;
                         return true;
                     }
-                    const btn = findClickable(doc);
+                    const btn = findClickable();
                     if (btn) {
                         btn.click();
-                        window.parent[flag] = true;
+                        window[flag] = true;
                         return true;
                     }
-                } catch (_) { return true; /* cross-origin -- give up silently */ }
+                } catch (_) { return true; }
                 return false;
             };
             if (!tryExpand()) {
@@ -276,7 +275,7 @@ if session:
         })();
         </script>
         """,
-        height=0,
+        unsafe_allow_javascript=True,
     )
     with st.sidebar:
         _render_sidebar_cert_picker()
