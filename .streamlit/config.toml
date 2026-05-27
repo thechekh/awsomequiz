@@ -8,3 +8,8 @@ font = "sans serif"
 
 [server]
 headless = true
+
+[client]
+# Temporarily show full Python tracebacks in-app so we can diagnose deploy
+# failures without needing Streamlit Cloud's Manage app logs.
+showErrorDetails = "full"
