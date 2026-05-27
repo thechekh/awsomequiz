@@ -18,8 +18,8 @@ import streamlit as st
 
 from app.cookies import (
     delete_cookie,
+    read_cookie_client_side,
     read_cookie_from_headers,
-    read_relay_param,
     write_cookie,
 )
 from app.db import get_supabase
@@ -46,18 +46,21 @@ def _save_refresh_cookie(refresh_token: str) -> None:
 
 
 def _read_refresh_cookie() -> str | None:
-    """Return the refresh token from the URL relay or request headers.
+    """Return the refresh token from the cookie_reader component (production)
+    or st.context.headers (local dev only).
 
-    Streamlit Cloud's proxy strips Cookie from the WebSocket upgrade, so
-    st.context.headers is empty in prod. The relay (a JS-driven URL hop
-    set up in streamlit_app.py) reads document.cookie client-side and
-    bounces the value back via ?__rt_relay=, which we pick up here.
-    Locally the header path still works.
+    Streamlit Cloud's reverse proxy strips Cookie from the WebSocket upgrade
+    headers, so st.context.headers is empty in prod. The cookie_reader custom
+    component reads document.cookie client-side and sends the value back via
+    the standard component-value postMessage protocol -- this works because
+    custom components have an iframe sandbox configured for component value
+    flow (no top-navigation needed, unlike a URL-hop fallback). Locally where
+    headers DO carry cookies, that path still works as a fast fallback.
     """
-    relay = read_relay_param()
-    if relay:
-        return relay
-    return read_cookie_from_headers(COOKIE_NAME)
+    from_headers = read_cookie_from_headers(COOKIE_NAME)
+    if from_headers:
+        return from_headers
+    return read_cookie_client_side(COOKIE_NAME, key="awsomequiz_rt_reader")
 
 
 def _delete_refresh_cookie() -> None:

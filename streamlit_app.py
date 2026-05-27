@@ -13,7 +13,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from app.auth import (
-    COOKIE_NAME,
     DARK_MODE_KEY,
     apply_session_to_client,
     exchange_code,
@@ -24,7 +23,6 @@ from app.auth import (
 )
 from app.cookies import (
     read_cookie_from_headers,
-    trigger_relay,
     write_cookie,
 )
 from app.queries import get_clf_certification, get_practice_streak, get_user_stats_summary
@@ -140,13 +138,13 @@ _handle_auth_callback()
 # If st.session_state has no session (e.g. after a page reload, which wipes
 # session_state on Streamlit Cloud), try to restore from the refresh-token
 # cookie. Streamlit Cloud's proxy strips the Cookie header before it reaches
-# the WebSocket upgrade, so restore_session_from_cookie() returns None on
-# the cold load -- the relay below then asks JS to read document.cookie and
-# bounce the value back as ?__rt_relay=, which the next script run picks up.
+# the WebSocket upgrade, so restore_session_from_cookie() falls back to the
+# cookie_reader custom component which reads document.cookie client-side and
+# sends the value back via Streamlit's component-value postMessage protocol.
+# That triggers one extra rerun (component value arrives async) on first cold
+# load; the script reruns with the value and restores the session.
 restore_session_from_cookie()
 session = get_session()
-if not session:
-    trigger_relay(COOKIE_NAME)
 apply_session_to_client()
 
 if session:

@@ -20,13 +20,17 @@ Workarounds in this module:
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from urllib.parse import unquote
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-RT_RELAY_PARAM = "__rt_relay"
-_RELAY_FLAG_JS = "__rt_relay_done"
+_COOKIE_READER_DIR = Path(__file__).parent / "cookie_reader"
+_cookie_reader = components.declare_component(
+    "awsomequiz_cookie_reader",
+    path=str(_COOKIE_READER_DIR),
+)
 
 
 def write_cookie(name: str, value: str, max_age_days: int) -> None:
@@ -40,7 +44,6 @@ def write_cookie(name: str, value: str, max_age_days: int) -> None:
             document.cookie = k + "=" + v
                 + "; max-age={int(max_age_days * 86400)}"
                 + "; path=/; SameSite=Lax; Secure";
-            try {{ window.top.sessionStorage.removeItem({json.dumps(_RELAY_FLAG_JS)}); }} catch (e) {{}}
         }} catch (e) {{}}
         </script>
         """,
@@ -56,7 +59,6 @@ def delete_cookie(name: str) -> None:
         try {{
             const k = {json.dumps(name)};
             document.cookie = k + "=; max-age=0; path=/; SameSite=Lax; Secure";
-            try {{ window.top.sessionStorage.removeItem({json.dumps(_RELAY_FLAG_JS)}); }} catch (e) {{}}
         }} catch (e) {{}}
         </script>
         """,
@@ -64,41 +66,15 @@ def delete_cookie(name: str) -> None:
     )
 
 
-def read_relay_param() -> str | None:
-    """Pop the value of the ?__rt_relay= query param if present."""
-    relay = st.query_params.get(RT_RELAY_PARAM)
-    if not relay:
-        return None
-    st.query_params.pop(RT_RELAY_PARAM, None)
-    return unquote(relay)
+def read_cookie_client_side(cookie_name: str, *, key: str | None = None) -> str | None:
+    """Read a first-party cookie via the cookie_reader custom component.
 
-
-def trigger_relay(cookie_name: str) -> None:
-    """Inject JS that reads document.cookie and reloads with the value as a
-    query param. SessionStorage flag prevents loops; write_cookie clears the
-    flag so future browser refreshes can re-trigger.
+    Returns None on the first script run (component hasn't sent its value yet),
+    then the actual value on the rerun the component triggers via postMessage.
+    No top-navigation needed, so the components.html sandbox limitation that
+    blocks a URL-hop approach doesn't apply here.
     """
-    components.html(
-        f"""
-        <script>
-        (function() {{
-            try {{
-                const top = window.top;
-                if (top.sessionStorage.getItem({json.dumps(_RELAY_FLAG_JS)}) === '1') return;
-                top.sessionStorage.setItem({json.dumps(_RELAY_FLAG_JS)}, '1');
-                const prefix = {json.dumps(cookie_name + '=')};
-                const c = (top.document.cookie || '').split(';')
-                    .map(x => x.trim()).find(x => x.startsWith(prefix));
-                if (c) {{
-                    const v = c.slice(prefix.length);
-                    top.location.replace(top.location.pathname + '?{RT_RELAY_PARAM}=' + v);
-                }}
-            }} catch (e) {{}}
-        }})();
-        </script>
-        """,
-        height=0,
-    )
+    return _cookie_reader(cookie_name=cookie_name, default=None, key=key)
 
 
 def read_cookie_from_headers(name: str) -> str | None:
