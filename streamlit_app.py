@@ -9,7 +9,7 @@ Two responsibilities:
 
 from __future__ import annotations
 
-import json
+import uuid
 from datetime import datetime, timedelta, timezone
 
 import streamlit as st
@@ -105,33 +105,30 @@ st.session_state[COOKIE_MANAGER_KEY] = cookie_manager
 _pending_save = st.session_state.pop(PENDING_SAVE_KEY, None)
 _pending_delete = st.session_state.pop(PENDING_DELETE_KEY, False)
 if _pending_save:
-    _expires_str = (datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS)).strftime(
-        "%a, %d %b %Y %H:%M:%S GMT"
-    )
-    components.html(
-        f"""<script>
-        (function () {{
-            try {{
-                var doc = (window.parent && window.parent.document) || document;
-                doc.cookie = {json.dumps(COOKIE_NAME)} + "=" + encodeURIComponent({json.dumps(_pending_save)})
-                    + "; path=/; expires={_expires_str}; SameSite=Lax; Secure";
-            }} catch (e) {{}}
-        }})();
-        </script>""",
-        height=0,
-    )
+    # cookie_manager.set is a proper Streamlit component, NOT a sandboxed
+    # components.html (which renders with null origin -- window.parent.document
+    # access is cross-origin and SecurityError throws). Unique key forces a
+    # fresh component instance so the set actually fires (cm.set short-circuits
+    # if the key was previously used in this session).
+    try:
+        cookie_manager.set(
+            COOKIE_NAME,
+            _pending_save,
+            expires_at=datetime.now(timezone.utc) + timedelta(days=COOKIE_MAX_AGE_DAYS),
+            same_site="lax",
+            path="/",
+            key=f"refresh_cookie_save_{uuid.uuid4().hex[:8]}",
+        )
+    except Exception:  # noqa: BLE001 - cookie failure must not block render
+        pass
 elif _pending_delete:
-    components.html(
-        f"""<script>
-        (function () {{
-            try {{
-                var doc = (window.parent && window.parent.document) || document;
-                doc.cookie = {json.dumps(COOKIE_NAME)} + "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
-            }} catch (e) {{}}
-        }})();
-        </script>""",
-        height=0,
-    )
+    try:
+        cookie_manager.delete(
+            COOKIE_NAME,
+            key=f"refresh_cookie_delete_{uuid.uuid4().hex[:8]}",
+        )
+    except Exception:  # noqa: BLE001
+        pass
 
 # Dark-mode preference: try cookie first (so the choice survives reloads),
 # fall back to whatever's in session_state, default light.
