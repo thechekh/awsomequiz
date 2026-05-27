@@ -505,17 +505,20 @@ iframe[height="0"] {
     height: 0 !important;
 }
 
-/* Force the sidebar to render. Streamlit's auto-collapse for
-   position="hidden" navigation (used on the unauth pages) sometimes carries
-   over to authenticated reruns. We deliberately do NOT override the
-   collapsed state here -- Streamlit's own CSS keeps the toggle arrow
-   visible (in a small strip) when aria-expanded="false". A previous
-   revision zeroed the width on collapse, which on some Streamlit builds
-   also hid the re-expand toggle, leaving users with no visible sidebar
-   and no way back. */
-[data-testid="stSidebar"][aria-expanded="true"] {
+/* Force the sidebar visible. After login (rerun, not cold load), Streamlit
+   leaves the sidebar at aria-expanded="false" -- positioned off-screen
+   (transform translateX or left: -300px) with width 1px. The auto-rendered
+   expand button isn't always reliably visible across Streamlit versions,
+   so we override the collapsed positioning unconditionally. Users can
+   collapse by clicking the in-sidebar collapse button; React state will
+   flip aria-expanded back to false, but our CSS keeps it pinned visible.
+   That's an acceptable trade for "navigation always visible after login". */
+[data-testid="stSidebar"] {
     min-width: 244px !important;
     width: 244px !important;
+    left: 0 !important;
+    transform: none !important;
+    margin-left: 0 !important;
 }
 
 /* Style-only st.markdown injections (CSS, JS, hidden helpers) shouldn't

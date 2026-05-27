@@ -229,6 +229,8 @@ if session:
                         return true;
                     }
                     const ctrl =
+                        doc.querySelector('[data-testid="stExpandSidebarButton"]') ||
+                        doc.querySelector('[data-testid="stExpandSidebarButton"] button') ||
                         doc.querySelector('[data-testid="stSidebarCollapsedControl"] button') ||
                         doc.querySelector('[data-testid="collapsedControl"] button');
                     if (ctrl) {
