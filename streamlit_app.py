@@ -114,7 +114,10 @@ st.set_page_config(
     page_title="AWSomeQuiz",
     page_icon="AWS",
     layout="wide",
-    initial_sidebar_state="expanded",
+    # "auto": Streamlit shows the sidebar expanded on desktop and collapses
+    # it on mobile (<768 px), which is what we want -- an open sidebar on
+    # a phone covers 60-70% of the screen.
+    initial_sidebar_state="auto",
 )
 
 # Drain any queued cookie write/delete BEFORE anything else can call st.rerun().
