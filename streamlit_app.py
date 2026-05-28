@@ -248,13 +248,6 @@ pg = st.navigation(pages, position="sidebar" if session else "hidden")
 # value won't always trigger a rerun out of.
 GUEST_FRIENDLY_PATHS = {"", "glossary", "guest_practice", "reset_password"}
 
-# If the JS fallback (below) reloaded us with ?nograce=1, clear the param
-# from the URL and skip the grace block on this render -- the user has
-# already waited long enough; let the target page redirect to /login.
-if st.query_params.get("nograce") == "1":
-    st.session_state[COLD_LOAD_GRACE_KEY] = True
-    del st.query_params["nograce"]
-
 if (
     not session
     and not st.session_state.get(COLD_LOAD_GRACE_KEY)
@@ -271,29 +264,6 @@ if (
         </div>
         """,
         unsafe_allow_html=True,
-    )
-    # Defensive: if the cookie_reader's setComponentValue postMessage never
-    # arrives (or its null value gets dedup'd by Streamlit), force a single
-    # page reload after 2.5s with ?nograce=1 so we never get stuck here.
-    st.html(
-        """
-        <script>
-        (function () {
-          const flag = '__awsomequizGraceTimerSet';
-          if (window[flag]) return;
-          window[flag] = true;
-          setTimeout(() => {
-            try {
-              const u = new URL(location.href);
-              if (u.searchParams.get('nograce') === '1') return;
-              u.searchParams.set('nograce', '1');
-              location.replace(u.toString());
-            } catch (_) {}
-          }, 2500);
-        })();
-        </script>
-        """,
-        unsafe_allow_javascript=True,
     )
     st.stop()
 
