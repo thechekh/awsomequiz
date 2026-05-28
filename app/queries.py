@@ -573,10 +573,11 @@ def pick_bookmarked_question_ids(
 def report_question(user_id: str, question_id: str, reason: str, details: str | None) -> None:
     """Insert a row into question_reports.
 
-    RLS policy is `auth.uid() = user_id`. supabase-py's `client.auth.set_session`
-    doesn't always propagate the JWT onto the PostgREST sub-client used for
-    table operations (especially inside an @st.dialog rerun context), so we
-    set both explicitly here before the insert.
+    RLS policy is `auth.uid() = user_id`. We pass the user_id explicitly and
+    also re-auth the PostgREST sub-client right before the call -- inside
+    an @st.dialog rerun the session occasionally hadn't propagated yet.
+    The user_id we use comes from supabase.auth.get_user() so it can't
+    drift from auth.uid() the way a stale session_state copy could.
     """
     if reason not in REPORT_REASONS:
         raise ValueError(f"Unknown report reason: {reason}")
@@ -589,6 +590,12 @@ def report_question(user_id: str, question_id: str, reason: str, details: str | 
     supabase = get_supabase()
     supabase.auth.set_session(access_token, refresh_token)
     supabase.postgrest.auth(access_token)
+    try:
+        live = supabase.auth.get_user(access_token)
+        if live and getattr(live, "user", None):
+            user_id = live.user.id  # canonical UID == auth.uid() server-side
+    except Exception:  # noqa: BLE001 -- best-effort, fall back to passed-in user_id
+        pass
     supabase.table("question_reports").insert({
         "user_id": user_id,
         "question_id": question_id,
