@@ -107,7 +107,7 @@ for bm in bookmarks:
     col_text, col_btn = st.columns([8, 1])
     with col_text:
         st.markdown(stem_preview)
-        st.caption(f"Bookmarked {bm['created_at']}")
+        st.caption(f"Bookmarked {format_started_at(bm['created_at'])}")
     with col_btn:
         if st.button("Remove", key=f"rm_{bm['question_id']}"):
             delete_bookmark(user["id"], bm["question_id"])

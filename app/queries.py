@@ -123,6 +123,33 @@ def set_current_certification(code: str) -> None:
     # render -- a single rerun after this call fixes that. Callers handle it.
 
 
+@st.cache_data(ttl=60)
+def get_display_name(user_id: str, email: str) -> str:
+    """Return the user's display name: profiles.username if set, else email-local-part.
+
+    Used in the welcome heading and sidebar caption so the user doesn't have to
+    expose their full email address on screen shares. Cached briefly so a name
+    change on /account propagates within a minute.
+    """
+    if not user_id:
+        return email or "(unknown)"
+    try:
+        supabase = get_supabase()
+        rows = (
+            supabase.table("profiles")
+            .select("username")
+            .eq("id", user_id)
+            .limit(1)
+            .execute()
+        ).data or []
+        username = (rows[0].get("username") if rows else None) or ""
+        if username.strip():
+            return username.strip()
+    except Exception:  # noqa: BLE001 -- fall back to email if the lookup fails
+        pass
+    return (email.split("@", 1)[0] if email else "") or email or "(unknown)"
+
+
 @st.cache_data(ttl=CACHE_TTL_REFERENCE)
 def list_domains(certification_id: str) -> list[dict]:
     """Return domain rows for a certification, ordered for display."""

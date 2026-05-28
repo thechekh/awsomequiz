@@ -118,8 +118,8 @@ with register_tab:
                 result = sign_up(email, password)
                 if result.get("needs_confirmation"):
                     st.success(
-                        f"Account created for **{email}**. Check your email for the "
-                        "verification link. (Locally: http://localhost:54324 --Inbucket.)"
+                        f"Account created for **{email}**. Check your email "
+                        "(including the spam folder) for the verification link."
                     )
                 else:
                     # No confirmation required -- already signed in.
@@ -148,5 +148,5 @@ with forgot_tab:
                 # addresses are registered. Supabase itself follows this pattern.
                 st.success(
                     "If an account with that email exists, a reset link has been sent. "
-                    "(Locally: check http://localhost:54324 -- Inbucket.)"
+                    "Check your inbox (and the spam folder)."
                 )

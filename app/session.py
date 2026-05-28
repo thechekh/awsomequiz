@@ -305,7 +305,7 @@ def complete_session(session_id: str) -> dict:
     ).data or []
     sess = (
         supabase.table("exam_sessions")
-        .select("certification_id, started_at, question_count")
+        .select("certification_id, started_at, question_count, mode")
         .eq("id", session_id)
         .single()
         .execute()
@@ -317,7 +317,7 @@ def complete_session(session_id: str) -> dict:
 
     cert = (
         supabase.table("certifications")
-        .select("pass_threshold_pct")
+        .select("pass_threshold_pct, duration_minutes")
         .eq("id", sess["certification_id"])
         .single()
         .execute()
@@ -325,7 +325,14 @@ def complete_session(session_id: str) -> dict:
     passed = score_pct >= cert["pass_threshold_pct"]
 
     started_at = datetime.fromisoformat(sess["started_at"].replace("Z", "+00:00"))
-    duration_seconds = int((datetime.now(timezone.utc) - started_at).total_seconds())
+    elapsed = int((datetime.now(timezone.utc) - started_at).total_seconds())
+    # Timed mode: cap at cert.duration_minutes so a tab that was closed at
+    # deadline doesn't report "Time spent: 524m" when the user re-opens the
+    # page hours later and auto-submit finally fires.
+    if sess.get("mode") == "timed" and cert.get("duration_minutes"):
+        duration_seconds = min(elapsed, int(cert["duration_minutes"]) * 60)
+    else:
+        duration_seconds = elapsed
 
     (
         supabase.table("exam_sessions")

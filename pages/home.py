@@ -14,7 +14,11 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.db import get_supabase
-from app.queries import get_answered_question_ids, get_current_certification
+from app.queries import (
+    get_answered_question_ids,
+    get_current_certification,
+    get_display_name,
+)
 from app.session import (
     get_active_bookmarked_session,
     get_active_practice_session,
@@ -29,7 +33,8 @@ if not user:
 apply_session_to_client()
 cert = get_current_certification()
 
-st.title(f"Welcome, {user['email']}")
+_display = get_display_name(user["id"], user.get("email") or "")
+st.title(f"Welcome, {_display}")
 
 if not cert:
     st.warning("No certifications seeded. Run `.\\dev.ps1 db-reset` to seed.")

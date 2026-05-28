@@ -31,6 +31,7 @@ from app.cookies import (
 )
 from app.queries import (
     get_current_certification,
+    get_display_name,
     get_practice_streak,
     get_user_stats_summary,
     list_certifications_with_questions,
@@ -320,6 +321,13 @@ if session:
             const tryExpand = () => {
                 try {
                     if (window[flag]) return true;
+                    // Mobile: keep the sidebar collapsed by default; an open
+                    // sidebar covers 60-70% of a phone screen and obscures
+                    // the page content. Desktop / tablet keep the auto-open.
+                    if (window.innerWidth < 768) {
+                        window[flag] = true;
+                        return true;
+                    }
                     const sidebar = document.querySelector('[data-testid="stSidebar"]');
                     if (sidebar && sidebar.getAttribute('aria-expanded') === 'true') {
                         window[flag] = true;
@@ -347,8 +355,10 @@ if session:
         _render_sidebar_cert_picker()
         _render_sidebar_mini_stats(session)
         st.divider()
-        user_email = session["user"]["email"] if session.get("user") else "(unknown)"
-        st.caption(f"Signed in as **{user_email}**")
+        u = session.get("user") or {}
+        user_email = u.get("email") or "(unknown)"
+        display = get_display_name(u.get("id") or "", user_email)
+        st.caption(f"Signed in as **{display}**")
         if st.button("Sign out", width="stretch", key="sidebar_signout"):
             sign_out()
             st.rerun()

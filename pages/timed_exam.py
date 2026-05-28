@@ -169,6 +169,11 @@ def _render_review(summary: dict) -> None:
     score = summary["score_pct"]
     if summary["passed"]:
         st.success(f"PASSED -- **{score}%** ({summary['correct']} / {summary['total']})")
+        # Celebrate on pass; once per summary render to avoid repeat firing.
+        ballooned_key = f"timed_passed_celebrated_{summary['session_id']}"
+        if not st.session_state.get(ballooned_key):
+            st.session_state[ballooned_key] = True
+            st.balloons()
     else:
         st.error(f"BELOW PASS THRESHOLD -- **{score}%** ({summary['correct']} / {summary['total']})")
     minutes, seconds = divmod(summary["duration_seconds"], 60)
