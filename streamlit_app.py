@@ -14,7 +14,6 @@ import streamlit as st
 from app.auth import (
     COOKIE_MAX_AGE_DAYS,
     COOKIE_NAME,
-    DARK_MODE_KEY,
     PENDING_DELETE_KEY,
     PENDING_SAVE_KEY,
     apply_session_to_client,
@@ -33,14 +32,17 @@ from app.queries import (
     get_current_certification,
     get_display_name,
     get_practice_streak,
+    get_theme_preference,
     get_user_stats_summary,
     list_certifications_with_questions,
     set_current_certification,
 )
 from app.styles import render_combined_css
+from app.theme import THEME_SYSTEM, VALID_THEMES, render_theme_css
 
-DARK_MODE_COOKIE = "awsomequiz_dark"
-_PENDING_DARK_WRITE_KEY = "_pending_dark_cookie_write"
+THEME_COOKIE = "awsomequiz_theme"
+THEME_PREF_KEY = "theme_preference"
+_PENDING_THEME_WRITE_KEY = "_pending_theme_cookie_write"
 
 
 def _render_sidebar_cert_picker() -> None:
@@ -132,20 +134,33 @@ if _pending_save:
     write_cookie(COOKIE_NAME, _pending_save, COOKIE_MAX_AGE_DAYS)
 elif _pending_delete:
     delete_cookie(COOKIE_NAME)
-_pending_dark = st.session_state.pop(_PENDING_DARK_WRITE_KEY, None)
-if _pending_dark is not None:
-    write_cookie(DARK_MODE_COOKIE, _pending_dark, 365)
+_pending_theme = st.session_state.pop(_PENDING_THEME_WRITE_KEY, None)
+if _pending_theme is not None:
+    write_cookie(THEME_COOKIE, _pending_theme, 365)
 
-if DARK_MODE_KEY not in st.session_state:
-    st.session_state[DARK_MODE_KEY] = read_cookie_from_headers(DARK_MODE_COOKIE) == "1"
 
-# Single CSS injection (combines light base + optional dark overrides). This
-# matters because toggling dark used to add/remove a SECOND st.markdown,
-# whose wrapper shifted page content by ~16px. One injection = stable DOM.
-st.markdown(
-    render_combined_css(bool(st.session_state.get(DARK_MODE_KEY))),
-    unsafe_allow_html=True,
-)
+def _resolve_theme_pref() -> str:
+    """Pick the active theme preference: session_state > cookie > 'system'.
+
+    The profile-stored preference is applied to session_state by the auth
+    flow once a user signs in (see app.auth._store_session). Until then we
+    fall back to the per-browser cookie, then the system default.
+    """
+    pref = st.session_state.get(THEME_PREF_KEY)
+    if pref in VALID_THEMES:
+        return pref
+    cookie_val = read_cookie_from_headers(THEME_COOKIE)
+    if cookie_val in VALID_THEMES:
+        st.session_state[THEME_PREF_KEY] = cookie_val
+        return cookie_val
+    return THEME_SYSTEM
+
+
+# Inject the palette CSS vars FIRST, then the global stylesheet that consumes
+# them. Order matters -- if the var block lands after the rules, paint can
+# briefly use undefined values on the first frame.
+st.markdown(render_theme_css(_resolve_theme_pref()), unsafe_allow_html=True)
+st.markdown(render_combined_css(), unsafe_allow_html=True)
 
 
 AUTH_CALLBACK_ERROR_KEY = "auth_callback_error"
@@ -275,24 +290,9 @@ if (
     )
     st.stop()
 
-# Dark mode toggle: previously rendered top-right via st.columns([9,2]) but
-# at mobile widths the 2-wide column became cramped and the toggle drifted
-# below the page H1. Moving it to the sidebar keeps the layout stable on
-# every viewport (and the sidebar auto-collapses on mobile so it doesn't
-# steal screen space). For unauth users the sidebar nav is hidden, so we
-# render the toggle in the body instead.
-if not session:
-    _, toggle_col = st.columns([9, 2])
-    with toggle_col:
-        new_dark = st.toggle(
-            "Dark mode",
-            value=st.session_state.get(DARK_MODE_KEY, False),
-            key="dark_mode_toggle",
-        )
-    if new_dark != st.session_state.get(DARK_MODE_KEY):
-        st.session_state[DARK_MODE_KEY] = new_dark
-        st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
-        st.rerun()
+# Theme is now configured per-user on /account (Theme selector). The CSS
+# variables block emitted near the top of this file picks up the active
+# preference, so there's no global toggle here.
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the
 # signed-in label + sign-out. Lives here (not in each page) so it survives
@@ -369,17 +369,6 @@ if session:
         st.caption(f"Signed in as **{display}**")
         if st.button("Sign out", width="stretch", key="sidebar_signout"):
             sign_out()
-            st.rerun()
-        # Settings -- bottom of sidebar so it doesn't compete with primary nav.
-        st.divider()
-        new_dark = st.toggle(
-            "Dark mode",
-            value=st.session_state.get(DARK_MODE_KEY, False),
-            key="dark_mode_toggle",
-        )
-        if new_dark != st.session_state.get(DARK_MODE_KEY):
-            st.session_state[DARK_MODE_KEY] = new_dark
-            st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
             st.rerun()
 
 pg.run()

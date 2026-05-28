@@ -124,6 +124,47 @@ def set_current_certification(code: str) -> None:
 
 
 @st.cache_data(ttl=60)
+def get_theme_preference(user_id: str) -> str | None:
+    """Read profiles.theme_preference for the given user, or None if missing.
+
+    Cached briefly so the inject-on-every-page pattern doesn't fire a DB
+    round-trip per script run. Callers that need a definitive value should
+    hit the cache.
+    """
+    if not user_id:
+        return None
+    try:
+        supabase = get_supabase()
+        rows = (
+            supabase.table("profiles")
+            .select("theme_preference")
+            .eq("id", user_id)
+            .limit(1)
+            .execute()
+        ).data or []
+        if rows:
+            return rows[0].get("theme_preference") or None
+    except Exception:  # noqa: BLE001 -- never block render; fall back to caller default
+        pass
+    return None
+
+
+def set_theme_preference(user_id: str, theme_pref: str) -> None:
+    """Persist the user's chosen theme to profiles."""
+    if not user_id:
+        return
+    supabase = get_supabase()
+    supabase.table("profiles").update(
+        {"theme_preference": theme_pref}
+    ).eq("id", user_id).execute()
+    # Bust the cached lookup so the next read sees the new value immediately.
+    try:
+        get_theme_preference.clear()
+    except Exception:  # noqa: BLE001
+        pass
+
+
+@st.cache_data(ttl=60)
 def get_display_name(user_id: str, email: str) -> str:
     """Return the user's display name: profiles.username if set, else email-local-part.
 

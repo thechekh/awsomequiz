@@ -70,44 +70,8 @@ st.caption(
     "category, or definition text."
 )
 
-st.markdown(
-    """
-    <style>
-    .glossary-entry {
-        padding: 0.55rem 0.85rem;
-        margin-bottom: 0.45rem;
-        border-left: 3px solid #2563EB;
-        background: rgba(37, 99, 235, 0.04);
-        border-radius: 4px;
-    }
-    .glossary-term {
-        font-weight: 600;
-        font-size: 1.02rem;
-        color: #1E40AF;
-    }
-    .glossary-meta {
-        margin-left: 0.55rem;
-        font-size: 0.72rem;
-        color: #6B7280;
-        white-space: nowrap;
-    }
-    .glossary-definition {
-        margin-top: 0.25rem;
-        line-height: 1.45;
-        color: #1F2937;
-    }
-    .glossary-letter {
-        font-size: 1.45rem;
-        font-weight: 700;
-        color: #2563EB;
-        margin: 1.1rem 0 0.45rem 0;
-        padding-bottom: 0.15rem;
-        border-bottom: 1px solid rgba(37, 99, 235, 0.25);
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Glossary entry styles now live in app/styles.py (CSS variables); no
+# page-level color overrides needed -- they pick up the active theme.
 
 # Filter controls
 c1, c2 = st.columns([3, 1])

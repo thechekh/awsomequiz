@@ -6,6 +6,15 @@ import streamlit as st
 
 from app.auth import apply_session_to_client, current_user, sign_out, update_password
 from app.db import get_supabase
+from app.queries import set_theme_preference
+from app.theme import (
+    THEME_DARK_HC,
+    THEME_DARK_SLATE,
+    THEME_LABELS,
+    THEME_LIGHT,
+    THEME_SYSTEM,
+    VALID_THEMES,
+)
 
 
 def _friendly_error(exc: Exception) -> str:
@@ -28,7 +37,7 @@ st.title("Account")
 
 profile = (
     supabase.table("profiles")
-    .select("username, preferences, created_at")
+    .select("username, preferences, created_at, theme_preference")
     .eq("id", user["id"])
     .single()
     .execute()
@@ -54,6 +63,47 @@ if submitted:
         )
         st.success("Profile saved.")
     except Exception as exc:  # noqa: BLE001 - surface unique-constraint failures cleanly
+        st.error(_friendly_error(exc))
+
+st.divider()
+
+# ---------------------------------------------------------------------------
+# Appearance / theme (persists to profiles.theme_preference + a cookie so
+# the next browser-only visit uses the same choice before the profile
+# fetch can land).
+# ---------------------------------------------------------------------------
+
+st.subheader("Appearance")
+
+current_theme = (profile or {}).get("theme_preference") or st.session_state.get(
+    "theme_preference"
+) or THEME_SYSTEM
+if current_theme not in VALID_THEMES:
+    current_theme = THEME_SYSTEM
+
+theme_options = [THEME_SYSTEM, THEME_LIGHT, THEME_DARK_SLATE, THEME_DARK_HC]
+chosen_theme = st.radio(
+    "Theme",
+    options=theme_options,
+    format_func=lambda k: THEME_LABELS.get(k, k),
+    index=theme_options.index(current_theme),
+    horizontal=False,
+    key="theme_radio",
+    help=(
+        "System default follows your OS / browser preference. "
+        "Neutral Slate is the comfortable dark; High Contrast is the deeper "
+        "dark with punchier feedback colors."
+    ),
+)
+
+if chosen_theme != current_theme:
+    try:
+        set_theme_preference(user["id"], chosen_theme)
+        st.session_state["theme_preference"] = chosen_theme
+        st.session_state["_pending_theme_cookie_write"] = chosen_theme
+        st.success("Theme updated.")
+        st.rerun()
+    except Exception as exc:  # noqa: BLE001
         st.error(_friendly_error(exc))
 
 st.divider()

@@ -25,7 +25,6 @@ from app.db import get_supabase
 SESSION_KEY = "supabase_session"
 COOKIE_NAME = "awsomequiz_rt"
 COOKIE_MAX_AGE_DAYS = 30
-DARK_MODE_KEY = "dark_mode"  # Shared so pages can render theme-aware UI bits.
 OtpType = Literal["signup", "recovery", "email_change", "invite", "magiclink"]
 
 # ---------------------------------------------------------------------------
@@ -133,19 +132,30 @@ def _store_session(session) -> dict:
     # If a cert was picked pre-login (guest picker on /login) or switched
     # in this session, persist it to profiles.current_cert_code so future
     # sign-ins on a fresh browser pick up the same cert.
-    from app.queries import CURRENT_CERT_CODE_KEY, set_current_certification
+    from app.queries import CURRENT_CERT_CODE_KEY, get_theme_preference, set_current_certification
     if cert_code := st.session_state.get(CURRENT_CERT_CODE_KEY):
         set_current_certification(cert_code)
+    # Load the user's stored theme preference into session_state so the
+    # palette injection on the next render uses their saved choice. Falls
+    # back to whatever's already in session_state (cookie / "system").
+    user_id = (d.get("user") or {}).get("id") or ""
+    try:
+        stored = get_theme_preference(user_id)
+        if stored:
+            st.session_state["theme_preference"] = stored
+    except Exception:  # noqa: BLE001 -- never block sign-in on a theme lookup
+        pass
     return d
 
 
 def _clear_session() -> None:
     st.session_state.pop(SESSION_KEY, None)
-    # Drop the cached current-cert so a new sign-in re-resolves from the
-    # next user's profile (or default). Deferred import to dodge the
-    # auth <-> queries circular at module load.
+    # Drop the cached current-cert + theme so a new sign-in re-resolves
+    # from the next user's profile (or default). Deferred import to dodge
+    # the auth <-> queries circular at module load.
     from app.queries import CURRENT_CERT_CODE_KEY
     st.session_state.pop(CURRENT_CERT_CODE_KEY, None)
+    st.session_state.pop("theme_preference", None)
     _delete_refresh_cookie()
 
 

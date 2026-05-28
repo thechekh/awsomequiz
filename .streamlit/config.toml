@@ -1,9 +1,15 @@
+# Streamlit-native theme is the FIRST-PAINT fallback only. The real per-user
+# theme (system / light / Neutral Slate / High Contrast) is injected as CSS
+# custom properties by app/theme.py once the page script runs. Setting the
+# defaults here to Neutral Slate avoids a jarring light flash on cold load
+# for users whose stored preference is dark.
+
 [theme]
-base = "light"
-primaryColor = "#2563EB"               # blue-600  -- buttons, links, focus rings
-backgroundColor = "#F9FAFB"            # gray-50   -- page background
-secondaryBackgroundColor = "#FFFFFF"   # white     -- cards, sidebar, inputs
-textColor = "#111827"                  # gray-900
+base = "dark"
+primaryColor = "#FF9900"                # accent (AWS orange) -- buttons, focus rings
+backgroundColor = "#1A1D23"             # Neutral Slate bg
+secondaryBackgroundColor = "#22262E"    # Neutral Slate surface
+textColor = "#E8EAED"                   # Neutral Slate text
 font = "sans serif"
 
 [server]
