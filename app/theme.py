@@ -56,9 +56,11 @@ LIGHT_PALETTE: dict[str, str] = {
     "surface-2":      "#F3F4F6",   # subtle accent surface
     "text":           "#111827",
     "muted":          "#6B7280",
-    "accent":         "#FF9900",
-    "accent-text":    "#3D2600",
-    "accent-strong":  "#2563EB",   # legacy "primary blue" -- buttons, charts
+    # Light accent stays as the deeper blue-600 -- gives ~5.5:1 contrast
+    # on white, which the brighter dark-mode #4F9CF9 doesn't quite hit.
+    "accent":         "#2563EB",
+    "accent-text":    "#FFFFFF",
+    "accent-strong":  "#2563EB",
     "accent-strong-hover": "#1D4ED8",
     "correct-text":   "#065F46",
     "correct-bg":     "#ECFDF5",

@@ -331,6 +331,18 @@ label[data-baseweb="form-control-label"] {
     color: var(--text) !important;
     caret-color: var(--text) !important;
 }
+/* Placeholder text -- Streamlit's default was almost invisible against the
+   white input bg in light mode (the glossary search bar's placeholder was
+   the most reported case). Use var(--muted) at ~70% opacity so the hint is
+   readable but stays clearly secondary to actual typed input. Covers every
+   input + textarea, including BaseWeb-wrapped widgets. */
+input::placeholder, textarea::placeholder,
+.stTextInput input::placeholder, .stTextArea textarea::placeholder,
+[data-baseweb="input"] input::placeholder,
+[data-baseweb="textarea"] textarea::placeholder {
+    color: var(--muted) !important;
+    opacity: 0.75 !important;
+}
 .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {
     box-shadow: none !important;
     border: none !important;
