@@ -37,6 +37,29 @@ _REPORT_LABELS = {
 }
 
 
+@st.dialog("Quit this session?")
+def _quit_dialog(session_id: str, namespace: str) -> None:
+    """Confirm before abandoning the active session.
+
+    Without confirmation an accidental click destroys the in-progress
+    question position (the answers themselves are preserved in the DB,
+    but the user can't easily resume from the same place).
+    """
+    st.write(
+        "Your answers so far are kept, but the in-progress session will "
+        "be marked abandoned and you'll start a new one if you come back."
+    )
+    c1, c2 = st.columns(2)
+    if c1.button("Cancel", width="stretch", key=f"quit_cancel_{namespace}"):
+        st.rerun()
+    if c2.button(
+        "Quit session", type="primary", width="stretch", key=f"quit_confirm_{namespace}",
+    ):
+        abandon_session(session_id)
+        _clear_runner_state(namespace)
+        st.rerun()
+
+
 @st.dialog("Report a problem")
 def _report_dialog(question_id: str, user_id: str) -> None:
     """Modal that posts to question_reports for moderator triage."""
@@ -97,9 +120,7 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
         st.divider()
         st.metric("Question", f"{min(index + 1, total)} / {total}")
         if st.button("Quit session", width="stretch", key=f"runner_quit_{namespace}"):
-            abandon_session(session["id"])
-            _clear_runner_state(namespace)
-            st.rerun()
+            _quit_dialog(session["id"], namespace)
 
     if index >= total:
         summary = complete_session(session["id"])

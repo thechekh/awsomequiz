@@ -219,6 +219,9 @@ if session:
         st.Page("pages/glossary.py", title="Glossary", icon=":material/menu_book:", url_path="glossary"),
         st.Page("pages/stats.py", title="Stats", icon=":material/insights:", url_path="stats"),
         st.Page("pages/account.py", title="Account", icon=":material/person:", url_path="account"),
+        # URL-routable but hidden from the sidebar nav -- reached by clicking
+        # a row on the Stats page's recent-sessions table.
+        st.Page("pages/session_detail.py", title="Session detail", url_path="session"),
     ]
 else:
     # Include the authenticated pages so URL routing resolves on deeplinks;
@@ -236,6 +239,7 @@ else:
         st.Page("pages/flashcards.py", title="Flashcards", url_path="flashcards"),
         st.Page("pages/stats.py", title="Stats", url_path="stats"),
         st.Page("pages/account.py", title="Account", url_path="account"),
+        st.Page("pages/session_detail.py", title="Session detail", url_path="session"),
     ]
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
@@ -271,23 +275,24 @@ if (
     )
     st.stop()
 
-# Dark mode toggle: rendered at top-right of every page via st.columns so the
-# layout is stable across toggles (DARK_OVERRIDE_CSS only changes colors,
-# not dimensions). Persists via cookie so the preference survives reloads.
-_, toggle_col = st.columns([9, 2])
-with toggle_col:
-    new_dark = st.toggle(
-        "Dark mode",
-        value=st.session_state.get(DARK_MODE_KEY, False),
-        key="dark_mode_toggle",
-    )
-if new_dark != st.session_state.get(DARK_MODE_KEY):
-    st.session_state[DARK_MODE_KEY] = new_dark
-    # Queue rather than write inline -- the st.rerun() below discards any
-    # st.html element registered after this point. The top-of-script drain
-    # picks up the queued write on the next run.
-    st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
-    st.rerun()
+# Dark mode toggle: previously rendered top-right via st.columns([9,2]) but
+# at mobile widths the 2-wide column became cramped and the toggle drifted
+# below the page H1. Moving it to the sidebar keeps the layout stable on
+# every viewport (and the sidebar auto-collapses on mobile so it doesn't
+# steal screen space). For unauth users the sidebar nav is hidden, so we
+# render the toggle in the body instead.
+if not session:
+    _, toggle_col = st.columns([9, 2])
+    with toggle_col:
+        new_dark = st.toggle(
+            "Dark mode",
+            value=st.session_state.get(DARK_MODE_KEY, False),
+            key="dark_mode_toggle",
+        )
+    if new_dark != st.session_state.get(DARK_MODE_KEY):
+        st.session_state[DARK_MODE_KEY] = new_dark
+        st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
+        st.rerun()
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the
 # signed-in label + sign-out. Lives here (not in each page) so it survives
@@ -364,6 +369,17 @@ if session:
         st.caption(f"Signed in as **{display}**")
         if st.button("Sign out", width="stretch", key="sidebar_signout"):
             sign_out()
+            st.rerun()
+        # Settings -- bottom of sidebar so it doesn't compete with primary nav.
+        st.divider()
+        new_dark = st.toggle(
+            "Dark mode",
+            value=st.session_state.get(DARK_MODE_KEY, False),
+            key="dark_mode_toggle",
+        )
+        if new_dark != st.session_state.get(DARK_MODE_KEY):
+            st.session_state[DARK_MODE_KEY] = new_dark
+            st.session_state[_PENDING_DARK_WRITE_KEY] = "1" if new_dark else "0"
             st.rerun()
 
 pg.run()

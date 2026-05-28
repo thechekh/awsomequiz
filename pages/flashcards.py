@@ -37,6 +37,18 @@ def _clear_study_state() -> None:
         st.session_state.pop(k, None)
 
 
+@st.dialog("Quit this study session?")
+def _quit_flashcards_dialog() -> None:
+    st.write("Your current progress in this deck will be discarded.")
+    c1, c2 = st.columns(2)
+    if c1.button("Cancel", width="stretch", key="fc_quit_cancel"):
+        st.rerun()
+    if c2.button("Quit", type="primary", width="stretch", key="fc_quit_confirm"):
+        _clear_study_state()
+        st.session_state.pop(DECK_KEY, None)
+        st.rerun()
+
+
 def _start_session(deck_id: str, deck_name: str, mode: str, count: int | None) -> None:
     queue = pick_deck_card_ids(user["id"], deck_id, mode=mode, count=count)
     if not queue:
@@ -111,9 +123,7 @@ if queue is not None:
         st.metric("Card", f"{min(index + 1, total)} / {total}")
         st.caption(f"Deck: **{deck['name']}**")
         if st.button("Quit study session", width="stretch", key="flashcards_quit"):
-            _clear_study_state()
-            st.session_state.pop(DECK_KEY, None)
-            st.rerun()
+            _quit_flashcards_dialog()
 
     # Done -> set summary
     if index >= total:

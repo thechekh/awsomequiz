@@ -208,4 +208,27 @@ with st.container(border=True):
             }
             for s in recent
         ]
-        st.dataframe(table, hide_index=True, width="stretch")
+        st.caption(
+            "Click a row to open that session's per-question review (works for "
+            "completed sessions)."
+        )
+        event = st.dataframe(
+            table,
+            hide_index=True,
+            width="stretch",
+            selection_mode="single-row",
+            on_select="rerun",
+            key="recent_sessions_table",
+        )
+        selected = (event.selection.rows or []) if hasattr(event, "selection") else []
+        if selected:
+            chosen = recent[selected[0]]
+            if chosen.get("completed_at"):
+                st.query_params.clear()
+                st.query_params["id"] = chosen["id"]
+                st.switch_page("pages/session_detail.py")
+            else:
+                st.info(
+                    "This session is still in progress -- resume it from the "
+                    "Home page to keep going. Completed sessions are reviewable."
+                )

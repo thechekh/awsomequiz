@@ -327,7 +327,9 @@ with st.sidebar:
     st.divider()
     st.caption(f"**Answered: {len(answered_ids)} / {total}**")
 
-    n_per_row = 5
+    # 4 per row gives each button ~70 px in a typical ~310 px sidebar -- a bit
+    # more breathing room than the previous 5-per-row (was cramped at <1366 px).
+    n_per_row = 4
     for row_start in range(0, total, n_per_row):
         cols = st.columns(n_per_row)
         for j in range(n_per_row):
