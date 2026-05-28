@@ -210,6 +210,7 @@ if session:
         st.Page("pages/review.py", title="Review", icon=":material/replay:", url_path="review"),
         st.Page("pages/bookmarks.py", title="Bookmarks", icon=":material/bookmark:", url_path="bookmarks"),
         st.Page("pages/flashcards.py", title="Flashcards", icon=":material/style:", url_path="flashcards"),
+        st.Page("pages/glossary.py", title="Glossary", icon=":material/menu_book:", url_path="glossary"),
         st.Page("pages/stats.py", title="Stats", icon=":material/insights:", url_path="stats"),
         st.Page("pages/account.py", title="Account", icon=":material/person:", url_path="account"),
     ]
@@ -219,9 +220,10 @@ else:
         # Hidden from nav (position="hidden" below) but URL-routable so the
         # password-reset email link works.
         st.Page("pages/reset_password.py", title="Reset password", url_path="reset_password"),
-        # Guest practice -- reachable via the button on the Login page or
-        # by direct URL. Hidden from nav too (nothing else routes here).
+        # Guest practice / glossary -- reachable via buttons on the Login page or
+        # by direct URL. Nav is hidden for unauth so nothing else routes here.
         st.Page("pages/guest_practice.py", title="Practice as guest", url_path="guest_practice"),
+        st.Page("pages/glossary.py", title="Glossary", url_path="glossary"),
     ]
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")

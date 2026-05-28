@@ -62,6 +62,8 @@ _, gmid, _ = st.columns([1, 2, 1])
 with gmid:
     if st.button("Practice as guest (no signup)", use_container_width=True, key="guest_cta"):
         st.switch_page("pages/guest_practice.py")
+    if st.button("Browse glossary", use_container_width=True, key="glossary_cta"):
+        st.switch_page("pages/glossary.py")
 
 signin_tab, register_tab, forgot_tab = st.tabs(["Sign in", "Register", "Forgot password"])
 
