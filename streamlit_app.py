@@ -36,9 +36,17 @@ from app.queries import (
     get_user_stats_summary,
     list_certifications_with_questions,
     set_current_certification,
+    set_theme_preference,
 )
 from app.styles import render_combined_css
-from app.theme import THEME_SYSTEM, VALID_THEMES, render_theme_css
+from app.theme import (
+    THEME_DARK_HC,
+    THEME_DARK_SLATE,
+    THEME_LIGHT,
+    THEME_SYSTEM,
+    VALID_THEMES,
+    render_theme_css,
+)
 
 THEME_COOKIE = "awsomequiz_theme"
 THEME_PREF_KEY = "theme_preference"
@@ -295,9 +303,44 @@ if (
     )
     st.stop()
 
-# Theme is now configured per-user on /account (Theme selector). The CSS
-# variables block emitted near the top of this file picks up the active
-# preference, so there's no global toggle here.
+# Quick "Dark mode" toggle: appears in the sidebar bottom for auth users
+# and in the page header for guests. Flips theme_preference between
+# THEME_DARK_SLATE and THEME_LIGHT -- the full 4-option selector
+# (System / Light / Slate / High Contrast) still lives on /account for
+# users who want the deeper-contrast variant or to follow system theme.
+
+_current_theme_pref = _resolve_theme_pref()
+
+
+def _is_dark_pref(pref: str) -> bool:
+    """Return True if a stored preference paints dark."""
+    return pref in (THEME_DARK_SLATE, THEME_DARK_HC)
+
+
+def _flip_dark(new_dark: bool, save_to_profile: bool, user_id: str | None) -> None:
+    """Persist a quick-toggle flip: dark_slate when on, light when off."""
+    new_pref = THEME_DARK_SLATE if new_dark else THEME_LIGHT
+    st.session_state["theme_preference"] = new_pref
+    st.session_state[_PENDING_THEME_WRITE_KEY] = new_pref
+    if save_to_profile and user_id:
+        try:
+            set_theme_preference(user_id, new_pref)
+        except Exception:  # noqa: BLE001 -- toggle should never block render
+            pass
+
+
+if not session:
+    # Guest: toggle lives in the page header (sidebar nav is hidden for unauth).
+    _, _toggle_col = st.columns([9, 2])
+    with _toggle_col:
+        _new_dark_guest = st.toggle(
+            "Dark mode",
+            value=_is_dark_pref(_current_theme_pref),
+            key="dark_mode_toggle_guest",
+        )
+    if _new_dark_guest != _is_dark_pref(_current_theme_pref):
+        _flip_dark(_new_dark_guest, save_to_profile=False, user_id=None)
+        st.rerun()
 
 # Sidebar contents for authenticated users: a compact dark stats panel + the
 # signed-in label + sign-out. Lives here (not in each page) so it survives
@@ -374,6 +417,19 @@ if session:
         st.caption(f"Signed in as **{display}**")
         if st.button("Sign out", width="stretch", key="sidebar_signout"):
             sign_out()
+            st.rerun()
+        # Quick dark-mode toggle. Goes between dark_slate and light; the
+        # full 4-option (System / Light / Slate / High Contrast) lives on
+        # /account. The handler also persists to the profile so the choice
+        # follows across devices, same as the radio.
+        st.divider()
+        _new_dark_auth = st.toggle(
+            "Dark mode",
+            value=_is_dark_pref(_current_theme_pref),
+            key="dark_mode_toggle_sidebar",
+        )
+        if _new_dark_auth != _is_dark_pref(_current_theme_pref):
+            _flip_dark(_new_dark_auth, save_to_profile=True, user_id=u.get("id"))
             st.rerun()
 
 pg.run()
