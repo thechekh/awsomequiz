@@ -7,7 +7,8 @@ S, matching how engineers actually look services up).
 
 Available to both anonymous visitors (linked from the Login page) and
 signed-in users (sidebar nav). Static content -- @st.cache_data with a
-long TTL since data/glossary.json only changes on deploy.
+moderate TTL; data/glossary.json only changes on deploy, but we keep the
+TTL short enough that an expansion lands without a hard container restart.
 """
 from __future__ import annotations
 
@@ -24,7 +25,7 @@ DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "glossary.json"
 _PREFIX_RE = re.compile(r"^(Amazon|AWS)\s+", re.IGNORECASE)
 
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=300)
 def _load_entries() -> list[dict]:
     raw = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     return raw["entries"]
