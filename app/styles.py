@@ -373,6 +373,82 @@ input::placeholder, textarea::placeholder,
 .stRadio > div, .stCheckbox > label {
     font-size: 0.9rem;
 }
+/* BaseWeb radio buttons render as nested divs: outer (16px) = the circle
+   outline + bg, inner (14px) = the inside fill. Streamlit's default colors
+   come from config.toml, which clashes with our per-user theme (a user on
+   Light page bg would see Dark Slate radio interior fill = looks solid
+   black). Force theme-aware values so the radios pick up var(--surface) /
+   var(--accent-strong) regardless of which static config.toml palette
+   Streamlit booted with. */
+[data-baseweb="radio"] > div:first-child {
+    background: var(--surface) !important;
+    border: 1.5px solid var(--muted) !important;
+    border-radius: 50% !important;
+}
+[data-baseweb="radio"] > div:first-child > div {
+    background: transparent !important;
+    border-radius: 50% !important;
+    transition: background 0.12s ease, transform 0.12s ease;
+}
+/* Selected: BaseWeb sets aria-checked on the label OR adds an "checked"
+   class on the input next to it. Cover both cases. */
+[data-baseweb="radio"][aria-checked="true"] > div:first-child,
+[data-baseweb="radio"]:has(input:checked) > div:first-child {
+    border-color: var(--accent-strong) !important;
+}
+[data-baseweb="radio"][aria-checked="true"] > div:first-child > div,
+[data-baseweb="radio"]:has(input:checked) > div:first-child > div {
+    background: var(--accent-strong) !important;
+}
+
+/* Checkbox: similar dual-div pattern. Outer = the square outline; inner =
+   the tick mark / fill state. */
+[data-baseweb="checkbox"] > span,
+.stCheckbox [data-baseweb="checkbox"] span:first-child {
+    background: var(--surface) !important;
+    border: 1.5px solid var(--muted) !important;
+}
+[data-baseweb="checkbox"]:has(input:checked) > span,
+.stCheckbox [data-baseweb="checkbox"]:has(input:checked) span:first-child {
+    background: var(--accent-strong) !important;
+    border-color: var(--accent-strong) !important;
+}
+
+/* ----- Selectbox dropdown popover --------------------------------------- */
+/* BaseWeb renders the dropdown menu in a portal outside the .stSelectbox
+   wrapper, so Streamlit's secondaryBackgroundColor from config.toml shows
+   through (dark) even on a Light page. Re-themeable selectors. */
+ul[data-baseweb="menu"],
+[data-baseweb="popover"] [role="listbox"],
+[data-baseweb="popover"] ul[role="listbox"] {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-hover) !important;
+}
+ul[data-baseweb="menu"] li,
+[data-baseweb="popover"] [role="option"] {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+ul[data-baseweb="menu"] li:hover,
+[data-baseweb="popover"] [role="option"]:hover,
+[data-baseweb="popover"] [role="option"][aria-selected="true"] {
+    background: var(--surface-2) !important;
+    color: var(--text) !important;
+}
+
+/* ----- Tab highlight indicator ----------------------------------------- */
+/* Streamlit's primaryColor from config.toml renders as a stray bar under
+   the tab list (most visible on the Login page where the Sign in /
+   Register / Forgot password tabs got TWO underlines stacked). Our own
+   .stTabs [aria-selected="true"][data-baseweb="tab"] rule already draws
+   the active-tab underline in var(--accent-strong); hide the BaseWeb
+   default so only ours remains. */
+.stTabs [data-baseweb="tab-highlight"],
+.stTabs [data-baseweb="tab-border"] {
+    background: transparent !important;
+    display: none !important;
+}
 
 /* ----- Dividers ---------------------------------------------------------- */
 hr, [data-testid="stDivider"] {

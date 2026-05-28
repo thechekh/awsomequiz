@@ -5,11 +5,16 @@
 # for users whose stored preference is dark.
 
 [theme]
-base = "dark"
-primaryColor = "#FF9900"                # accent (AWS orange) -- buttons, focus rings
-backgroundColor = "#1A1D23"             # Neutral Slate bg
-secondaryBackgroundColor = "#22262E"    # Neutral Slate surface
-textColor = "#E8EAED"                   # Neutral Slate text
+# Light theme tokens are the safer first-paint default: a brief light
+# flash for dark users is less jarring than the inverse, and the BaseWeb
+# widget internals (radio circles, selectbox dropdown popover) inherit
+# these tokens before our CSS variables can override -- so anchoring on
+# light keeps form widgets readable in both modes.
+base = "light"
+primaryColor = "#2563EB"                # light-mode accent (blue-600)
+backgroundColor = "#F9FAFB"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#111827"
 font = "sans serif"
 
 [server]
