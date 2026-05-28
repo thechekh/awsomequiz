@@ -8,6 +8,7 @@ cached with `@st.cache_data` per the brief's free-tier constraint.
 from __future__ import annotations
 
 import random
+from datetime import datetime, timedelta, timezone
 
 import streamlit as st
 
@@ -421,24 +422,20 @@ def _cert_question_ids(certification_id: str) -> list[str]:
     return [r["id"] for r in rows]
 
 
-def pick_weak_area_question_ids(
+CACHE_TTL_PICK = 30  # Short -- post-session UI feedback should feel fresh.
+
+
+@st.cache_data(ttl=CACHE_TTL_PICK)
+def _weak_area_question_ids_cached(
     user_id: str,
     certification_id: str,
-    count: int | None = None,
-    threshold_pct: int = 70,
-    min_attempts: int = 3,
+    threshold_pct: int,
+    min_attempts: int,
 ) -> list[str]:
-    """Pick questions where the user's accuracy is below `threshold_pct` after
-    at least `min_attempts` attempts, OR questions they've never seen.
-
-    Unseen questions are included because the brief says weak-areas should
-    surface knowledge gaps -- both confirmed-weak and uncovered-territory.
-    """
+    """Cached part of weak-area selection (no shuffle, no count cap)."""
     cert_qids = _cert_question_ids(certification_id)
     if not cert_qids:
         return []
-    cert_qid_set = set(cert_qids)
-
     supabase = get_supabase()
     stats_rows = (
         supabase.table("question_stats")
@@ -456,38 +453,52 @@ def pick_weak_area_question_ids(
             weak.append(qid)
             continue
         if s["times_seen"] < min_attempts:
-            # Too few attempts to call it weak -- skip (avoid noise from one-shot misses)
             continue
         accuracy = (s["times_correct"] / s["times_seen"]) * 100
         if accuracy < threshold_pct:
             weak.append(qid)
+    return weak
 
+
+def pick_weak_area_question_ids(
+    user_id: str,
+    certification_id: str,
+    count: int | None = None,
+    threshold_pct: int = 70,
+    min_attempts: int = 3,
+) -> list[str]:
+    """Pick questions where the user's accuracy is below `threshold_pct` after
+    at least `min_attempts` attempts, OR questions they've never seen.
+
+    Unseen questions are included because the brief says weak-areas should
+    surface knowledge gaps -- both confirmed-weak and uncovered-territory.
+
+    The heavy lifting (cert qids + per-user stats fetch) is cached for 30s
+    via `_weak_area_question_ids_cached`; the shuffle/count cap happens
+    outside the cache so each call returns a fresh sample.
+    """
+    weak = list(_weak_area_question_ids_cached(
+        user_id, certification_id, threshold_pct, min_attempts,
+    ))
     random.shuffle(weak)
     if count is not None:
         weak = weak[:count]
     return weak
 
 
-def pick_missed_question_ids(
-    user_id: str,
-    certification_id: str,
-    count: int | None = None,
-) -> list[str]:
-    """Pick distinct questions the user has gotten wrong in any past session.
-
-    Uses user_answers directly so this reflects the user's *last submitted*
-    answer per session (works for both practice and timed-with-revisions).
-    """
+@st.cache_data(ttl=CACHE_TTL_PICK)
+def _missed_question_ids_cached(user_id: str, certification_id: str) -> list[str]:
+    """Cached part of missed-question selection (no shuffle, no count cap)."""
     cert_qid_set = set(_cert_question_ids(certification_id))
     if not cert_qid_set:
         return []
 
     supabase = get_supabase()
-    # First fetch the user's session IDs (RLS scopes to this user).
     session_rows = (
         supabase.table("exam_sessions")
         .select("id")
         .eq("user_id", user_id)
+        .eq("certification_id", certification_id)
         .limit(10000)
         .execute()
     ).data or []
@@ -503,7 +514,22 @@ def pick_missed_question_ids(
         .limit(10000)
         .execute()
     ).data or []
-    missed = list({a["question_id"] for a in answers if a["question_id"] in cert_qid_set})
+    return list({a["question_id"] for a in answers if a["question_id"] in cert_qid_set})
+
+
+def pick_missed_question_ids(
+    user_id: str,
+    certification_id: str,
+    count: int | None = None,
+) -> list[str]:
+    """Pick distinct questions the user has gotten wrong in any past session.
+
+    Uses user_answers directly so this reflects the user's *last submitted*
+    answer per session (works for both practice and timed-with-revisions).
+    Inner fetch is cached for 30s; shuffle + slice happen outside so each
+    call to start a session gets a fresh random sample.
+    """
+    missed = list(_missed_question_ids_cached(user_id, certification_id))
     random.shuffle(missed)
     if count is not None:
         missed = missed[:count]
@@ -844,13 +870,44 @@ def record_flashcard_review(user_id: str, card_id: str, knew_it: bool) -> None:
 
 
 @st.cache_data(ttl=CACHE_TTL_STATS)
+def get_recent_answers(
+    user_id: str,
+    certification_id: str,
+    limit: int = 1000,
+) -> list[dict]:
+    """Return the user's most recent (answered_at, is_correct) tuples for one cert.
+
+    Scoped via exam_sessions.certification_id so practice + timed + review +
+    bookmarked all contribute. Used by the stats page's practice-trend chart.
+    """
+    supabase = get_supabase()
+    session_rows = (
+        supabase.table("exam_sessions")
+        .select("id")
+        .eq("user_id", user_id)
+        .eq("certification_id", certification_id)
+        .limit(10000)
+        .execute()
+    ).data or []
+    session_ids = [s["id"] for s in session_rows]
+    if not session_ids:
+        return []
+    return (
+        supabase.table("user_answers")
+        .select("answered_at, is_correct")
+        .in_("session_id", session_ids)
+        .order("answered_at", desc=True)
+        .limit(limit)
+        .execute()
+    ).data or []
+
+
+@st.cache_data(ttl=CACHE_TTL_STATS)
 def get_practice_streak(user_id: str) -> int:
     """Consecutive UTC days with at least one session, ending today or yesterday.
 
     Returns 0 if the user hasn't practiced today AND not yesterday (broken streak).
     """
-    from datetime import datetime, timedelta, timezone
-
     supabase = get_supabase()
     rows = (
         supabase.table("exam_sessions")

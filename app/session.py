@@ -9,11 +9,13 @@ INSERT and UPDATE -- do NOT update the rollup here.
 
 from __future__ import annotations
 
+import random
 from datetime import datetime, timezone
 from typing import Literal
 
 from app.db import get_supabase
 from app.queries import (
+    list_domains,
     pick_bookmarked_question_ids,
     pick_missed_question_ids,
     pick_question_ids,
@@ -75,11 +77,36 @@ def start_practice_session(
     return _create_session_row(user_id, certification_id, "practice", qids, domain_ids)
 
 
+def _allocate_per_domain(count: int, weights: list[float]) -> list[int]:
+    """Largest-remainder method: split `count` items by float `weights`.
+
+    Returns a list of integer counts (same length as `weights`) that sums to
+    `count` exactly. Used so a 65-question CLF-C02 timed exam draws ~16/19/22/8
+    from its four official domains (24/30/34/12 %) rather than uniformly.
+    """
+    if not weights or sum(weights) <= 0:
+        return []
+    total_weight = sum(weights)
+    raw = [count * (w / total_weight) for w in weights]
+    floored = [int(r) for r in raw]
+    remainder = count - sum(floored)
+    # Distribute the remainder to the largest fractional parts.
+    fractional = sorted(
+        range(len(weights)), key=lambda i: raw[i] - floored[i], reverse=True
+    )
+    for i in fractional[:remainder]:
+        floored[i] += 1
+    return floored
+
+
 def start_timed_session(user_id: str, certification_id: str) -> dict:
     """Create a timed exam session.
 
     Question count + duration come from the `certifications` row (CLF-C02:
-    65 questions / 90 minutes) so SAA/DVA can be added later without code edits.
+    65 questions / 90 minutes). When the cert has domains with weights set,
+    questions are drawn proportionally per domain (CLF-C02: 24/30/34/12 %)
+    so the simulation matches the real exam blueprint instead of being a
+    uniform sample over all questions.
     """
     supabase = get_supabase()
     cert = (
@@ -90,12 +117,53 @@ def start_timed_session(user_id: str, certification_id: str) -> dict:
         .execute()
     ).data
     count = cert["question_count"]
-    qids = pick_question_ids(certification_id, count)
+
+    qids = _pick_domain_weighted_qids(certification_id, count)
     if len(qids) < count:
         raise ValueError(
             f"Only {len(qids)} active questions available; need {count} for a timed exam."
         )
     return _create_session_row(user_id, certification_id, "timed", qids)
+
+
+def _pick_domain_weighted_qids(certification_id: str, count: int) -> list[str]:
+    """Pick `count` question IDs respecting the cert's domain weights.
+
+    Falls back to uniform random sampling when no domain has a weight, or
+    when domain-weighted picking can't fill the request (small domains).
+    """
+    domains = list_domains(certification_id)
+    weighted = [d for d in domains if d.get("weight") and float(d["weight"]) > 0]
+    if not weighted or len(weighted) < 2:
+        return pick_question_ids(certification_id, count)
+
+    weights = [float(d["weight"]) for d in weighted]
+    targets = _allocate_per_domain(count, weights)
+
+    qids: list[str] = []
+    shortfall_domains: list[int] = []
+    for i, (domain, target) in enumerate(zip(weighted, targets)):
+        if target <= 0:
+            continue
+        picked = pick_question_ids(certification_id, target, domain_ids=[domain["id"]])
+        qids.extend(picked)
+        if len(picked) < target:
+            shortfall_domains.append(target - len(picked))
+
+    # If any domain ran out of questions, top up from the global pool
+    # (untagged + other domains' overflow), avoiding duplicates.
+    if len(qids) < count:
+        seen = set(qids)
+        all_qids = pick_question_ids(certification_id, None)
+        for qid in all_qids:
+            if qid not in seen:
+                qids.append(qid)
+                seen.add(qid)
+                if len(qids) >= count:
+                    break
+
+    random.shuffle(qids)
+    return qids[:count]
 
 
 def start_weak_areas_session(

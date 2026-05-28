@@ -16,12 +16,14 @@ can't cheat extra time.
 
 from __future__ import annotations
 
+import time
 from datetime import datetime, timedelta, timezone
 
 import streamlit as st
 
 from app.auth import apply_session_to_client, current_user
 from app.queries import (
+    REPORT_REASONS,
     format_started_at,
     get_answered_question_ids,
     get_current_certification,
@@ -29,6 +31,7 @@ from app.queries import (
     get_review_bundle,
     get_user_answer,
     is_bookmarked,
+    report_question,
     toggle_bookmark,
 )
 from app.session import (
@@ -38,6 +41,47 @@ from app.session import (
     record_answer,
     start_timed_session,
 )
+
+
+_REPORT_LABELS = {
+    "incorrect_answer": "Answer is wrong",
+    "typo": "Typo / formatting",
+    "ambiguous": "Question is ambiguous",
+    "outdated": "Outdated / no longer accurate",
+    "other": "Other",
+}
+
+
+@st.dialog("Report a problem")
+def _timed_report_dialog(question_id: str, user_id: str) -> None:
+    """Modal that posts to question_reports during a timed exam."""
+    st.caption("Reports are reviewed offline; this exam continues normally.")
+    reason = st.radio(
+        "Reason",
+        options=list(REPORT_REASONS),
+        format_func=lambda r: _REPORT_LABELS.get(r, r),
+        key=f"timed_report_reason_{question_id}",
+    )
+    details = st.text_area(
+        "Details (optional)",
+        key=f"timed_report_details_{question_id}",
+    )
+    c1, c2 = st.columns(2)
+    if c1.button("Cancel", use_container_width=True, key=f"timed_report_cancel_{question_id}"):
+        st.rerun()
+    if c2.button(
+        "Submit report",
+        type="primary",
+        use_container_width=True,
+        key=f"timed_report_submit_{question_id}",
+    ):
+        try:
+            report_question(user_id, question_id, reason, details or None)
+        except Exception as exc:  # noqa: BLE001
+            st.error(f"Could not submit: {exc}")
+            return
+        st.success("Report submitted.")
+        st.rerun()
 
 TIMED_SESSION_KEY = "timed_session"
 TIMED_INDEX_KEY = "timed_index"
@@ -312,7 +356,7 @@ correct_ids = [o["id"] for o in question["options"] if o["is_correct"]]
 prior = get_user_answer(session["id"], qid)
 prior_selected: list[str] = (prior or {}).get("selected_option_ids") or []
 
-hcol, bcol = st.columns([7, 1])
+hcol, bcol, rcol = st.columns([6, 1, 1])
 hcol.subheader(f"Question {index + 1} of {total}")
 
 bookmarked = is_bookmarked(user["id"], qid)
@@ -320,6 +364,19 @@ bm_label = "Bookmarked" if bookmarked else "Bookmark"
 if bcol.button(bm_label, key=f"timed_bm_{qid}", use_container_width=True):
     toggle_bookmark(user["id"], qid)
     st.rerun()
+if rcol.button(
+    "Report",
+    key=f"timed_report_btn_{qid}",
+    use_container_width=True,
+    help="Flag a problem with this question.",
+):
+    _timed_report_dialog(qid, user["id"])
+
+# Record first-view timestamp per question so we can capture time-on-question
+# on Save. Survives navigation back-and-forth; cleared after the answer lands.
+viewed_key = f"timed_viewed_{qid}"
+if viewed_key not in st.session_state:
+    st.session_state[viewed_key] = time.time()
 
 st.markdown(question["stem"])
 
@@ -362,7 +419,9 @@ if save_col.button(
     key=f"timed_save_{qid}",
     use_container_width=True,
 ):
-    record_answer(session["id"], qid, chosen, correct_ids, 0)
+    elapsed = int(time.time() - st.session_state.get(viewed_key, time.time()))
+    record_answer(session["id"], qid, chosen, correct_ids, max(elapsed, 0))
+    st.session_state.pop(viewed_key, None)
     if index < total - 1:
         st.session_state[TIMED_INDEX_KEY] = index + 1
     st.rerun()

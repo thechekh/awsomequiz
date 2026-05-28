@@ -20,6 +20,7 @@ from app.queries import (
     get_current_certification,
     get_per_domain_accuracy,
     get_practice_streak,
+    get_recent_answers,
     get_session_history,
     get_user_stats_summary,
 )
@@ -115,6 +116,38 @@ with st.container(border=True):
         st.caption(f"Pass threshold: {cert['pass_threshold_pct']}%")
     else:
         st.caption("No timed exams completed yet -- take one to see your score over time.")
+
+# ---------------------------------------------------------------------------
+# Practice accuracy trend (rolling, includes every mode)
+# ---------------------------------------------------------------------------
+
+st.markdown('<div class="section-label">Practice accuracy trend</div>', unsafe_allow_html=True)
+
+ROLLING_WINDOW = 25
+recent_answers = get_recent_answers(user["id"], cert["id"], limit=1000)
+
+with st.container(border=True):
+    if len(recent_answers) < ROLLING_WINDOW:
+        st.caption(
+            f"Answer at least **{ROLLING_WINDOW}** questions to see a rolling-accuracy "
+            f"trend. So far: {len(recent_answers)}."
+        )
+    else:
+        df = pd.DataFrame([
+            {
+                "Answered at": datetime.fromisoformat(a["answered_at"].replace("Z", "+00:00")),
+                "Correct": 1 if a["is_correct"] else 0,
+            }
+            for a in recent_answers
+        ]).sort_values("Answered at").set_index("Answered at")
+        df["Rolling accuracy %"] = (
+            df["Correct"].rolling(ROLLING_WINDOW, min_periods=ROLLING_WINDOW).mean() * 100
+        )
+        chart_df = df[["Rolling accuracy %"]].dropna()
+        st.line_chart(chart_df, y="Rolling accuracy %")
+        st.caption(
+            f"Rolling mean over the last {ROLLING_WINDOW} answered questions across all modes."
+        )
 
 # ---------------------------------------------------------------------------
 # Per-domain accuracy

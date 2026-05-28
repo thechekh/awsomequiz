@@ -202,6 +202,29 @@ restore_session_from_cookie()
 session = get_session()
 apply_session_to_client()
 
+# Cold-load grace: on the first script run, the cookie_reader component
+# returns None synchronously and only posts the real value on its next
+# render. Without a one-render delay, deeplinks like /practice land
+# while session=None, so st.navigation registers the unauth pages list
+# (no /practice) and Streamlit shows "Page not found". Render a brief
+# placeholder, st.stop, and let the component-value postMessage trigger
+# the rerun that restores the session.
+COLD_LOAD_GRACE_KEY = "_cold_load_grace_done"
+if not session and not st.session_state.get(COLD_LOAD_GRACE_KEY):
+    st.session_state[COLD_LOAD_GRACE_KEY] = True
+    st.markdown(
+        """
+        <div style="display:flex;align-items:center;justify-content:center;height:60vh;">
+          <div style="text-align:center;color:#6B7280;">
+            <div style="font-size:1.05rem;margin-bottom:0.3rem;">Loading...</div>
+            <div style="font-size:0.85rem;">Restoring your session</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.stop()
+
 if session:
     pages = [
         st.Page("pages/home.py", title="Home", icon=":material/home:", default=True, url_path=""),
@@ -215,15 +238,21 @@ if session:
         st.Page("pages/account.py", title="Account", icon=":material/person:", url_path="account"),
     ]
 else:
+    # Include the authenticated pages so URL routing resolves on deeplinks;
+    # each page redirects to /login via in-page current_user() check. Visible
+    # nav is hidden for unauth, so these don't appear in the sidebar.
     pages = [
         st.Page("pages/login.py", title="Sign in", icon=":material/login:", default=True, url_path=""),
-        # Hidden from nav (position="hidden" below) but URL-routable so the
-        # password-reset email link works.
         st.Page("pages/reset_password.py", title="Reset password", url_path="reset_password"),
-        # Guest practice / glossary -- reachable via buttons on the Login page or
-        # by direct URL. Nav is hidden for unauth so nothing else routes here.
         st.Page("pages/guest_practice.py", title="Practice as guest", url_path="guest_practice"),
         st.Page("pages/glossary.py", title="Glossary", url_path="glossary"),
+        st.Page("pages/practice.py", title="Practice", url_path="practice"),
+        st.Page("pages/timed_exam.py", title="Timed exam", url_path="timed_exam"),
+        st.Page("pages/review.py", title="Review", url_path="review"),
+        st.Page("pages/bookmarks.py", title="Bookmarks", url_path="bookmarks"),
+        st.Page("pages/flashcards.py", title="Flashcards", url_path="flashcards"),
+        st.Page("pages/stats.py", title="Stats", url_path="stats"),
+        st.Page("pages/account.py", title="Account", url_path="account"),
     ]
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")

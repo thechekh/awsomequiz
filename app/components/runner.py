@@ -18,12 +18,56 @@ import time
 import streamlit as st
 
 from app.queries import (
+    REPORT_REASONS,
     get_question_with_options,
     get_user_answer,
     is_bookmarked,
+    report_question,
     toggle_bookmark,
 )
 from app.session import abandon_session, complete_session, record_answer
+
+
+_REPORT_LABELS = {
+    "incorrect_answer": "Answer is wrong",
+    "typo": "Typo / formatting",
+    "ambiguous": "Question is ambiguous",
+    "outdated": "Outdated / no longer accurate",
+    "other": "Other",
+}
+
+
+@st.dialog("Report a problem")
+def _report_dialog(question_id: str, user_id: str) -> None:
+    """Modal that posts to question_reports for moderator triage."""
+    st.caption("Help improve the question bank. Reports are anonymous to other users.")
+    reason = st.radio(
+        "Reason",
+        options=list(REPORT_REASONS),
+        format_func=lambda r: _REPORT_LABELS.get(r, r),
+        key=f"report_reason_{question_id}",
+    )
+    details = st.text_area(
+        "Details (optional)",
+        placeholder="What's wrong? Quote the option label / paste the correct answer if you know it.",
+        key=f"report_details_{question_id}",
+    )
+    c1, c2 = st.columns(2)
+    if c1.button("Cancel", use_container_width=True, key=f"report_cancel_{question_id}"):
+        st.rerun()
+    if c2.button(
+        "Submit report",
+        type="primary",
+        use_container_width=True,
+        key=f"report_submit_{question_id}",
+    ):
+        try:
+            report_question(user_id, question_id, reason, details or None)
+        except Exception as exc:  # noqa: BLE001 - surface to user, don't crash dialog
+            st.error(f"Could not submit: {exc}")
+            return
+        st.success("Report submitted. Thanks for flagging.")
+        st.rerun()
 
 
 def _clear_runner_state(namespace: str) -> None:
@@ -69,7 +113,7 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     correct_ids = [o["id"] for o in question["options"] if o["is_correct"]]
     prior = get_user_answer(session["id"], qid)
 
-    hcol, bcol = st.columns([7, 1])
+    hcol, bcol, rcol = st.columns([6, 1, 1])
     hcol.subheader(f"Question {index + 1}")
 
     bookmarked = is_bookmarked(user["id"], qid)
@@ -77,6 +121,13 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     if bcol.button(bm_label, key=f"runner_bm_{qid}", use_container_width=True):
         toggle_bookmark(user["id"], qid)
         st.rerun()
+    if rcol.button(
+        "Report",
+        key=f"runner_report_btn_{qid}",
+        use_container_width=True,
+        help="Flag a problem with this question (incorrect answer, typo, ambiguous, etc.)",
+    ):
+        _report_dialog(qid, user["id"])
 
     st.markdown(question["stem"])
 
