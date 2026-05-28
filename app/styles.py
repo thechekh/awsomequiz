@@ -173,8 +173,14 @@ h3, .stMarkdown h3 {
     letter-spacing: -0.02em;
     line-height: 1.1;
 }
-.dark-stat-value.accent-emerald { color: var(--correct-text); }
-.dark-stat-value.accent-amber   { color: var(--accent); }
+/* Dark stat block is dark in BOTH themes (it's the "Our Proof Points"
+   pattern -- a high-contrast dark gradient surface on every page).
+   var(--correct-text) was theme-dependent and in Light mode resolves to
+   #065F46 (dark forest green), which is unreadable on the dark gradient
+   bg -- the "Pass threshold 70%" number disappeared. Use fixed, light
+   tones that read on the dark surface in both themes. */
+.dark-stat-value.accent-emerald { color: #5DCAA5 !important; }   /* desaturated sage */
+.dark-stat-value.accent-amber   { color: #FBBF24 !important; }   /* amber-400 */
 
 /* ----- Welcome intro paragraph (top of home page) ----------------------- */
 .welcome-intro {
