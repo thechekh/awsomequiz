@@ -573,16 +573,22 @@ def pick_bookmarked_question_ids(
 def report_question(user_id: str, question_id: str, reason: str, details: str | None) -> None:
     """Insert a row into question_reports.
 
-    RLS policy on question_reports requires auth.uid() = user_id. The cached
-    Supabase client occasionally loses its session inside an @st.dialog rerun
-    context (the dialog runs in its own script-execution scope), so we
-    re-apply the session here defensively before the insert.
+    RLS policy is `auth.uid() = user_id`. supabase-py's `client.auth.set_session`
+    doesn't always propagate the JWT onto the PostgREST sub-client used for
+    table operations (especially inside an @st.dialog rerun context), so we
+    set both explicitly here before the insert.
     """
     if reason not in REPORT_REASONS:
         raise ValueError(f"Unknown report reason: {reason}")
-    from app.auth import apply_session_to_client  # deferred -- avoids auth<->queries circular
-    apply_session_to_client()
+    import streamlit as _st
+    session = _st.session_state.get("supabase_session") or {}
+    access_token = session.get("access_token")
+    refresh_token = session.get("refresh_token")
+    if not access_token:
+        raise RuntimeError("No active session; cannot file report.")
     supabase = get_supabase()
+    supabase.auth.set_session(access_token, refresh_token)
+    supabase.postgrest.auth(access_token)
     supabase.table("question_reports").insert({
         "user_id": user_id,
         "question_id": question_id,
