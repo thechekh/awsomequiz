@@ -67,12 +67,12 @@ def _timed_report_dialog(question_id: str, user_id: str) -> None:
         key=f"timed_report_details_{question_id}",
     )
     c1, c2 = st.columns(2)
-    if c1.button("Cancel", use_container_width=True, key=f"timed_report_cancel_{question_id}"):
+    if c1.button("Cancel", width="stretch", key=f"timed_report_cancel_{question_id}"):
         st.rerun()
     if c2.button(
         "Submit report",
         type="primary",
-        use_container_width=True,
+        width="stretch",
         key=f"timed_report_submit_{question_id}",
     ):
         try:
@@ -158,9 +158,9 @@ def _submit_dialog(session_row: dict) -> None:
         )
     st.write("Submit and view your score?")
     c1, c2 = st.columns(2)
-    if c1.button("Cancel", use_container_width=True):
+    if c1.button("Cancel", width="stretch"):
         st.rerun()
-    if c2.button("Submit final", type="primary", use_container_width=True):
+    if c2.button("Submit final", type="primary", width="stretch"):
         _finalize(session_row["id"])
 
 
@@ -339,13 +339,13 @@ with st.sidebar:
                     f"{prefix}{q_idx + 1}",
                     key=f"timed_grid_{q_idx}",
                     type=btn_type,
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     st.session_state[TIMED_INDEX_KEY] = q_idx
                     st.rerun()
 
     st.divider()
-    if st.button("Submit exam", type="primary", use_container_width=True):
+    if st.button("Submit exam", type="primary", width="stretch"):
         _submit_dialog(session)
 
 # Main pane: current question
@@ -361,13 +361,13 @@ hcol.subheader(f"Question {index + 1} of {total}")
 
 bookmarked = is_bookmarked(user["id"], qid)
 bm_label = "Bookmarked" if bookmarked else "Bookmark"
-if bcol.button(bm_label, key=f"timed_bm_{qid}", use_container_width=True):
+if bcol.button(bm_label, key=f"timed_bm_{qid}", width="stretch"):
     toggle_bookmark(user["id"], qid)
     st.rerun()
 if rcol.button(
     "Report",
     key=f"timed_report_btn_{qid}",
-    use_container_width=True,
+    width="stretch",
     help="Flag a problem with this question.",
 ):
     _timed_report_dialog(qid, user["id"])
@@ -407,7 +407,7 @@ else:
 
 # Navigation row
 prev_col, save_col, next_col = st.columns(3)
-if prev_col.button("Previous", disabled=index == 0, key=f"timed_prev_{qid}", use_container_width=True):
+if prev_col.button("Previous", disabled=index == 0, key=f"timed_prev_{qid}", width="stretch"):
     st.session_state[TIMED_INDEX_KEY] = index - 1
     st.rerun()
 
@@ -417,7 +417,7 @@ if save_col.button(
     type="primary",
     disabled=chosen is None,
     key=f"timed_save_{qid}",
-    use_container_width=True,
+    width="stretch",
 ):
     elapsed = int(time.time() - st.session_state.get(viewed_key, time.time()))
     record_answer(session["id"], qid, chosen, correct_ids, max(elapsed, 0))
@@ -430,7 +430,7 @@ if next_col.button(
     "Next",
     disabled=index >= total - 1,
     key=f"timed_next_{qid}",
-    use_container_width=True,
+    width="stretch",
 ):
     st.session_state[TIMED_INDEX_KEY] = index + 1
     st.rerun()

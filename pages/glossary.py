@@ -175,5 +175,5 @@ st.caption(
 # regular sidebar nav so they don't need this).
 if not current_user():
     st.divider()
-    if st.button("Back to sign in / register", use_container_width=False):
+    if st.button("Back to sign in / register", width="content"):
         st.switch_page("pages/login.py")

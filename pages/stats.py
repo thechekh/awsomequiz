@@ -208,4 +208,4 @@ with st.container(border=True):
             }
             for s in recent
         ]
-        st.dataframe(table, hide_index=True, use_container_width=True)
+        st.dataframe(table, hide_index=True, width="stretch")

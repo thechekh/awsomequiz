@@ -236,16 +236,29 @@ else:
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
 
-# Cold-load grace: when the URL is a deeplink (not "/") and we have no
-# session yet, the cookie_reader component hasn't posted its value back
-# on this first render. Render a placeholder and st.stop() AFTER nav was
-# registered (so the URL is preserved) but BEFORE pg.run() (so the target
-# page doesn't redirect to /login pre-emptively). The cookie value's
-# postMessage triggers the rerun that completes the session restore.
+# Cold-load grace: when the URL is a deeplink to an auth-only page and we
+# have no session yet, the cookie_reader component hasn't posted its value
+# back on this first render. Render a placeholder and st.stop() AFTER nav
+# was registered (so the URL is preserved) but BEFORE pg.run() (so the
+# target page doesn't redirect to /login pre-emptively).
+#
+# Skip grace for pages that work fine without a session ("", glossary,
+# guest_practice, reset_password). Guests browsing /glossary should see it
+# immediately, not flash a Loading screen that the cookie_reader's null
+# value won't always trigger a rerun out of.
+GUEST_FRIENDLY_PATHS = {"", "glossary", "guest_practice", "reset_password"}
+
+# If the JS fallback (below) reloaded us with ?nograce=1, clear the param
+# from the URL and skip the grace block on this render -- the user has
+# already waited long enough; let the target page redirect to /login.
+if st.query_params.get("nograce") == "1":
+    st.session_state[COLD_LOAD_GRACE_KEY] = True
+    del st.query_params["nograce"]
+
 if (
     not session
     and not st.session_state.get(COLD_LOAD_GRACE_KEY)
-    and pg.url_path != ""
+    and pg.url_path not in GUEST_FRIENDLY_PATHS
 ):
     st.session_state[COLD_LOAD_GRACE_KEY] = True
     st.markdown(
@@ -258,6 +271,29 @@ if (
         </div>
         """,
         unsafe_allow_html=True,
+    )
+    # Defensive: if the cookie_reader's setComponentValue postMessage never
+    # arrives (or its null value gets dedup'd by Streamlit), force a single
+    # page reload after 2.5s with ?nograce=1 so we never get stuck here.
+    st.html(
+        """
+        <script>
+        (function () {
+          const flag = '__awsomequizGraceTimerSet';
+          if (window[flag]) return;
+          window[flag] = true;
+          setTimeout(() => {
+            try {
+              const u = new URL(location.href);
+              if (u.searchParams.get('nograce') === '1') return;
+              u.searchParams.set('nograce', '1');
+              location.replace(u.toString());
+            } catch (_) {}
+          }, 2500);
+        })();
+        </script>
+        """,
+        unsafe_allow_javascript=True,
     )
     st.stop()
 
@@ -343,7 +379,7 @@ if session:
         st.divider()
         user_email = session["user"]["email"] if session.get("user") else "(unknown)"
         st.caption(f"Signed in as **{user_email}**")
-        if st.button("Sign out", use_container_width=True, key="sidebar_signout"):
+        if st.button("Sign out", width="stretch", key="sidebar_signout"):
             sign_out()
             st.rerun()
 

@@ -95,7 +95,7 @@ if session is None:
             ),
         )
         start = st.form_submit_button(
-            "Start practice", type="primary", use_container_width=True
+            "Start practice", type="primary", width="stretch"
         )
     if start:
         domain_ids = (

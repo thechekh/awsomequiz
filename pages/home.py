@@ -120,11 +120,11 @@ st.markdown('<div class="section-label">Study modes</div>', unsafe_allow_html=Tr
 
 c1, c2 = st.columns(2)
 with c1:
-    if st.button("Start a practice session", type="primary", use_container_width=True):
+    if st.button("Start a practice session", type="primary", width="stretch"):
         st.switch_page("pages/practice.py")
     st.caption("Pick domain + count. Immediate feedback after each answer.")
 with c2:
-    if st.button("Start a timed exam", type="primary", use_container_width=True):
+    if st.button("Start a timed exam", type="primary", width="stretch"):
         st.switch_page("pages/timed_exam.py")
     st.caption(
         f"{cert['question_count']}Q / {cert['duration_minutes']} min. "
@@ -133,11 +133,11 @@ with c2:
 
 c3, c4 = st.columns(2)
 with c3:
-    if st.button("Review weak areas / missed", use_container_width=True):
+    if st.button("Review weak areas / missed", width="stretch"):
         st.switch_page("pages/review.py")
     st.caption("Drill questions you got wrong or accuracy < 70%.")
 with c4:
-    if st.button("Bookmarks", use_container_width=True):
+    if st.button("Bookmarks", width="stretch"):
         st.switch_page("pages/bookmarks.py")
     st.caption("Manage saved questions and practice them.")
 
@@ -149,10 +149,10 @@ st.markdown('<div class="section-label">Reference &amp; insight</div>', unsafe_a
 
 c5, c6 = st.columns(2)
 with c5:
-    if st.button("Flashcards", use_container_width=True):
+    if st.button("Flashcards", width="stretch"):
         st.switch_page("pages/flashcards.py")
     st.caption("Anki-style decks: AWS services, frameworks, basics.")
 with c6:
-    if st.button("Stats", use_container_width=True):
+    if st.button("Stats", width="stretch"):
         st.switch_page("pages/stats.py")
     st.caption("Accuracy trends, streaks, recent sessions.")

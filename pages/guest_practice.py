@@ -117,7 +117,7 @@ if queue is None:
         if chosen != current_code:
             set_current_certification(chosen)
             st.rerun()
-    if st.button("Start practice", type="primary", use_container_width=True):
+    if st.button("Start practice", type="primary", width="stretch"):
         _start_guest_session()
     st.stop()
 
@@ -133,7 +133,7 @@ with st.sidebar:
     st.divider()
     st.metric("Question", f"{min(index + 1, total)} / {total}")
     st.caption("Guest session -- not saved.")
-    if st.button("Quit", use_container_width=True, key="guest_quit"):
+    if st.button("Quit", width="stretch", key="guest_quit"):
         _clear_guest_state()
         st.switch_page("pages/login.py")
 
@@ -224,6 +224,6 @@ else:
             )
 
     next_label = "Finish session" if index + 1 == total else "Next question"
-    if st.button(next_label, type="primary", key=f"guest_next_{qid}", use_container_width=True):
+    if st.button(next_label, type="primary", key=f"guest_next_{qid}", width="stretch"):
         st.session_state[INDEX_KEY] = index + 1
         st.rerun()

@@ -110,7 +110,7 @@ if queue is not None:
         st.divider()
         st.metric("Card", f"{min(index + 1, total)} / {total}")
         st.caption(f"Deck: **{deck['name']}**")
-        if st.button("Quit study session", use_container_width=True, key="flashcards_quit"):
+        if st.button("Quit study session", width="stretch", key="flashcards_quit"):
             _clear_study_state()
             st.session_state.pop(DECK_KEY, None)
             st.rerun()
@@ -148,14 +148,14 @@ if queue is not None:
             )
 
     if not flipped:
-        if st.button("Show answer", type="primary", use_container_width=True, key=f"flip_{card['id']}"):
+        if st.button("Show answer", type="primary", width="stretch", key=f"flip_{card['id']}"):
             st.session_state[FLIPPED_KEY] = True
             st.rerun()
     else:
         c_left, c_right = st.columns(2)
         if c_left.button(
             "Need more practice",
-            use_container_width=True,
+            width="stretch",
             key=f"again_{card['id']}",
         ):
             record_flashcard_review(user["id"], card["id"], knew_it=False)
@@ -168,7 +168,7 @@ if queue is not None:
         if c_right.button(
             "I knew it",
             type="primary",
-            use_container_width=True,
+            width="stretch",
             key=f"knew_{card['id']}",
         ):
             record_flashcard_review(user["id"], card["id"], knew_it=True)
@@ -220,7 +220,7 @@ if selected is None:
                     "Study",
                     key=f"select_deck_{deck['id']}",
                     type="primary",
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     st.session_state[DECK_KEY] = {
                         "id": deck["id"],
@@ -255,7 +255,7 @@ with st.form("flashcard_mode_picker"):
         horizontal=True,
         index=0,
     )
-    start = st.form_submit_button("Start studying", type="primary", use_container_width=True)
+    start = st.form_submit_button("Start studying", type="primary", width="stretch")
 if start:
     mode = mode_label_to_key[mode_label]
     count = None if count_choice == "All" else int(count_choice)

@@ -113,7 +113,7 @@ with weak_tab:
                 key="weak_count",
             )
             start = st.form_submit_button(
-                "Start weak-areas review", type="primary", use_container_width=True
+                "Start weak-areas review", type="primary", width="stretch"
             )
         if start:
             count = None if count_choice == "All" else int(count_choice)
@@ -149,7 +149,7 @@ with missed_tab:
                 key="missed_count",
             )
             start = st.form_submit_button(
-                "Start missed review", type="primary", use_container_width=True
+                "Start missed review", type="primary", width="stretch"
             )
         if start:
             count = None if count_choice == "All" else int(count_choice)

@@ -53,16 +53,16 @@ if github_url:
         st.link_button(
             "Sign in with GitHub",
             github_url,
-            use_container_width=True,
+            width="stretch",
         )
     st.divider()
 
 # Guest mode -- try the practice runner without an account. No progress saved.
 _, gmid, _ = st.columns([1, 2, 1])
 with gmid:
-    if st.button("Practice as guest (no signup)", use_container_width=True, key="guest_cta"):
+    if st.button("Practice as guest (no signup)", width="stretch", key="guest_cta"):
         st.switch_page("pages/guest_practice.py")
-    if st.button("Browse glossary", use_container_width=True, key="glossary_cta"):
+    if st.button("Browse glossary", width="stretch", key="glossary_cta"):
         st.switch_page("pages/glossary.py")
 
 signin_tab, register_tab, forgot_tab = st.tabs(["Sign in", "Register", "Forgot password"])
@@ -75,7 +75,7 @@ with signin_tab:
     with st.form("signin_form", clear_on_submit=False):
         email = st.text_input("Email", key="signin_email", autocomplete="email")
         password = st.text_input("Password", type="password", key="signin_password", autocomplete="current-password")
-        submitted = st.form_submit_button("Sign in", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Sign in", type="primary", width="stretch")
     if submitted:
         if not email or not password:
             st.error("Email and password are required.")
@@ -105,7 +105,7 @@ with register_tab:
             key="register_password_confirm",
             autocomplete="new-password",
         )
-        submitted = st.form_submit_button("Create account", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Create account", type="primary", width="stretch")
     if submitted:
         if not email or not password:
             st.error("Email and password are required.")
@@ -134,7 +134,7 @@ with register_tab:
 with forgot_tab:
     with st.form("forgot_form", clear_on_submit=True):
         email = st.text_input("Email", key="forgot_email", autocomplete="email")
-        submitted = st.form_submit_button("Send reset link", use_container_width=True)
+        submitted = st.form_submit_button("Send reset link", width="stretch")
     if submitted:
         if not email:
             st.error("Email is required.")

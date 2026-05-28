@@ -39,7 +39,7 @@ st.caption(f"Resetting password for **{user['email']}**")
 with st.form("reset_form", clear_on_submit=True):
     new_pw = st.text_input("New password", type="password", autocomplete="new-password")
     new_pw_confirm = st.text_input("Confirm new password", type="password", autocomplete="new-password")
-    submitted = st.form_submit_button("Update password", type="primary", use_container_width=True)
+    submitted = st.form_submit_button("Update password", type="primary", width="stretch")
 
 if submitted:
     if not new_pw or len(new_pw) < 8:

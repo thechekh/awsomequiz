@@ -86,7 +86,7 @@ st.caption(f"**{len(bookmarks)}** bookmarked.")
 if st.button(
     "Practice all bookmarks",
     type="primary",
-    use_container_width=False,
+    width="content",
     disabled=len(bookmarks) == 0,
 ):
     try:

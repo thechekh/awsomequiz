@@ -53,12 +53,12 @@ def _report_dialog(question_id: str, user_id: str) -> None:
         key=f"report_details_{question_id}",
     )
     c1, c2 = st.columns(2)
-    if c1.button("Cancel", use_container_width=True, key=f"report_cancel_{question_id}"):
+    if c1.button("Cancel", width="stretch", key=f"report_cancel_{question_id}"):
         st.rerun()
     if c2.button(
         "Submit report",
         type="primary",
-        use_container_width=True,
+        width="stretch",
         key=f"report_submit_{question_id}",
     ):
         try:
@@ -96,7 +96,7 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     with st.sidebar:
         st.divider()
         st.metric("Question", f"{min(index + 1, total)} / {total}")
-        if st.button("Quit session", use_container_width=True, key=f"runner_quit_{namespace}"):
+        if st.button("Quit session", width="stretch", key=f"runner_quit_{namespace}"):
             abandon_session(session["id"])
             _clear_runner_state(namespace)
             st.rerun()
@@ -118,13 +118,13 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
 
     bookmarked = is_bookmarked(user["id"], qid)
     bm_label = "Bookmarked" if bookmarked else "Bookmark"
-    if bcol.button(bm_label, key=f"runner_bm_{qid}", use_container_width=True):
+    if bcol.button(bm_label, key=f"runner_bm_{qid}", width="stretch"):
         toggle_bookmark(user["id"], qid)
         st.rerun()
     if rcol.button(
         "Report",
         key=f"runner_report_btn_{qid}",
-        use_container_width=True,
+        width="stretch",
         help="Flag a problem with this question (incorrect answer, typo, ambiguous, etc.)",
     ):
         _report_dialog(qid, user["id"])
@@ -211,7 +211,7 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
             next_label,
             type="primary",
             key=f"runner_next_{qid}",
-            use_container_width=True,
+            width="stretch",
         ):
             st.session_state[index_key] = index + 1
             st.rerun()
