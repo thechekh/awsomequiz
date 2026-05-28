@@ -202,28 +202,7 @@ restore_session_from_cookie()
 session = get_session()
 apply_session_to_client()
 
-# Cold-load grace: on the first script run, the cookie_reader component
-# returns None synchronously and only posts the real value on its next
-# render. Without a one-render delay, deeplinks like /practice land
-# while session=None, so st.navigation registers the unauth pages list
-# (no /practice) and Streamlit shows "Page not found". Render a brief
-# placeholder, st.stop, and let the component-value postMessage trigger
-# the rerun that restores the session.
 COLD_LOAD_GRACE_KEY = "_cold_load_grace_done"
-if not session and not st.session_state.get(COLD_LOAD_GRACE_KEY):
-    st.session_state[COLD_LOAD_GRACE_KEY] = True
-    st.markdown(
-        """
-        <div style="display:flex;align-items:center;justify-content:center;height:60vh;">
-          <div style="text-align:center;color:#6B7280;">
-            <div style="font-size:1.05rem;margin-bottom:0.3rem;">Loading...</div>
-            <div style="font-size:0.85rem;">Restoring your session</div>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    st.stop()
 
 if session:
     pages = [
@@ -256,6 +235,31 @@ else:
     ]
 
 pg = st.navigation(pages, position="sidebar" if session else "hidden")
+
+# Cold-load grace: when the URL is a deeplink (not "/") and we have no
+# session yet, the cookie_reader component hasn't posted its value back
+# on this first render. Render a placeholder and st.stop() AFTER nav was
+# registered (so the URL is preserved) but BEFORE pg.run() (so the target
+# page doesn't redirect to /login pre-emptively). The cookie value's
+# postMessage triggers the rerun that completes the session restore.
+if (
+    not session
+    and not st.session_state.get(COLD_LOAD_GRACE_KEY)
+    and pg.url_path != ""
+):
+    st.session_state[COLD_LOAD_GRACE_KEY] = True
+    st.markdown(
+        """
+        <div style="display:flex;align-items:center;justify-content:center;height:60vh;">
+          <div style="text-align:center;color:#6B7280;">
+            <div style="font-size:1.05rem;margin-bottom:0.3rem;">Loading...</div>
+            <div style="font-size:0.85rem;">Restoring your session</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.stop()
 
 # Dark mode toggle: rendered at top-right of every page via st.columns so the
 # layout is stable across toggles (DARK_OVERRIDE_CSS only changes colors,
