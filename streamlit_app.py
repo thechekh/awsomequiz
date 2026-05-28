@@ -156,10 +156,10 @@ def _resolve_theme_pref() -> str:
     return THEME_SYSTEM
 
 
-# Inject the palette CSS vars FIRST, then the global stylesheet that consumes
-# them. Order matters -- if the var block lands after the rules, paint can
-# briefly use undefined values on the first frame.
-st.markdown(render_theme_css(_resolve_theme_pref()), unsafe_allow_html=True)
+# Global stylesheet now -- it consumes CSS vars but they have safe defaults
+# (Streamlit's config.toml block sets the same palette via base/bg/text, so
+# any unset var falls back to a sensible Neutral Slate dark). The real
+# per-user palette CSS is injected AFTER session restore, below.
 st.markdown(render_combined_css(), unsafe_allow_html=True)
 
 
@@ -220,6 +220,11 @@ _handle_auth_callback()
 restore_session_from_cookie()
 session = get_session()
 apply_session_to_client()
+
+# Theme injection NOW -- the user's stored preference was loaded into
+# session_state by _store_session above (if signed in). For signed-out
+# users this picks the cookie or 'system'.
+st.markdown(render_theme_css(_resolve_theme_pref()), unsafe_allow_html=True)
 
 COLD_LOAD_GRACE_KEY = "_cold_load_grace_done"
 
