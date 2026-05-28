@@ -1,0 +1,625 @@
+[
+  {
+    "term": "IAM role",
+    "aliases": ["Role"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "An IAM identity that you can assume to gain temporary security credentials. Unlike an IAM user, a role has no long-term credentials or password; instead, when an entity assumes a role, it receives temporary credentials for the role session. Used to delegate access to users, applications, or AWS services (e.g. EC2 instance roles, Lambda execution roles, cross-account access)."
+  },
+  {
+    "term": "IAM user",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "An entity created in IAM that represents a person or application that interacts with AWS. Has a name and credentials (password and/or access keys) and zero or more attached policies. AWS best practice today is to use IAM Identity Center or federated identities for human access and reserve IAM users for service accounts or break-glass cases."
+  },
+  {
+    "term": "IAM instance profile",
+    "aliases": ["Instance profile"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A container for an IAM role that you attach to an EC2 instance at launch (or later). Provides the AWS SDK and CLI on the instance with temporary credentials via the EC2 instance metadata service, removing the need to embed long-term access keys."
+  },
+  {
+    "term": "Inline policy",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An IAM policy that you embed directly into a single user, group, or role. The policy is deleted when the principal is deleted. Useful for one-off permissions tightly coupled to a single identity; for reusable permissions, prefer customer-managed policies."
+  },
+  {
+    "term": "Customer managed policy",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An IAM policy that you create and manage in your AWS account. Standalone (not embedded in a single identity), versionable, and attachable to multiple users, groups, or roles. Preferred over inline policies when the same permission set is reused."
+  },
+  {
+    "term": "Identity federation",
+    "aliases": ["Federation"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "The ability to grant users authenticated by an external identity provider (corporate directory, Google, Facebook, OIDC/SAML IdP) access to AWS resources without creating an IAM user for each. AWS supports SAML 2.0 federation, web identity federation (via Cognito or AssumeRoleWithWebIdentity), and IAM Identity Center."
+  },
+  {
+    "term": "Federated user",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A user authenticated by an external identity provider who receives temporary AWS credentials via STS (AssumeRoleWithSAML, AssumeRoleWithWebIdentity, or via IAM Identity Center). Has no IAM user record."
+  },
+  {
+    "term": "SAML 2.0 federation",
+    "aliases": ["SAML 2.0", "SAML federation"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An open-standard mechanism for exchanging authentication and authorisation data between an external identity provider (Microsoft AD FS, Okta, Ping, etc.) and AWS. After the IdP returns a SAML assertion, the client calls AssumeRoleWithSAML on STS to receive temporary AWS credentials."
+  },
+  {
+    "term": "Web Identity Federation",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Identity federation using a public web identity provider — Login with Amazon, Facebook, Google, or any OIDC-compatible provider — to obtain AWS credentials via STS AssumeRoleWithWebIdentity. Most mobile/web apps integrate this through Amazon Cognito identity pools rather than calling STS directly."
+  },
+  {
+    "term": "Cross-account access",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Granting identities in one AWS account permission to use resources in another. Implemented via an IAM role with a trust policy naming the trusted account; principals in that account call STS AssumeRole to receive temporary credentials in the trusting account."
+  },
+  {
+    "term": "KMS key",
+    "aliases": ["Customer master key (CMK)", "CMK"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "The primary resource in AWS KMS. A logical representation of a cryptographic key plus its metadata, policy, and aliases. Three types exist: AWS managed (controlled by AWS for service-side encryption), customer managed (you control rotation, deletion, policy), and AWS owned (used internally by services like S3-SSE). Formerly called Customer Master Key (CMK)."
+  },
+  {
+    "term": "KMS key rotation",
+    "aliases": ["Key rotation"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An optional KMS feature that automatically generates new key material for a customer managed symmetric key every year (configurable from 90 to 2,560 days). KMS keeps all prior key versions so existing ciphertexts remain decryptable. Asymmetric and HMAC keys do not support automatic rotation."
+  },
+  {
+    "term": "Symmetric encryption",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Cryptography where the same key encrypts and decrypts data. Faster than asymmetric and the default for KMS-managed data encryption (AES-256 in KMS). Requires secure key distribution between parties."
+  },
+  {
+    "term": "Asymmetric encryption",
+    "aliases": ["Public-key cryptography"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Cryptography using a mathematically linked key pair — a public key that anyone can use to encrypt or verify and a private key kept by the owner to decrypt or sign. KMS supports asymmetric keys for sign/verify (RSA, ECC) and encrypt/decrypt (RSA only) use cases."
+  },
+  {
+    "term": "Server-side encryption (SSE)",
+    "aliases": ["SSE"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Encryption applied by AWS to data after it arrives at the service and before it is written to storage; decryption happens transparently on read. Most-used variants on S3 are SSE-S3 (S3-managed keys, default), SSE-KMS (KMS-managed keys with audit trail), SSE-C (customer-provided keys), and DSSE-KMS (dual-layer)."
+  },
+  {
+    "term": "Client-side encryption",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Encryption that happens on the client before data is sent to AWS. AWS only ever sees ciphertext. Implemented via the AWS Encryption SDK, the DynamoDB Encryption Client, or S3 Encryption Client; the customer owns the key-management responsibility end-to-end."
+  },
+  {
+    "term": "Instance type",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "The EC2 hardware configuration combining CPU, memory, storage, and networking capacity. Identified by family + generation + size (e.g. m7i.large). Families target general-purpose (m, t), compute-optimised (c), memory-optimised (r, x), storage-optimised (i, d), accelerated (p, g, inf, trn), and burstable (t) workloads."
+  },
+  {
+    "term": "Instance store",
+    "aliases": ["Ephemeral storage", "Instance store volume"],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "Physically attached, block-level temporary storage on the EC2 host machine. Very high I/O but **data is lost when the instance stops, hibernates, or terminates** (and on the underlying hardware failure). Use only for buffers, caches, scratch data, or replicated data. Not all instance types include instance store."
+  },
+  {
+    "term": "Instance metadata service (IMDS)",
+    "aliases": ["IMDS", "Instance metadata", "IMDSv2"],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "An HTTP endpoint at 169.254.169.254 reachable only from inside an EC2 instance. Returns metadata (instance ID, region, IAM role credentials, user-data). IMDSv2 (recommended) requires a session token obtained via PUT to mitigate SSRF attacks; IMDSv1 is unauthenticated and being deprecated."
+  },
+  {
+    "term": "Key pair",
+    "aliases": ["EC2 key pair"],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "An asymmetric RSA or ED25519 key pair used for SSH (Linux) or RDP password retrieval (Windows) on an EC2 instance. AWS keeps the public key; you download the private key once at creation. Losing the private key means you cannot connect via SSH — recover by detaching the volume or using EC2 Instance Connect / Session Manager."
+  },
+  {
+    "term": "Dedicated Host",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A physical EC2 server dedicated for your use, with visibility into sockets, cores, and host ID. Helps satisfy server-bound software licences (per-socket / per-core Oracle, Windows, SQL Server) and address compliance requirements. Billed per host hour; more expensive than Dedicated Instances."
+  },
+  {
+    "term": "Dedicated Instance",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "An EC2 tenancy option where instances run on hardware dedicated to a single AWS account (no instance-level visibility into the host). Costs more than default shared tenancy; less expensive and less control than a Dedicated Host."
+  },
+  {
+    "term": "Placement group",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "A logical grouping of EC2 instances within an Availability Zone. Three strategies: cluster (low-latency, high-throughput, same rack), partition (spread across distinct partitions for fault isolation, used by HDFS/Cassandra), and spread (each instance on distinct hardware, up to 7 per AZ)."
+  },
+  {
+    "term": "Block device mapping",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "The list of block devices (root volume, additional EBS volumes, instance-store volumes) attached to an EC2 instance at launch. Defined in the AMI and overridable per instance launch. Determines whether instance-store volumes are exposed and whether EBS volumes are deleted on termination."
+  },
+  {
+    "term": "Object (S3)",
+    "aliases": ["S3 object"],
+    "category": "Storage",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "The fundamental storage unit in Amazon S3. Consists of object data (up to 5 TB), a key (the full path inside the bucket), metadata (system + user-defined), a version ID (if versioning enabled), and subresources (ACL, torrent). Buckets contain objects; folders are a console abstraction over key prefixes."
+  },
+  {
+    "term": "Object key",
+    "aliases": ["S3 key"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "The unique identifier of an object within an S3 bucket — a UTF-8 string up to 1,024 bytes. The full S3 URL is s3://bucket/key. S3 treats keys as flat, but slash-delimited keys (logs/2026/01/01.json) render as folders in the console and enable prefix-based filtering, lifecycle, and replication."
+  },
+  {
+    "term": "S3 lifecycle policy",
+    "aliases": ["Lifecycle rule", "Lifecycle configuration"],
+    "category": "Storage",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A set of rules attached to an S3 bucket that automatically transitions objects between storage classes (e.g. Standard → Standard-IA → Glacier Flexible Retrieval → Glacier Deep Archive) or expires/deletes them after a configurable age. Filters by prefix or tag; rules also clean up incomplete multipart uploads and expired delete markers."
+  },
+  {
+    "term": "S3 Standard",
+    "aliases": ["Standard storage class"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "The default S3 storage class for frequently accessed data. 99.99% availability SLA, 99.999999999% (11 9's) durability, multi-AZ, no retrieval fee, no minimum storage duration."
+  },
+  {
+    "term": "S3 Standard-IA",
+    "aliases": ["Standard-IA", "Infrequent Access"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "Storage class for data accessed less often but requiring rapid access when needed. Lower per-GB storage cost than Standard, charged per-GB retrieval fee, 30-day minimum storage duration, multi-AZ, 99.9% availability SLA."
+  },
+  {
+    "term": "S3 One Zone-IA",
+    "aliases": ["One Zone-IA"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "Storage class for infrequently accessed data that does not require multi-AZ resilience. Lives in a single AZ, ~20% cheaper than Standard-IA, 99.5% availability SLA. Use for re-creatable data (thumbnails, backups already stored elsewhere)."
+  },
+  {
+    "term": "S3 Glacier Instant Retrieval",
+    "aliases": ["Glacier Instant Retrieval"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "S3 archive storage class for rarely accessed data that still needs millisecond retrieval. ~68% cheaper than Standard, 90-day minimum storage duration, per-GB retrieval fee. Good for medical images, news archives, genomic data."
+  },
+  {
+    "term": "S3 Glacier Flexible Retrieval",
+    "aliases": ["Glacier Flexible Retrieval", "Glacier"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "Low-cost S3 archive class with 1-5 minute Expedited, 3-5 hour Standard, or 5-12 hour Bulk retrieval tiers. 90-day minimum storage duration. Replaces the older standalone S3 Glacier service."
+  },
+  {
+    "term": "S3 Glacier Deep Archive",
+    "aliases": ["Glacier Deep Archive"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "The cheapest S3 storage class, designed for data retained 7-10+ years (compliance, regulatory). 12-hour Standard or 48-hour Bulk retrieval; 180-day minimum storage duration."
+  },
+  {
+    "term": "EBS snapshot",
+    "aliases": ["Snapshot"],
+    "category": "Storage",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A point-in-time, incremental backup of an EBS volume stored in S3 (managed by AWS, not visible in user buckets). The first snapshot copies all written blocks; subsequent snapshots only the changed blocks. Used to create new volumes (including in other AZs/Regions via copy), and as the basis of EBS-backed AMIs."
+  },
+  {
+    "term": "DB snapshot",
+    "aliases": ["RDS snapshot"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A point-in-time backup of an RDS DB instance, stored in S3-managed storage. Either automated (taken daily during the backup window, retained per the configured period, supports PITR) or manual (taken on demand, retained until you delete them, can be shared and copied across Regions)."
+  },
+  {
+    "term": "DB parameter group",
+    "aliases": [],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A container of engine-level configuration values applied to one or more RDS DB instances. Default groups are read-only; create a custom group to tune timeouts, character sets, max_connections, etc. Some parameters require a reboot to take effect (static); others apply dynamically."
+  },
+  {
+    "term": "Point-in-time recovery (PITR)",
+    "aliases": ["PITR"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "The ability to restore a database to any second within a retention window. RDS PITR uses continuous backups of WAL/binlog (up to 35 days). DynamoDB PITR is enabled per table and provides per-second restore for the last 35 days."
+  },
+  {
+    "term": "Partition key",
+    "aliases": ["Hash key"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "The primary key attribute in DynamoDB whose hash determines which partition stores the item. With a partition key alone, value must be unique across the table; combined with a sort key, only the (partition, sort) pair must be unique. Skewed partition-key distribution causes 'hot partitions' that throttle."
+  },
+  {
+    "term": "Sort key",
+    "aliases": ["Range key"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "The second component of a DynamoDB composite primary key. Items with the same partition key are stored together and sorted by this attribute. Enables efficient range queries (BETWEEN, >, <, begins_with) within a partition."
+  },
+  {
+    "term": "Read Capacity Unit (RCU)",
+    "aliases": ["RCU"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "The DynamoDB throughput unit for reads. 1 RCU = 1 strongly consistent read per second, OR 2 eventually consistent reads per second, OR 0.5 transactional reads per second, for an item up to 4 KB. Larger items consume proportionally more RCUs."
+  },
+  {
+    "term": "Write Capacity Unit (WCU)",
+    "aliases": ["WCU"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "The DynamoDB throughput unit for writes. 1 WCU = 1 standard write per second for an item up to 1 KB, OR 0.5 transactional writes per second. Larger items consume proportionally more WCUs."
+  },
+  {
+    "term": "Eventual consistency",
+    "aliases": ["Eventually consistent read"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A consistency model where reads may return stale data shortly after a write, but all replicas converge given enough time. DynamoDB's default read mode, and S3's default model for cross-Region and certain cross-bucket reads. Half the RCU cost of a strongly consistent read in DynamoDB."
+  },
+  {
+    "term": "Strong consistency",
+    "aliases": ["Strongly consistent read"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A consistency model where every read returns the latest committed write. DynamoDB supports it per-request (consumes 2× the RCU). Amazon S3 has provided strong read-after-write consistency for all objects since December 2020."
+  },
+  {
+    "term": "Atomic counter",
+    "aliases": [],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A DynamoDB numeric attribute that you increment or decrement atomically via UpdateItem with the ADD action. The operation never blocks and never returns a conflict, but is not idempotent — retries may double-count. Suitable for visit counters where exact accuracy isn't required."
+  },
+  {
+    "term": "Subnet",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A range of IP addresses inside a VPC, residing in exactly one Availability Zone. Resources (EC2, RDS, Lambda-in-VPC) launch into a subnet and inherit its routing, NACL, and AZ. Subnets are classified by their route table: public (default route to an internet gateway) or private (no IGW route)."
+  },
+  {
+    "term": "Public subnet",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A subnet whose route table has a default route (0.0.0.0/0) pointing to an internet gateway. Instances with a public or Elastic IP launched in it are reachable from the internet. Typical home for ALBs, NAT gateways, and bastion hosts."
+  },
+  {
+    "term": "Private subnet",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A subnet whose route table has no default route to an internet gateway. Instances can reach the internet only via a NAT gateway / NAT instance in a public subnet, or via VPC endpoints. Standard placement for application servers and databases."
+  },
+  {
+    "term": "NAT instance",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An EC2 instance that you launch from a community NAT AMI to provide outbound internet for private-subnet resources. Predates the managed NAT gateway; lower cost at small scale but you manage HA, patching, and bandwidth. NAT gateway is the modern recommendation."
+  },
+  {
+    "term": "VPC Flow Logs",
+    "aliases": ["Flow Logs"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A feature that captures information about IP traffic going to/from network interfaces in a VPC. Records flow tuple, action (accept/reject), and bytes. Delivered to CloudWatch Logs, S3, or Firehose. Used for security auditing, troubleshooting connectivity, and traffic analytics."
+  },
+  {
+    "term": "Customer gateway",
+    "aliases": ["CGW"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An AWS resource that represents the customer side of a Site-to-Site VPN connection: the IP address and BGP ASN of the on-prem VPN device. Paired with a virtual private gateway or Transit Gateway to establish IPsec tunnels."
+  },
+  {
+    "term": "Virtual private gateway (VGW)",
+    "aliases": ["VGW", "Virtual Private Gateway"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "The AWS-side endpoint of a Site-to-Site VPN or Direct Connect attached to a single VPC. Provides redundant IPsec tunnel endpoints. Largely superseded by Transit Gateway for multi-VPC topologies."
+  },
+  {
+    "term": "Target group",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An Elastic Load Balancing object that groups one or more registered targets (EC2 instances, IPs, Lambda functions, or ALBs) and defines the protocol, port, and health check used to forward traffic from a listener. The ALB / NLB routing rules direct requests to a target group."
+  },
+  {
+    "term": "Health check",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A periodic probe used to determine whether a target is available. ELB target-group health checks issue HTTP / TCP probes to instances and remove unhealthy ones from rotation. Route 53 health checks monitor endpoints (TCP, HTTP, HTTPS) and can drive DNS failover."
+  },
+  {
+    "term": "Origin Access Control (OAC)",
+    "aliases": ["OAC"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "The modern CloudFront feature for restricting an S3 origin so it can only be accessed via CloudFront (and not directly over the public S3 endpoint). Supports SigV4, all S3 Regions, and KMS-encrypted objects. Replaces the older Origin Access Identity (OAI)."
+  },
+  {
+    "term": "Origin Access Identity (OAI)",
+    "aliases": ["OAI"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "The legacy CloudFront feature for restricting access to an S3 origin to a special CloudFront identity. Still supported for compatibility but AWS recommends migrating to Origin Access Control (OAC)."
+  },
+  {
+    "term": "Throttling",
+    "aliases": ["Rate limiting"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "A control that limits the rate at which clients can call an API or service to prevent abuse, protect downstream resources, and ensure fair sharing. API Gateway, DynamoDB, Lambda, KMS, and most other AWS services apply throttling at account / region / resource granularity and return HTTP 429 Too Many Requests when exceeded."
+  },
+  {
+    "term": "API Gateway usage plan",
+    "aliases": ["Usage plan"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "An API Gateway construct that grants API keys access to specific stages and methods with per-key throttle (RPS, burst) and quota (calls per day / week / month) limits. Used by SaaS APIs to differentiate tiers (free, basic, premium)."
+  },
+  {
+    "term": "CloudFormation stack",
+    "aliases": ["Stack"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A collection of AWS resources that you provision and manage as a single unit, defined by a CloudFormation template. Stack lifecycle (create / update / delete / rollback) is atomic; resource state and dependencies are tracked by the service. Use change sets to preview an update before applying it."
+  },
+  {
+    "term": "CloudFormation template",
+    "aliases": ["CFN template"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A JSON or YAML text file declaring AWS resources, parameters, outputs, conditions, mappings, and metadata. Submitted to CloudFormation to create or update a stack. Templates are idempotent declarations of desired state; CloudFormation computes the resource graph and reconciles drift."
+  },
+  {
+    "term": "Change set",
+    "aliases": ["CloudFormation change set"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A preview of how a proposed CloudFormation template change would affect the resources in an existing stack — which resources are created, updated, replaced, or deleted. Execute the change set to apply the change, or discard it."
+  },
+  {
+    "term": "Continuous integration (CI)",
+    "aliases": ["CI"],
+    "category": "Developer Tools",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A software development practice where developers frequently merge code into a shared branch and an automated pipeline builds and tests the change. On AWS: CodeBuild + CodeCommit / CodePipeline, or GitHub Actions / GitLab connecting to AWS via OIDC."
+  },
+  {
+    "term": "Continuous delivery (CD)",
+    "aliases": ["CD"],
+    "category": "Developer Tools",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A practice where every change that passes CI is automatically prepared for production release, with a manual approval gate before the deploy. CodePipeline + CodeDeploy is the canonical AWS-native implementation."
+  },
+  {
+    "term": "Continuous deployment",
+    "aliases": [],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A practice that extends continuous delivery by automatically deploying every change that passes CI into production with no manual approval — relying on automated tests, canary / blue-green deploys, and rollback to keep risk low."
+  },
+  {
+    "term": "AWS Organizations OU",
+    "aliases": ["Organizational unit", "OU"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "A container inside an AWS Organization that groups accounts hierarchically. SCPs attached to an OU apply to every member account. OUs can nest up to 5 levels and let you mirror your business structure (Dev / Prod / Sandbox, Finance / Marketing / Engineering)."
+  },
+  {
+    "term": "Consolidated billing",
+    "aliases": [],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "An AWS Organizations feature that combines the bills of all member accounts into a single management-account invoice. Eligible usage is aggregated to qualify for volume discounts (S3, EC2) and Reserved Instances / Savings Plans can be shared across accounts that have opted in."
+  },
+  {
+    "term": "Opt-in Region",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "An AWS Region disabled by default that you must explicitly enable in your account before using. Currently includes regions in the Middle East, Africa, Asia-Pacific (Hong Kong / Hyderabad / Jakarta / Melbourne), Europe (Milan / Spain / Zurich), and Israel."
+  },
+  {
+    "term": "AWS GovCloud (US)",
+    "aliases": ["GovCloud"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Isolated AWS Regions (us-gov-east-1, us-gov-west-1) designed to host sensitive workloads in the cloud for U.S. government agencies and contractors. Operated by U.S. citizens on U.S. soil, supports FedRAMP High, ITAR, DoD SRG IL5; requires a separate AWS GovCloud account."
+  },
+  {
+    "term": "Service Quotas",
+    "aliases": ["AWS Service Quotas", "Service limits"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A central place to view and request quota increases for AWS services across your account. Replaces the older support-ticket workflow for raising service limits and integrates with CloudWatch to alert when usage approaches a quota."
+  },
+  {
+    "term": "AWS Resource Groups",
+    "aliases": ["Resource Groups"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02"],
+    "definition": "Lets you create logical groupings of AWS resources based on tags or CloudFormation stacks. Used as the target of bulk operations in Systems Manager, CloudWatch dashboards, and tag-based access policies."
+  },
+  {
+    "term": "AWS Partner Network (APN)",
+    "aliases": ["APN", "AWS Partners"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "AWS's global community of consulting and technology partners that build and resell solutions on AWS. Partners are tiered (Select / Advanced / Premier) and may hold competencies (security, ML, migration) or service-delivery validations. AWS Marketplace is one APN distribution channel."
+  },
+  {
+    "term": "AWS Fault Injection Service",
+    "aliases": ["AWS Fault Injection Simulator (FIS)", "FIS"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "A managed chaos-engineering service that runs controlled fault-injection experiments against AWS workloads (EC2 stop, EBS pause I/O, RDS reboot, network latency, API throttling). Experiment templates define stop conditions; results integrate with CloudWatch."
+  },
+  {
+    "term": "AWS Clean Rooms",
+    "aliases": [],
+    "category": "Analytics",
+    "certs": ["CLF-C02"],
+    "definition": "A collaborative analytics service that lets companies and partners run joint SQL queries on their combined data without sharing the underlying rows. Encryption, privacy-preserving query controls (aggregation thresholds, query allow-listing), and audit logs keep each party's data confidential."
+  },
+  {
+    "term": "AWS Cloud WAN",
+    "aliases": ["Cloud WAN"],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02"],
+    "definition": "A managed service for building, monitoring, and managing a unified global network across VPCs, branch offices, data centres, and partner Regions. Replaces the manual mesh of Transit Gateways, Site-to-Site VPNs, and Direct Connect Gateways with policy-driven segments."
+  },
+  {
+    "term": "CloudWatch Events",
+    "aliases": [],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "The original name for what is now Amazon EventBridge — an event bus that routes events from AWS services, custom applications, and SaaS partners to targets (Lambda, Step Functions, SNS, SQS, etc.). The CloudWatch Events name is still recognised in older docs and IAM actions (events:*)."
+  },
+  {
+    "term": "Access key",
+    "aliases": ["Access key ID", "Secret access key"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A long-term credential pair (AKIA…/SecretKey) used to sign programmatic AWS API requests. Issued to IAM users (or via root, strongly discouraged). Prefer IAM roles or IAM Identity Center temporary credentials; if you must use access keys, rotate them regularly via IAM Access Analyzer recommendations."
+  },
+  {
+    "term": "Temporary security credentials",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Short-lived AWS credentials issued by STS (15 minutes to 36 hours). Returned by AssumeRole, GetSessionToken, AssumeRoleWithSAML, and AssumeRoleWithWebIdentity. Contain an access key ID, secret key, AND a session token that must accompany every signed request."
+  },
+  {
+    "term": "TTL (Time to Live)",
+    "aliases": ["Time to live"],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A metadata field that controls how long a record or message remains valid. In DynamoDB, an item with a TTL attribute in the past is deleted within 48 hours at no cost. In Route 53, TTL determines DNS resolver caching. In CloudFront, TTL controls how long the edge keeps an object before re-validating with the origin."
+  },
+  {
+    "term": "Cost allocation tags",
+    "aliases": ["Cost allocation tag"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "Resource tags activated in Billing settings so that their keys appear as columns in the Cost and Usage Report and dimensions in Cost Explorer. Two types: AWS-generated (createdBy) and user-defined. Foundation for showback/chargeback by team, environment, or cost centre."
+  },
+  {
+    "term": "Tagging strategy",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "A documented plan for how an organisation labels AWS resources with tags. Typical dimensions: environment (dev/stage/prod), owner / team, cost centre, data classification, application. Combined with AWS Organizations tag policies and IAM tag-based access control."
+  },
+  {
+    "term": "Sustainability shared responsibility model",
+    "aliases": ["Customer Carbon Footprint Tool"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "AWS publishes its scope-1 and scope-2 emissions via the Customer Carbon Footprint Tool in Billing. Customers are responsible for sustainability of what they build in the cloud — right-sizing instances, using managed services, choosing renewable Regions, and applying the Sustainability pillar guidance."
+  },
+  {
+    "term": "Disaster recovery (DR)",
+    "aliases": ["DR"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The process and tooling to recover IT systems after a disruption. AWS defines four DR strategies on a cost / RTO spectrum: backup and restore (cheapest, slowest), pilot light, warm standby, and multi-site active-active (most expensive, lowest RTO)."
+  },
+  {
+    "term": "Serverless",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A cloud-architecture model where you write functions or use managed services without provisioning servers; the provider handles scaling, patching, and capacity. AWS serverless primitives include Lambda, Fargate, API Gateway, EventBridge, Step Functions, DynamoDB on-demand, Aurora Serverless, SNS, SQS."
+  },
+  {
+    "term": "Endpoint",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "The URL or DNS name of an AWS service entry point. Each Region has its own service endpoint (e.g. dynamodb.eu-west-1.amazonaws.com). VPC endpoints provide private connectivity to services without traversing the public internet."
+  },
+  {
+    "term": "Pagination",
+    "aliases": [],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "Splitting large API responses into smaller pages, each returning a token (NextToken, ExclusiveStartKey) to fetch the next page. Standard across AWS APIs and SDKs; the SDK paginators iterate transparently. DynamoDB Query/Scan, S3 ListObjectsV2, Lambda ListFunctions all paginate."
+  },
+  {
+    "term": "Exponential backoff",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A retry strategy where the wait between attempts grows exponentially (1s, 2s, 4s, 8s …), usually combined with random jitter to avoid thundering-herd. The AWS SDKs implement it automatically for throttling and 5xx responses; standard recipe for handling AWS API rate-limit errors."
+  },
+  {
+    "term": "Idempotency token",
+    "aliases": ["Idempotency key", "Client request token"],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A unique client-supplied identifier (UUID) attached to a request so that retries return the original result instead of creating duplicate side-effects. Required by EC2 RunInstances (ClientToken), API Gateway / Lambda integrations, Step Functions, and many SDK helpers."
+  },
+  {
+    "term": "Edge-optimized API endpoint",
+    "aliases": ["Edge-optimized endpoint"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An API Gateway endpoint type that routes client requests to the nearest CloudFront edge location and from there to the regional API endpoint. Reduces TLS-handshake and TCP-round-trip latency for geographically dispersed clients."
+  },
+  {
+    "term": "Regional API endpoint",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An API Gateway endpoint type deployed in a single Region with no CloudFront layer. Recommended when clients are in the same Region (lower latency, lower cost) or when you front the API with your own CloudFront distribution."
+  },
+  {
+    "term": "Private API endpoint",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "An API Gateway endpoint accessible only from a VPC via an interface VPC endpoint. Lets you expose APIs internally to applications running in private subnets without crossing the public internet."
+  }
+]
