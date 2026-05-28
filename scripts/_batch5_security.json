@@ -1,0 +1,100 @@
+[
+  {
+    "term": "Amazon Detective",
+    "aliases": ["Detective"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "Automatically collects log data from VPC Flow Logs, CloudTrail, and GuardDuty findings, applies machine learning and graph theory to build a linked set of data so analysts can investigate, isolate, and resolve security issues."
+  },
+  {
+    "term": "AWS Audit Manager",
+    "aliases": ["Audit Manager"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "Helps continuously audit AWS usage to assess risk and compliance with regulations (PCI DSS, GDPR, HIPAA, AWS Foundational Security Best Practices) and industry standards. Automates evidence collection and produces audit-ready reports."
+  },
+  {
+    "term": "AWS Encryption SDK",
+    "aliases": ["Encryption SDK"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A client-side encryption library that helps developers implement industry best practices: envelope encryption, key reuse via data-key caching, support for multiple key providers (KMS, custom keystores), and pluggable cryptographic algorithms. Available in Java, Python, C, JavaScript, .NET."
+  },
+  {
+    "term": "AWS Signer",
+    "aliases": ["Signer"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Manages code-signing certificates and verifies signatures for Lambda functions, IoT devices, and container images. Ensures only trusted code is deployed; integrates with KMS-backed certificates from AWS Certificate Manager Private CA."
+  },
+  {
+    "term": "IAM Access Analyzer",
+    "aliases": ["Access Analyzer"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Identifies resources in your organisation and accounts (S3 buckets, IAM roles, KMS keys, Lambda functions, SQS queues, Secrets Manager secrets) that are shared with an external entity. Continuously monitors policies and surfaces unintended external access."
+  },
+  {
+    "term": "AWS Directory Service",
+    "aliases": ["Directory Service", "Managed Microsoft AD", "AD Connector", "Simple AD"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "Provides multiple ways to use Microsoft Active Directory with other AWS services: AWS Managed Microsoft AD (full AD service), AD Connector (proxy to on-prem AD), and Simple AD (Samba 4-based, low-cost)."
+  },
+  {
+    "term": "Permission boundary",
+    "aliases": ["IAM permission boundary"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An advanced IAM feature that uses a managed policy to set the maximum permissions an identity-based policy can grant to a user or role. Useful for delegating permission management to other teams without granting overly broad privileges."
+  },
+  {
+    "term": "Resource-based policy",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A JSON policy document attached to a resource (S3 bucket, SNS topic, SQS queue, Lambda function, KMS key, etc.) that grants the specified Principal permissions to act on the resource. Pair with identity-based policies for cross-account access."
+  },
+  {
+    "term": "Identity-based policy",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "A JSON policy attached to an IAM identity (user, group, or role) that grants permissions on AWS resources. Managed (AWS-managed, customer-managed) or inline; evaluated together with resource-based policies and SCPs."
+  },
+  {
+    "term": "Trust policy",
+    "aliases": [],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "An IAM role's resource-based policy that defines which principals (users, services, accounts) can assume the role. Combined with the role's permissions policy to determine effective access."
+  },
+  {
+    "term": "AWS Shield Advanced",
+    "aliases": ["Shield Advanced"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "Paid tier of AWS Shield that provides expanded DDoS protection with the AWS Shield Response Team (SRT) for 24/7 incident response, near-real-time visibility into attacks, cost protection for scaling caused by attacks, and integration with AWS WAF and Firewall Manager."
+  },
+  {
+    "term": "AWS Shield Response Team",
+    "aliases": ["DDoS Response Team", "DRT", "SRT"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["CLF-C02"],
+    "definition": "A 24/7 team of DDoS experts available to Shield Advanced subscribers (and Business/Enterprise Support customers) for assistance with DDoS incident triage, mitigation, and post-event analysis."
+  },
+  {
+    "term": "Pre-signed URL",
+    "aliases": ["Presigned URL"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "Signature Version 4 (SigV4)",
+    "aliases": ["SigV4", "Signature Version 4"],
+    "category": "Security, Identity & Compliance",
+    "certs": ["DVA-C02"],
+    "definition": "AWS's process for authenticating requests by signing them with your access key. Most AWS SDKs sign requests automatically; required by all current AWS service APIs. Includes a date/region/service scope and a hash of the request body."
+  }
+]

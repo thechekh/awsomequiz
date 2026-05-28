@@ -4,1018 +4,3285 @@
   "entries": [
     {
       "term": "Amazon API Gateway",
-      "aliases": ["API Gateway"],
+      "aliases": [
+        "API Gateway"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed service for creating, publishing, maintaining, monitoring, and securing REST, HTTP, and WebSocket APIs at any scale. Supports request validation, transformation via mapping templates, custom and Lambda authorizers, throttling, usage plans, and API keys."
     },
     {
       "term": "Amazon AppFlow",
-      "aliases": ["AppFlow"],
+      "aliases": [
+        "AppFlow"
+      ],
       "category": "Application Integration",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed integration service for securely transferring data between SaaS applications (Salesforce, ServiceNow, Slack, etc.) and AWS services like Amazon S3 and Amazon Redshift, without writing custom code."
     },
     {
       "term": "Amazon AppStream",
-      "aliases": ["AppStream"],
+      "aliases": [
+        "AppStream"
+      ],
       "category": "End-User Computing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A fully managed non-persistent application and desktop streaming service that delivers desktop applications to any computer through a web browser."
     },
     {
       "term": "Amazon Athena",
-      "aliases": ["Athena"],
+      "aliases": [
+        "Athena"
+      ],
       "category": "Analytics",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An interactive serverless query service that makes it easy to analyse data directly in Amazon S3 using standard SQL. No infrastructure to manage; you pay only for the queries that you run."
     },
     {
       "term": "Amazon Aurora",
-      "aliases": ["Aurora"],
+      "aliases": [
+        "Aurora"
+      ],
       "category": "Database",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A MySQL- and PostgreSQL-compatible relational database built for the cloud, providing up to 5x throughput of standard MySQL and 3x of PostgreSQL. Storage auto-scales up to 128 TB; supports Aurora Serverless and Global Database."
     },
     {
       "term": "Amazon Bedrock",
-      "aliases": ["Bedrock"],
+      "aliases": [
+        "Bedrock"
+      ],
       "category": "Machine Learning",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed service that offers a choice of high-performing foundation models from leading AI companies through a single API, with capabilities to build generative-AI applications using your own data via retrieval-augmented generation (RAG)."
     },
     {
       "term": "Amazon Chime",
-      "aliases": ["Chime"],
+      "aliases": [
+        "Chime"
+      ],
       "category": "Business Applications",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A communications service that lets users meet, chat, and place business calls inside and outside your organization, all using a single application."
     },
     {
       "term": "Amazon CloudFront",
-      "aliases": ["CloudFront", "CDN"],
+      "aliases": [
+        "CloudFront",
+        "CDN"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fast content delivery network (CDN) that securely delivers data, videos, applications, and APIs to customers globally with low latency. Integrates with AWS Shield, WAF, ACM, and S3; supports signed URLs/cookies, field-level encryption, and Lambda@Edge / CloudFront Functions."
     },
     {
       "term": "Amazon CloudSearch",
-      "aliases": ["CloudSearch"],
+      "aliases": [
+        "CloudSearch"
+      ],
       "category": "Analytics",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A managed search service that lets you set up, manage, and scale a search solution for your website or application without operating search infrastructure."
     },
     {
       "term": "Amazon CloudWatch",
-      "aliases": ["CloudWatch"],
+      "aliases": [
+        "CloudWatch"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A monitoring and observability service that collects metrics, logs, and events from AWS resources, applications, and on-premises servers. Includes CloudWatch Alarms, Dashboards, Logs Insights, Synthetics, and Contributor Insights."
     },
     {
       "term": "Amazon Cognito",
-      "aliases": ["Cognito"],
+      "aliases": [
+        "Cognito"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An identity service that handles user sign-up, sign-in, and access control. Cognito User Pools provide a directory and authentication for application users; Identity Pools grant temporary AWS credentials to authenticated and guest users."
     },
     {
       "term": "Amazon Comprehend",
-      "aliases": ["Comprehend"],
+      "aliases": [
+        "Comprehend"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A natural-language processing (NLP) service that uses machine learning to extract insights and relationships from unstructured text, including entity recognition, sentiment, key phrases, topics, and language detection."
     },
     {
       "term": "Amazon Connect",
       "aliases": [],
       "category": "Business Applications",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An easy-to-use omnichannel cloud contact centre that helps companies deliver superior customer service at lower cost. Pay-by-the-minute pricing with no infrastructure to manage."
     },
     {
       "term": "Amazon DocumentDB",
-      "aliases": ["DocumentDB"],
+      "aliases": [
+        "DocumentDB"
+      ],
       "category": "Database",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed, MongoDB-compatible document database service that supports JSON workloads with millisecond latency at any scale. Decouples storage and compute; replicates six copies of data across three Availability Zones."
     },
     {
       "term": "Amazon DynamoDB",
-      "aliases": ["DynamoDB"],
+      "aliases": [
+        "DynamoDB"
+      ],
       "category": "Database",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed serverless NoSQL key-value and document database that delivers single-digit-millisecond performance at any scale. Supports on-demand and provisioned capacity, global tables, DAX caching, point-in-time recovery, and DynamoDB Streams for change-data capture."
     },
     {
       "term": "Amazon EBS",
-      "aliases": ["EBS", "Elastic Block Store"],
+      "aliases": [
+        "EBS",
+        "Elastic Block Store"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Block-storage volumes for use with Amazon EC2 instances. Volume types (gp3, gp2, io2, io1, st1, sc1) trade off performance and cost; snapshots are stored in S3. Volumes are Availability Zone-scoped."
     },
     {
       "term": "Amazon EC2",
-      "aliases": ["EC2", "Elastic Compute Cloud"],
+      "aliases": [
+        "EC2",
+        "Elastic Compute Cloud"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Amazon Elastic Compute Cloud provides resizable compute capacity in the cloud as virtual machines called instances. Purchasing options include On-Demand, Reserved Instances, Savings Plans, and Spot Instances; instance types span general purpose, compute, memory, storage, and accelerated computing families."
     },
     {
       "term": "Amazon ECR",
-      "aliases": ["ECR", "Elastic Container Registry"],
+      "aliases": [
+        "ECR",
+        "Elastic Container Registry"
+      ],
       "category": "Containers",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed container image registry that integrates with Amazon ECS, EKS, Lambda, and Docker CLI. Supports private and public repositories, image scanning, lifecycle policies, and replication across Regions."
     },
     {
       "term": "Amazon ECS",
-      "aliases": ["ECS", "Elastic Container Service"],
+      "aliases": [
+        "ECS",
+        "Elastic Container Service"
+      ],
       "category": "Containers",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A highly scalable container orchestration service that supports Docker containers and lets you run and scale containerized applications on AWS. Two launch types: EC2 (manage your own instances) or Fargate (serverless)."
     },
     {
       "term": "Amazon EFS",
-      "aliases": ["EFS", "Elastic File System"],
+      "aliases": [
+        "EFS",
+        "Elastic File System"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed, elastic, serverless NFS file system that grows and shrinks automatically. Mountable from multiple EC2 instances, ECS tasks, Lambda functions, and on-premises servers; supports lifecycle management to Infrequent Access and Archive tiers."
     },
     {
       "term": "Amazon EKS",
-      "aliases": ["EKS", "Elastic Kubernetes Service"],
+      "aliases": [
+        "EKS",
+        "Elastic Kubernetes Service"
+      ],
       "category": "Containers",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A managed Kubernetes service that runs upstream Kubernetes on AWS without you needing to install, operate, and maintain your own Kubernetes control plane. Supports EC2 and Fargate worker nodes."
     },
     {
       "term": "Amazon ElastiCache",
-      "aliases": ["ElastiCache"],
+      "aliases": [
+        "ElastiCache"
+      ],
       "category": "Database",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed in-memory caching service supporting Redis and Memcached engines. Used to improve application response times and reduce load on backend databases via lazy loading, write-through, or session caching patterns."
     },
     {
       "term": "Amazon EMR",
-      "aliases": ["EMR", "Elastic MapReduce"],
+      "aliases": [
+        "EMR",
+        "Elastic MapReduce"
+      ],
       "category": "Analytics",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A cloud big-data platform for running large-scale distributed data processing jobs using open-source frameworks such as Apache Spark, Hive, Presto, HBase, and Hadoop."
     },
     {
       "term": "Amazon EventBridge",
-      "aliases": ["EventBridge", "CloudWatch Events"],
+      "aliases": [
+        "EventBridge",
+        "CloudWatch Events"
+      ],
       "category": "Application Integration",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A serverless event bus service that makes it easy to connect application data from your own apps, SaaS, and AWS services via event rules. Supports schema discovery, archive and replay, and scheduled events (successor to CloudWatch Events)."
     },
     {
       "term": "Amazon FSx",
-      "aliases": ["FSx"],
+      "aliases": [
+        "FSx"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Fully managed third-party file systems on AWS: Windows File Server (SMB), Lustre (HPC), NetApp ONTAP, and OpenZFS. Choose the file system that meets your application's compatibility, performance, and management requirements."
     },
     {
       "term": "Amazon GuardDuty",
-      "aliases": ["GuardDuty"],
+      "aliases": [
+        "GuardDuty"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A continuous threat-detection service that monitors AWS accounts and workloads for malicious activity using machine learning and integrated threat intelligence. Analyses VPC Flow Logs, DNS logs, and CloudTrail events."
     },
     {
       "term": "Amazon Inspector",
-      "aliases": ["Inspector"],
+      "aliases": [
+        "Inspector"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An automated vulnerability-management service that continually scans EC2 instances, container images in ECR, and Lambda functions for software vulnerabilities and unintended network exposure."
     },
     {
       "term": "Amazon Kinesis",
-      "aliases": ["Kinesis", "Kinesis Data Streams", "Kinesis Firehose"],
+      "aliases": [
+        "Kinesis",
+        "Kinesis Data Streams",
+        "Kinesis Firehose"
+      ],
       "category": "Analytics",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A family of services for ingesting and processing streaming data: Kinesis Data Streams (real-time custom processing with shards), Data Firehose (load streams into S3/Redshift/OpenSearch with no code), and Data Analytics (SQL over streams)."
     },
     {
       "term": "Amazon Lex",
-      "aliases": ["Lex"],
+      "aliases": [
+        "Lex"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service for building conversational interfaces (chatbots) using voice and text, powered by the same deep-learning technologies that power Amazon Alexa."
     },
     {
       "term": "Amazon Lightsail",
-      "aliases": ["Lightsail"],
+      "aliases": [
+        "Lightsail"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An easy-to-use cloud platform that bundles a virtual server, storage, and networking for a fixed monthly price. Designed for simple workloads such as websites, small apps, and dev/test."
     },
     {
       "term": "Amazon Macie",
-      "aliases": ["Macie"],
+      "aliases": [
+        "Macie"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A fully managed data security service that uses machine learning and pattern matching to discover, monitor, and help protect sensitive data (PII, financial data) in Amazon S3."
     },
     {
       "term": "Amazon MQ",
-      "aliases": ["MQ"],
+      "aliases": [
+        "MQ"
+      ],
       "category": "Application Integration",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A managed message broker service for Apache ActiveMQ and RabbitMQ, making it easy to migrate existing applications that rely on industry-standard messaging APIs and protocols (JMS, AMQP, STOMP, MQTT, OpenWire)."
     },
     {
       "term": "Amazon MSK",
-      "aliases": ["MSK", "Managed Streaming for Kafka"],
+      "aliases": [
+        "MSK",
+        "Managed Streaming for Kafka"
+      ],
       "category": "Analytics",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed Apache Kafka service for running production workloads. Removes the operational overhead of cluster management, broker patching, and ZooKeeper coordination."
     },
     {
       "term": "Amazon Neptune",
-      "aliases": ["Neptune"],
+      "aliases": [
+        "Neptune"
+      ],
       "category": "Database",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fast, reliable, fully managed graph database service supporting both property-graph (Gremlin, openCypher) and RDF (SPARQL) query languages. Ideal for fraud detection, knowledge graphs, and recommendation engines."
     },
     {
       "term": "Amazon OpenSearch Service",
-      "aliases": ["OpenSearch", "Elasticsearch Service"],
+      "aliases": [
+        "OpenSearch",
+        "Elasticsearch Service"
+      ],
       "category": "Analytics",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A managed service for deploying, operating, and scaling OpenSearch and Elasticsearch clusters in the cloud. Includes built-in Kibana/OpenSearch Dashboards for visualisation."
     },
     {
       "term": "Amazon Polly",
-      "aliases": ["Polly"],
+      "aliases": [
+        "Polly"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service that turns text into lifelike speech using deep learning. Supports dozens of voices across many languages."
     },
     {
       "term": "Amazon QuickSight",
-      "aliases": ["QuickSight"],
+      "aliases": [
+        "QuickSight"
+      ],
       "category": "Analytics",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A cloud-native, serverless business intelligence service that makes it easy to create and publish interactive dashboards. Pay-per-session pricing; ML-powered insights and natural-language Q&A."
     },
     {
       "term": "Amazon RDS",
-      "aliases": ["RDS", "Relational Database Service"],
+      "aliases": [
+        "RDS",
+        "Relational Database Service"
+      ],
       "category": "Database",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A managed relational database service supporting six engines: Aurora, MySQL, PostgreSQL, MariaDB, Oracle, and SQL Server. Automates provisioning, patching, backups, snapshots, and Multi-AZ failover."
     },
     {
       "term": "Amazon Redshift",
-      "aliases": ["Redshift"],
+      "aliases": [
+        "Redshift"
+      ],
       "category": "Database",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A fully managed petabyte-scale cloud data warehouse. Columnar storage, massively parallel processing, and Redshift Spectrum (query S3 directly). Serverless option provisions and scales capacity automatically."
     },
     {
       "term": "Amazon Rekognition",
-      "aliases": ["Rekognition"],
+      "aliases": [
+        "Rekognition"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service that makes it easy to add image and video analysis to applications: object/scene/activity detection, facial analysis, face comparison, text in images, content moderation, and celebrity recognition."
     },
     {
       "term": "Amazon Route 53",
-      "aliases": ["Route 53"],
+      "aliases": [
+        "Route 53"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A highly available and scalable cloud DNS web service. Supports public and private hosted zones, health checks, traffic-routing policies (simple, weighted, latency-based, failover, geolocation, geoproximity, multi-value), and domain registration."
     },
     {
       "term": "Amazon S3",
-      "aliases": ["S3", "Simple Storage Service"],
+      "aliases": [
+        "S3",
+        "Simple Storage Service"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Amazon Simple Storage Service offers industry-leading scalability, data availability, security, and performance for object storage. Storage classes: Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant/Flexible Retrieval, and Glacier Deep Archive. Features include versioning, lifecycle policies, cross-region replication, pre-signed URLs, and event notifications."
     },
     {
       "term": "Amazon SageMaker",
-      "aliases": ["SageMaker"],
+      "aliases": [
+        "SageMaker"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A fully managed service that provides every developer and data scientist with the ability to build, train, and deploy machine learning models at any scale. Includes built-in algorithms, hyperparameter tuning, and model hosting."
     },
     {
       "term": "Amazon SES",
-      "aliases": ["SES", "Simple Email Service"],
+      "aliases": [
+        "SES",
+        "Simple Email Service"
+      ],
       "category": "Application Integration",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A scalable, cost-effective email-sending service for transactional and marketing emails. Supports IP/domain reputation management, DKIM signing, and inbound email processing."
     },
     {
       "term": "Amazon SNS",
-      "aliases": ["SNS", "Simple Notification Service"],
+      "aliases": [
+        "SNS",
+        "Simple Notification Service"
+      ],
       "category": "Application Integration",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed pub/sub messaging service. Producers publish to topics; subscribers (SQS queues, Lambda, HTTP/S endpoints, email, SMS, mobile push) receive messages. Supports message filtering and FIFO topics with strict ordering and deduplication."
     },
     {
       "term": "Amazon SQS",
-      "aliases": ["SQS", "Simple Queue Service"],
+      "aliases": [
+        "SQS",
+        "Simple Queue Service"
+      ],
       "category": "Application Integration",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed message queuing service that decouples and scales microservices, distributed systems, and serverless applications. Two queue types: Standard (best-effort ordering, at-least-once delivery, near-unlimited throughput) and FIFO (strict ordering, exactly-once processing)."
     },
     {
       "term": "Amazon Textract",
-      "aliases": ["Textract"],
+      "aliases": [
+        "Textract"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A machine learning service that automatically extracts text, handwriting, forms, and tabular data from scanned documents."
     },
     {
       "term": "Amazon Transcribe",
-      "aliases": ["Transcribe"],
+      "aliases": [
+        "Transcribe"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An automatic speech-recognition service that converts audio to text. Supports real-time streaming and batch transcription across many languages."
     },
     {
       "term": "Amazon Translate",
-      "aliases": ["Translate"],
+      "aliases": [
+        "Translate"
+      ],
       "category": "Machine Learning",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A neural machine-translation service that delivers fast, high-quality, customisable language translation."
     },
     {
       "term": "Amazon VPC",
-      "aliases": ["VPC", "Virtual Private Cloud"],
+      "aliases": [
+        "VPC",
+        "Virtual Private Cloud"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A logically isolated section of the AWS Cloud where you launch AWS resources in a virtual network you define. Configure IP ranges (CIDR), subnets (public/private), route tables, internet/NAT gateways, security groups, and network ACLs."
     },
     {
       "term": "Amazon WorkSpaces",
-      "aliases": ["WorkSpaces"],
+      "aliases": [
+        "WorkSpaces"
+      ],
       "category": "End-User Computing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A managed, secure desktop-as-a-service (DaaS) solution that delivers persistent Windows or Linux desktops to users on demand."
     },
     {
       "term": "API key",
       "aliases": [],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "An identifier issued by Amazon API Gateway used to track and control how the API is used by individual clients. Typically combined with usage plans for throttling and quotas. Not a substitute for authentication."
     },
     {
       "term": "ARN",
-      "aliases": ["Amazon Resource Name"],
+      "aliases": [
+        "Amazon Resource Name"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Amazon Resource Names uniquely identify AWS resources across the account, partition, region, and service. Format: arn:partition:service:region:account-id:resource. Used in IAM policies, cross-service references, and CLI/SDK arguments."
     },
     {
       "term": "Availability Zone (AZ)",
-      "aliases": ["AZ"],
+      "aliases": [
+        "AZ"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "One or more discrete data centres with redundant power, networking, and connectivity within an AWS Region. AZs in a Region are physically separated and connected with high-bandwidth, low-latency links. Multi-AZ deployments improve fault tolerance."
     },
     {
       "term": "AWS Amplify",
-      "aliases": ["Amplify"],
+      "aliases": [
+        "Amplify"
+      ],
       "category": "Compute",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A set of tools and services for building scalable mobile and web applications. Includes hosting (CDN-backed), authentication (Cognito), data (DataStore/AppSync), and CI/CD."
     },
     {
       "term": "AWS App Runner",
-      "aliases": ["App Runner"],
+      "aliases": [
+        "App Runner"
+      ],
       "category": "Compute",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed service that makes it easy to deploy from source code or a container image directly to a scalable, secure web application running on AWS."
     },
     {
       "term": "AWS AppConfig",
-      "aliases": ["AppConfig"],
+      "aliases": [
+        "AppConfig"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A capability of AWS Systems Manager for creating, managing, and deploying application configurations and feature flags. Supports controlled rollouts, validation, and automatic rollback on deployment errors."
     },
     {
       "term": "AWS AppSync",
-      "aliases": ["AppSync"],
+      "aliases": [
+        "AppSync"
+      ],
       "category": "Application Integration",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A managed serverless GraphQL service that simplifies application development by letting you create flexible APIs to securely access, manipulate, and combine data from multiple sources."
     },
     {
       "term": "AWS Artifact",
       "aliases": [],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A central resource for compliance reports (SOC, PCI, ISO, FedRAMP, HIPAA, etc.) and security and compliance agreements (AWS BAA) with AWS."
     },
     {
       "term": "AWS Backup",
-      "aliases": ["Backup"],
+      "aliases": [
+        "Backup"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A fully managed service that centralises and automates data protection across AWS services (EBS, RDS, DynamoDB, EFS, FSx, Storage Gateway, EC2 AMIs, S3, and more) and on-premises VMs."
     },
     {
       "term": "AWS Batch",
-      "aliases": ["Batch"],
+      "aliases": [
+        "Batch"
+      ],
       "category": "Compute",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A service that lets developers, scientists, and engineers easily and efficiently run hundreds of thousands of batch computing jobs on AWS. Dynamically provisions optimal compute resources based on the volume and resource requirements of submitted jobs."
     },
     {
       "term": "AWS Budgets",
-      "aliases": ["Budgets"],
+      "aliases": [
+        "Budgets"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Lets you set custom budgets that alert you when your costs or usage exceed (or are forecasted to exceed) your budgeted amount. Supports cost, usage, RI utilisation, and Savings Plans coverage budgets."
     },
     {
       "term": "AWS CDK",
-      "aliases": ["CDK", "Cloud Development Kit"],
+      "aliases": [
+        "CDK",
+        "Cloud Development Kit"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "An open-source software development framework for defining cloud infrastructure in code (TypeScript, JavaScript, Python, Java, Go, C#) and provisioning it through AWS CloudFormation."
     },
     {
       "term": "AWS Certificate Manager (ACM)",
-      "aliases": ["ACM", "Certificate Manager"],
+      "aliases": [
+        "ACM",
+        "Certificate Manager"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A service that lets you easily provision, manage, and deploy public and private SSL/TLS certificates for use with AWS services and your internal connected resources. Public certs are free; auto-renewed."
     },
     {
       "term": "AWS Cloud Adoption Framework (CAF)",
-      "aliases": ["CAF", "Cloud Adoption Framework"],
+      "aliases": [
+        "CAF",
+        "Cloud Adoption Framework"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Guidance and best practices, organised into six perspectives (Business, People, Governance, Platform, Security, Operations), for accelerating an organisation's cloud journey."
     },
     {
       "term": "AWS Cloud9",
-      "aliases": ["Cloud9"],
+      "aliases": [
+        "Cloud9"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A cloud-based integrated development environment (IDE) that lets you write, run, and debug code with just a browser. Pre-packaged with the AWS CLI and common runtimes."
     },
     {
       "term": "AWS CloudFormation",
-      "aliases": ["CloudFormation"],
+      "aliases": [
+        "CloudFormation"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An infrastructure-as-code service that provisions and manages AWS and third-party resources by treating infrastructure as JSON or YAML templates. Supports stacks, change sets, drift detection, nested stacks, StackSets, and DeletionPolicy/UpdateReplacePolicy."
     },
     {
       "term": "AWS CloudHSM",
-      "aliases": ["CloudHSM"],
+      "aliases": [
+        "CloudHSM"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Cloud-based hardware security modules (HSMs) that let you generate and use your own encryption keys in dedicated, FIPS 140-2 Level 3 validated hardware."
     },
     {
       "term": "AWS CloudShell",
-      "aliases": ["CloudShell"],
+      "aliases": [
+        "CloudShell"
+      ],
       "category": "Developer Tools",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A browser-based shell pre-authenticated with your AWS Management Console credentials. Comes pre-installed with AWS CLI, common shells (bash, PowerShell, zsh), and runtimes."
     },
     {
       "term": "AWS CloudTrail",
-      "aliases": ["CloudTrail"],
+      "aliases": [
+        "CloudTrail"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A service that enables governance, compliance, and operational/risk auditing of an AWS account. Logs API calls across services into trails delivered to S3, CloudWatch Logs, and EventBridge."
     },
     {
       "term": "AWS CodeArtifact",
-      "aliases": ["CodeArtifact"],
+      "aliases": [
+        "CodeArtifact"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed software artifact repository that supports popular package managers (npm, PyPI, Maven, NuGet, etc.) and integrates with public package repositories via upstream connections."
     },
     {
       "term": "AWS CodeBuild",
-      "aliases": ["CodeBuild"],
+      "aliases": [
+        "CodeBuild"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed continuous-integration service that compiles source code, runs tests, and produces software packages ready to deploy. Build instructions live in a buildspec.yml file."
     },
     {
       "term": "AWS CodeCommit",
-      "aliases": ["CodeCommit"],
+      "aliases": [
+        "CodeCommit"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A fully managed source-control service that hosts secure private Git repositories. Integrates with IAM for access control and triggers (CloudWatch Events / Lambda) on repository events."
     },
     {
       "term": "AWS CodeDeploy",
-      "aliases": ["CodeDeploy"],
+      "aliases": [
+        "CodeDeploy"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A deployment service that automates application deployments to EC2, on-premises instances, Lambda, or ECS. Supports in-place, blue/green, canary, and linear deployments via an appspec.yml file."
     },
     {
       "term": "AWS CodePipeline",
-      "aliases": ["CodePipeline"],
+      "aliases": [
+        "CodePipeline"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A continuous-delivery service that automates release pipelines for fast and reliable application and infrastructure updates. Models source -> build -> test -> deploy stages with manual approval actions and parallel execution."
     },
     {
       "term": "AWS Config",
-      "aliases": ["Config"],
+      "aliases": [
+        "Config"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A service that continuously monitors and records AWS resource configurations and lets you automate the evaluation of recorded configurations against desired configurations (Config Rules + auto-remediation)."
     },
     {
       "term": "AWS Control Tower",
-      "aliases": ["Control Tower"],
+      "aliases": [
+        "Control Tower"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "The easiest way to set up and govern a secure, multi-account AWS environment (a landing zone). Provides guardrails (preventive SCPs + detective AWS Config rules) and account-vending via Service Catalog."
     },
     {
       "term": "AWS Cost Explorer",
-      "aliases": ["Cost Explorer"],
+      "aliases": [
+        "Cost Explorer"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A free tool for viewing and analysing AWS costs and usage over time. Includes filters, grouping, forecasts, RI/Savings Plans recommendations, and Rightsizing Recommendations."
     },
     {
       "term": "AWS Direct Connect",
-      "aliases": ["Direct Connect"],
+      "aliases": [
+        "Direct Connect"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A dedicated, private network connection from on-premises to AWS. Provides consistent network performance, lower bandwidth costs at scale, and the ability to extend on-premises networks into AWS through VLANs."
     },
     {
       "term": "AWS Elastic Beanstalk",
-      "aliases": ["Elastic Beanstalk"],
+      "aliases": [
+        "Elastic Beanstalk"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker. You retain full control of the underlying AWS resources; configure via .ebextensions."
     },
     {
       "term": "AWS Fargate",
-      "aliases": ["Fargate"],
+      "aliases": [
+        "Fargate"
+      ],
       "category": "Containers",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A serverless compute engine for containers that works with Amazon ECS and EKS. You don't manage EC2 instances; pay only for the CPU and memory your tasks/pods consume."
     },
     {
       "term": "AWS Firewall Manager",
-      "aliases": ["Firewall Manager"],
+      "aliases": [
+        "Firewall Manager"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A security management service that lets you centrally configure and manage firewall rules (WAF, Shield Advanced, Network Firewall, security groups, Route 53 Resolver DNS Firewall) across multiple accounts and resources."
     },
     {
       "term": "AWS Global Accelerator",
-      "aliases": ["Global Accelerator"],
+      "aliases": [
+        "Global Accelerator"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A networking service that improves the availability and performance of applications by routing traffic through the AWS global network and providing static anycast IP addresses as a fixed entry point."
     },
     {
       "term": "AWS Health Dashboard",
-      "aliases": ["Health Dashboard", "Personal Health Dashboard"],
+      "aliases": [
+        "Health Dashboard",
+        "Personal Health Dashboard"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Provides a personalised view of the performance and availability of AWS services that you are using, plus alerts about scheduled changes and outages that affect your resources (Personal Health) alongside global service health (Service Health)."
     },
     {
       "term": "AWS Identity and Access Management (IAM)",
-      "aliases": ["IAM", "Identity and Access Management"],
+      "aliases": [
+        "IAM",
+        "Identity and Access Management"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A service for securely controlling access to AWS resources. Manages users, groups, roles, identity providers, and policies (identity-based, resource-based, permission boundaries, SCPs). Apply the principle of least privilege and protect the root user with MFA."
     },
     {
       "term": "AWS IAM Identity Center",
-      "aliases": ["Identity Center", "AWS SSO", "SSO"],
+      "aliases": [
+        "Identity Center",
+        "AWS SSO",
+        "SSO"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "Successor to AWS Single Sign-On. Centrally manages workforce access to multiple AWS accounts and business applications. Supports SAML 2.0 IdPs and built-in identity store; assigns permission sets to users and groups."
     },
     {
       "term": "AWS Key Management Service (KMS)",
-      "aliases": ["KMS", "Key Management Service"],
+      "aliases": [
+        "KMS",
+        "Key Management Service"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A managed service for creating and controlling cryptographic keys used to encrypt data. Supports customer-managed keys (CMKs), AWS-managed keys, key rotation, key policies, grants, and envelope encryption via data keys."
     },
     {
       "term": "AWS Lambda",
-      "aliases": ["Lambda"],
+      "aliases": [
+        "Lambda"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A serverless compute service that runs code in response to events (API Gateway, S3, DynamoDB Streams, EventBridge, SQS, etc.) without provisioning or managing servers. Pay only for compute time consumed; supports up to 10 GB of memory, 15-min timeout, layers, aliases/versions, and provisioned concurrency."
     },
     {
       "term": "AWS License Manager",
-      "aliases": ["License Manager"],
+      "aliases": [
+        "License Manager"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service that streamlines managing software licenses (Microsoft, SAP, Oracle, IBM, etc.) from vendors across AWS and on-premises environments."
     },
     {
       "term": "AWS Marketplace",
-      "aliases": ["Marketplace"],
+      "aliases": [
+        "Marketplace"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A curated digital catalog that customers can use to find, buy, deploy, and manage third-party software, data, and services. Charges roll up into the customer's AWS bill."
     },
     {
       "term": "AWS Migration Hub",
-      "aliases": ["Migration Hub"],
+      "aliases": [
+        "Migration Hub"
+      ],
       "category": "Migration & Transfer",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A single location to discover, plan, and track migrations across multiple AWS and partner solutions."
     },
     {
       "term": "AWS Network Firewall",
-      "aliases": ["Network Firewall"],
+      "aliases": [
+        "Network Firewall"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A managed network firewall service for VPCs. Provides stateful inspection, intrusion prevention (Suricata-compatible rules), and protocol filtering."
     },
     {
       "term": "AWS Organizations",
-      "aliases": ["Organizations"],
+      "aliases": [
+        "Organizations"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service for centrally managing and governing multiple AWS accounts. Provides consolidated billing, organizational units (OUs), Service Control Policies (SCPs), and resource sharing across accounts."
     },
     {
       "term": "AWS Outposts",
-      "aliases": ["Outposts"],
+      "aliases": [
+        "Outposts"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Fully managed racks (or smaller 1U/2U servers) of AWS-designed infrastructure that bring AWS services and operating model to virtually any on-premises or edge location."
     },
     {
       "term": "AWS Pricing Calculator",
-      "aliases": ["Pricing Calculator", "TCO Calculator"],
+      "aliases": [
+        "Pricing Calculator",
+        "TCO Calculator"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A web-based planning tool you can use to create cost estimates for AWS services. Supports modelling multi-service architectures and exporting estimates as CSV/PDF."
     },
     {
       "term": "AWS Resource Access Manager (RAM)",
-      "aliases": ["RAM", "Resource Access Manager"],
+      "aliases": [
+        "RAM",
+        "Resource Access Manager"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A service that helps you securely share AWS resources (Transit Gateways, subnets, License Manager configurations, Route 53 Resolver rules, etc.) with any AWS account or through AWS Organizations."
     },
     {
       "term": "AWS Secrets Manager",
-      "aliases": ["Secrets Manager"],
+      "aliases": [
+        "Secrets Manager"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A service to manage, retrieve, and rotate database credentials, API keys, and other secrets throughout their lifecycle. Native rotation for RDS, Redshift, DocumentDB; custom rotation via Lambda."
     },
     {
       "term": "AWS Security Hub",
-      "aliases": ["Security Hub"],
+      "aliases": [
+        "Security Hub"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A cloud security posture management (CSPM) service that aggregates, organises, and prioritises security findings from AWS services (GuardDuty, Inspector, Macie, IAM Access Analyzer) and third-party tools against industry standards (CIS, PCI DSS, AWS Foundational Security Best Practices)."
     },
     {
       "term": "AWS Serverless Application Model (SAM)",
-      "aliases": ["SAM"],
+      "aliases": [
+        "SAM"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "An open-source framework for building serverless applications. SAM templates extend CloudFormation with shorthand syntax for Lambda functions, APIs, and DynamoDB tables. The SAM CLI provides local testing (sam local invoke), guided deploy, and packaging."
     },
     {
       "term": "AWS Service Catalog",
-      "aliases": ["Service Catalog"],
+      "aliases": [
+        "Service Catalog"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Lets organisations create and manage catalogs of IT services (built as CloudFormation products) that are approved for use on AWS. Users browse and self-provision products under governed configurations."
     },
     {
       "term": "AWS Shield",
-      "aliases": ["Shield"],
+      "aliases": [
+        "Shield"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A managed Distributed Denial of Service (DDoS) protection service. Shield Standard (free, automatically on for all customers) defends against common network/transport attacks; Shield Advanced (paid) adds proactive engagement with the AWS DDoS Response Team and cost-protection."
     },
     {
       "term": "AWS Snow Family",
-      "aliases": ["Snowball", "Snowcone", "Snowmobile"],
+      "aliases": [
+        "Snowball",
+        "Snowcone",
+        "Snowmobile"
+      ],
       "category": "Migration & Transfer",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Physical devices for petabyte- and exabyte-scale data transfer, edge computing, and storage in environments with limited connectivity. Snowcone (8 TB), Snowball Edge (80 TB), Snowmobile (100 PB)."
     },
     {
       "term": "AWS Step Functions",
-      "aliases": ["Step Functions"],
+      "aliases": [
+        "Step Functions"
+      ],
       "category": "Application Integration",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A serverless workflow service that lets you coordinate multiple AWS services into serverless applications. Define state machines in Amazon States Language (JSON) with Standard (long-running, exactly-once) or Express (high-volume, at-least-once) workflows."
     },
     {
       "term": "AWS Storage Gateway",
-      "aliases": ["Storage Gateway"],
+      "aliases": [
+        "Storage Gateway"
+      ],
       "category": "Storage",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A hybrid cloud storage service that connects on-premises environments to virtually unlimited cloud storage. Gateway types: S3 File, FSx File, Volume (cached/stored), and Tape."
     },
     {
       "term": "AWS Support plans",
-      "aliases": ["Support", "Basic Support", "Developer Support", "Business Support", "Enterprise Support"],
+      "aliases": [
+        "Support",
+        "Basic Support",
+        "Developer Support",
+        "Business Support",
+        "Enterprise Support"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Four tiers: Basic (free, account & billing), Developer (business-hours email, one primary contact), Business (24/7 phone/chat/email, all customers, third-party software guidance), and Enterprise On-Ramp / Enterprise (24/7 with 15-min response for critical issues, designated Technical Account Manager, Infrastructure Event Management, Concierge support team)."
     },
     {
       "term": "AWS Systems Manager",
-      "aliases": ["Systems Manager", "SSM"],
+      "aliases": [
+        "Systems Manager",
+        "SSM"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An operations hub that provides operational data and automated actions across AWS resources. Includes Parameter Store (config + secrets), Session Manager (shell access without SSH), Patch Manager, Run Command, Inventory, OpsCenter, and Automation."
     },
     {
       "term": "AWS Transfer Family",
-      "aliases": ["Transfer Family"],
+      "aliases": [
+        "Transfer Family"
+      ],
       "category": "Migration & Transfer",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Fully managed support for file transfers in and out of Amazon S3 and Amazon EFS over SFTP, FTPS, FTP, and AS2 protocols."
     },
     {
       "term": "AWS Trusted Advisor",
-      "aliases": ["Trusted Advisor"],
+      "aliases": [
+        "Trusted Advisor"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An online tool that provides real-time guidance to help you provision resources following AWS best practices across five categories: cost optimisation, performance, security, fault tolerance, and service limits."
     },
     {
       "term": "AWS WAF",
-      "aliases": ["WAF", "Web Application Firewall"],
+      "aliases": [
+        "WAF",
+        "Web Application Firewall"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A web-application firewall that protects web applications and APIs against common exploits (SQL injection, XSS, bots) by inspecting HTTP/S requests. Deployable on CloudFront, ALB, API Gateway, AppSync, and Cognito user pools."
     },
     {
       "term": "AWS X-Ray",
-      "aliases": ["X-Ray"],
+      "aliases": [
+        "X-Ray"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A distributed-tracing service that helps developers analyse and debug production, distributed applications. Visualises requests as a service map; segments and subsegments expose latency and errors per call."
     },
     {
       "term": "Blue/green deployment",
-      "aliases": ["Blue-green deployment"],
+      "aliases": [
+        "Blue-green deployment"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A deployment strategy that runs two identical production environments (blue = current, green = new). Traffic is shifted from blue to green; if issues arise you can instantly roll back by switching traffic back to blue. Native support in CodeDeploy, Elastic Beanstalk, and Lambda alias routing."
     },
     {
       "term": "Canary deployment",
-      "aliases": ["Canary release"],
+      "aliases": [
+        "Canary release"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A deployment strategy where the new version is rolled out to a small subset of users/instances first. If metrics look good, the rest are migrated. CodeDeploy and API Gateway support canary traffic shifting natively."
     },
     {
       "term": "CIDR block",
-      "aliases": ["CIDR"],
+      "aliases": [
+        "CIDR"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "Classless Inter-Domain Routing notation for IP address ranges (e.g. 10.0.0.0/16). VPCs and subnets are defined with CIDR blocks; subnet CIDRs must be within and not overlap inside the VPC CIDR."
     },
     {
       "term": "Cold start",
       "aliases": [],
       "category": "Concepts & Architecture",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "The latency penalty incurred when AWS Lambda must initialise a new execution environment (download code, start runtime, run init code) before invoking the handler. Mitigated by provisioned concurrency, keeping function packages small, and lazy-loading SDK clients outside the handler."
     },
     {
       "term": "DAX",
-      "aliases": ["DynamoDB Accelerator"],
+      "aliases": [
+        "DynamoDB Accelerator"
+      ],
       "category": "Database",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "Amazon DynamoDB Accelerator is a fully managed, write-through, in-memory cache for DynamoDB that delivers microsecond response times for read-heavy workloads. Sits between the app and the DynamoDB table; uses the same DynamoDB API."
     },
     {
       "term": "Edge location",
       "aliases": [],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Sites that CloudFront uses to cache copies of content for faster delivery to users in any location. There are many more edge locations than Regions, distributed worldwide; also used by Route 53, Global Accelerator, and Shield."
     },
     {
       "term": "Elastic Load Balancing (ELB)",
-      "aliases": ["ELB", "ALB", "NLB", "GWLB", "Application Load Balancer", "Network Load Balancer", "Gateway Load Balancer"],
+      "aliases": [
+        "ELB",
+        "ALB",
+        "NLB",
+        "GWLB",
+        "Application Load Balancer",
+        "Network Load Balancer",
+        "Gateway Load Balancer"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Automatically distributes incoming traffic across multiple targets and Availability Zones. ALB (Layer 7, HTTP/HTTPS, host/path/header rules), NLB (Layer 4, TCP/UDP/TLS, ultra-low latency, static IPs), GWLB (Layer 3 transparent for security appliances), and Classic Load Balancer (legacy)."
     },
     {
       "term": "Encryption at rest",
       "aliases": [],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Protection of data while it is stored on disk. AWS services integrate with KMS for server-side encryption (SSE-KMS, SSE-S3, SSE-C in S3; KMS-encrypted EBS volumes, RDS instances, DynamoDB tables, etc.)."
     },
     {
       "term": "Encryption in transit",
       "aliases": [],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "Protection of data while it moves between systems. Implemented with TLS/SSL between clients and AWS endpoints, ACM-managed certificates on load balancers and CloudFront, and VPC peering / VPN / Direct Connect MACsec for inter-network traffic."
     },
     {
       "term": "Envelope encryption",
       "aliases": [],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A pattern where a customer master key (CMK / KMS key) encrypts a data key, and the data key encrypts the data itself. The encrypted data key is stored alongside the ciphertext; this avoids sending large amounts of data to KMS."
     },
     {
       "term": "GSI",
-      "aliases": ["Global Secondary Index"],
+      "aliases": [
+        "Global Secondary Index"
+      ],
       "category": "Database",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A DynamoDB index with a partition key, optional sort key, and projection that can be different from the base table. Supports eventually consistent reads across all partitions; creatable/deletable at any time."
     },
     {
       "term": "Idempotency",
       "aliases": [],
       "category": "Concepts & Architecture",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A property where multiple invocations of the same operation produce the same result. Critical for retry-safe APIs; achieve via deduplication keys (SQS FIFO MessageDeduplicationId, S3 multipart uploads, DynamoDB conditional writes, idempotency tokens in SDK requests)."
     },
     {
       "term": "Infrastructure as Code (IaC)",
-      "aliases": ["IaC"],
+      "aliases": [
+        "IaC"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "Practice of managing and provisioning infrastructure through machine-readable definition files rather than manual processes. On AWS: CloudFormation, AWS SAM, AWS CDK, and third-party tools like Terraform/Pulumi."
     },
     {
       "term": "Internet Gateway",
-      "aliases": ["IGW"],
+      "aliases": [
+        "IGW"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A horizontally scaled, redundant, highly available VPC component that allows communication between resources in a VPC and the public internet. Required for resources in public subnets to be reachable."
     },
     {
       "term": "JWT",
-      "aliases": ["JSON Web Token"],
+      "aliases": [
+        "JSON Web Token"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A compact, URL-safe means of representing claims between two parties as a signed JSON object. Commonly issued by Amazon Cognito user pools and consumed by API Gateway authorizers."
     },
     {
       "term": "LSI",
-      "aliases": ["Local Secondary Index"],
+      "aliases": [
+        "Local Secondary Index"
+      ],
       "category": "Database",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A DynamoDB index sharing the same partition key as the base table but with a different sort key. Strongly or eventually consistent reads; must be created at table-creation time and limited to 5 per table."
     },
     {
       "term": "MFA",
-      "aliases": ["Multi-Factor Authentication"],
+      "aliases": [
+        "Multi-Factor Authentication"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "An extra layer of protection on top of username and password, requiring a second factor (virtual or hardware MFA device, FIDO security key) for sign-in. Strongly recommended for the root user and all privileged IAM identities."
     },
     {
       "term": "NAT Gateway",
-      "aliases": ["NAT"],
+      "aliases": [
+        "NAT"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A managed network address translation service that lets resources in a private subnet initiate outbound connections to the internet (or other AWS services) while remaining unreachable from the internet."
     },
     {
       "term": "Pre-signed URL",
-      "aliases": ["Presigned URL"],
+      "aliases": [
+        "Presigned URL"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A time-limited URL generated by an authorised principal that grants temporary access to an S3 object (GET or PUT) without requiring the requester to have AWS credentials. Common for browser uploads/downloads."
     },
     {
       "term": "Provisioned concurrency",
       "aliases": [],
       "category": "Compute",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A Lambda feature that initialises a requested number of execution environments and keeps them warm. Eliminates cold starts for predictable workloads. Charged per GB-second of provisioned capacity."
     },
     {
       "term": "Reserved concurrency",
       "aliases": [],
       "category": "Compute",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A Lambda configuration that guarantees the maximum number of concurrent executions for a function (and caps it). Prevents one function from consuming all account-level unreserved concurrency."
     },
     {
       "term": "Region",
-      "aliases": ["AWS Region"],
+      "aliases": [
+        "AWS Region"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A physical location in the world where AWS clusters data centres. Each Region consists of multiple, isolated, and physically separate Availability Zones. Customers choose Regions for latency, compliance/data residency, service availability, and cost."
     },
     {
       "term": "Reserved Instance (RI)",
-      "aliases": ["RI"],
+      "aliases": [
+        "RI"
+      ],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A billing discount applied to EC2 (and a few other services) in exchange for a 1- or 3-year commitment. Up to ~72% off On-Demand prices; Standard (locked attributes) or Convertible (can change instance family). Largely superseded by Savings Plans."
     },
     {
       "term": "Savings Plans",
       "aliases": [],
       "category": "Billing & Pricing",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "A flexible pricing model offering lower compute prices in exchange for a commitment to a consistent usage amount ($/hour) for 1 or 3 years. Compute Savings Plans (most flexible, EC2/Fargate/Lambda); EC2 Instance Savings Plans (instance-family-specific); SageMaker Savings Plans."
     },
     {
       "term": "SDK",
-      "aliases": ["Software Development Kit", "AWS SDK"],
+      "aliases": [
+        "Software Development Kit",
+        "AWS SDK"
+      ],
       "category": "Developer Tools",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "Language-specific libraries that simplify calling AWS APIs from your application. Officially supported SDKs: Python (boto3), JavaScript/TypeScript, Java, Go, .NET, Ruby, PHP, C++, Kotlin, Rust, Swift."
     },
     {
       "term": "Security Group",
       "aliases": [],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "A virtual stateful firewall attached to an EC2 instance / ENI. Allow rules only (no deny rules); return traffic for established connections is automatically permitted. Operates at the instance level (unlike Network ACLs at subnet level)."
     },
     {
       "term": "Service Control Policy (SCP)",
-      "aliases": ["SCP"],
+      "aliases": [
+        "SCP"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "An AWS Organizations policy type that sets the maximum permissions for accounts in the organisation. SCPs don't grant permissions but act as a guardrail filter over IAM policies. Attached to roots, OUs, or accounts."
     },
     {
       "term": "Shared Responsibility Model",
       "aliases": [],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02", "DVA-C02"],
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
       "definition": "AWS's framework for security responsibilities: AWS is responsible for security OF the cloud (hardware, hypervisor, managed services); the customer is responsible for security IN the cloud (data, IAM, OS patching for unmanaged services, application code, network/firewall config)."
     },
     {
       "term": "Spot Instance",
-      "aliases": ["Spot", "Spot Instances"],
+      "aliases": [
+        "Spot",
+        "Spot Instances"
+      ],
       "category": "Compute",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Spare EC2 capacity at up to 90% off On-Demand prices. AWS can reclaim the instance with a 2-minute notification. Suitable for fault-tolerant, flexible workloads (batch jobs, CI/CD, big data, stateless web)."
     },
     {
       "term": "STS",
-      "aliases": ["Security Token Service"],
+      "aliases": [
+        "Security Token Service"
+      ],
       "category": "Security, Identity & Compliance",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "AWS Security Token Service grants temporary, limited-privilege credentials for IAM principals or federated users via AssumeRole, AssumeRoleWithSAML, AssumeRoleWithWebIdentity, GetSessionToken, and GetFederationToken APIs."
     },
     {
       "term": "Tags",
-      "aliases": ["Tagging"],
+      "aliases": [
+        "Tagging"
+      ],
       "category": "Management & Monitoring",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "Key-value pairs you assign to AWS resources for metadata, organisation, automation, IAM access control (ABAC), and cost allocation (activate as Cost Allocation Tags in Billing)."
     },
     {
       "term": "Transit Gateway",
-      "aliases": ["TGW"],
+      "aliases": [
+        "TGW"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "A network transit hub that connects VPCs, on-premises networks (via Direct Connect or VPN), and other Transit Gateways in a hub-and-spoke topology. Simplifies what would otherwise be a full mesh of VPC peering connections."
     },
     {
       "term": "Visibility timeout",
       "aliases": [],
       "category": "Application Integration",
-      "certs": ["DVA-C02"],
+      "certs": [
+        "DVA-C02"
+      ],
       "definition": "An SQS configuration that hides a message from other consumers after a worker receives it, giving the worker time to process and delete it. If the worker fails to delete before the timeout expires, the message becomes visible again."
     },
     {
       "term": "VPN",
-      "aliases": ["AWS Site-to-Site VPN", "Client VPN"],
+      "aliases": [
+        "AWS Site-to-Site VPN",
+        "Client VPN"
+      ],
       "category": "Networking & Content Delivery",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "AWS Site-to-Site VPN creates encrypted IPsec tunnels between an on-premises network and a VPC. AWS Client VPN provides per-user OpenVPN access to AWS and on-premises networks."
     },
     {
       "term": "Well-Architected Framework",
-      "aliases": ["Well-Architected", "WAF (framework)"],
+      "aliases": [
+        "Well-Architected",
+        "WAF (framework)"
+      ],
       "category": "Concepts & Architecture",
-      "certs": ["CLF-C02"],
+      "certs": [
+        "CLF-C02"
+      ],
       "definition": "AWS's set of best practices organised into six pillars: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, and Sustainability. The Well-Architected Tool reviews workloads against these pillars."
+    },
+    {
+      "term": "Amazon Machine Image (AMI)",
+      "aliases": [
+        "AMI"
+      ],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A template containing the software configuration (OS, application server, applications) required to launch an EC2 instance. AMIs can be owned by AWS, the AWS Marketplace community, or built privately; shared across accounts; copied across Regions."
+    },
+    {
+      "term": "AWS Auto Scaling",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A service that monitors applications and automatically adjusts capacity to maintain steady, predictable performance at the lowest possible cost. Coordinates scaling across multiple resources (EC2 Auto Scaling groups, ECS services, DynamoDB tables, Aurora replicas) from a single configuration."
+    },
+    {
+      "term": "Amazon EC2 Auto Scaling",
+      "aliases": [
+        "EC2 Auto Scaling",
+        "Auto Scaling group",
+        "ASG"
+      ],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Helps maintain application availability by automatically launching or terminating EC2 instances based on policies. Defines an Auto Scaling group with min, max, and desired capacity; scaling policies can be target-tracking, step, simple, predictive, or scheduled."
+    },
+    {
+      "term": "AWS Graviton",
+      "aliases": [
+        "Graviton",
+        "Graviton2",
+        "Graviton3"
+      ],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "AWS-designed Arm-based processors that power EC2 instance families (M6g/M7g, C6g/C7g, R6g/R7g, T4g) at up to 40% better price-performance than comparable x86 instances. Supported in Lambda, ECS Fargate, EKS, RDS, and ElastiCache."
+    },
+    {
+      "term": "AWS Copilot",
+      "aliases": [
+        "Copilot",
+        "AWS Copilot CLI"
+      ],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A command-line tool that helps developers build, release, and operate production-ready containerized applications on Amazon ECS and AWS Fargate. Generates the underlying CloudFormation templates and CI/CD pipelines from a single `copilot init` workflow."
+    },
+    {
+      "term": "AWS Compute Optimizer",
+      "aliases": [
+        "Compute Optimizer"
+      ],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Analyses configuration and utilisation metrics across EC2 instances, Auto Scaling groups, EBS volumes, Lambda functions, and ECS services on Fargate to recommend right-sized resource configurations that reduce cost and improve performance."
+    },
+    {
+      "term": "AWS Mainframe Modernization",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A managed runtime and tooling service to migrate, modernise, run, and operate mainframe applications on AWS. Supports replatform (AWS Blu Age) and refactor (Micro Focus) patterns."
+    },
+    {
+      "term": "Lambda alias",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A pointer to a specific Lambda function version. Aliases let you decouple integrations (event sources, API Gateway, callers) from versions and enable weighted alias routing for canary / linear deployments."
+    },
+    {
+      "term": "Lambda version",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An immutable snapshot of a Lambda function's code and configuration. Published versions get a sequential version number; the unpublished latest is referenced as `$LATEST`. Combine with aliases for stable invocation targets."
+    },
+    {
+      "term": "Lambda layer",
+      "aliases": [
+        "Lambda layers"
+      ],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A .zip archive of libraries, custom runtimes, or other dependencies that you can attach to one or more Lambda functions. Layers reduce deployment-package size, enable sharing of common dependencies, and can be versioned and shared across accounts."
+    },
+    {
+      "term": "Lambda@Edge",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A feature of Amazon CloudFront that runs Lambda functions at AWS edge locations in response to viewer/origin request and response events. Used for HTTP header manipulation, A/B testing, dynamic origin selection, and personalised responses with low latency."
+    },
+    {
+      "term": "CloudFront Functions",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Lightweight JavaScript functions that run at CloudFront edge locations with sub-millisecond startup time. Limited to <1 ms CPU and 2 MB memory; ideal for header/URL rewrites, cache-key normalisation, and simple auth checks. Cheaper and faster than Lambda@Edge for short tasks."
+    },
+    {
+      "term": "AWS Wavelength",
+      "aliases": [
+        "Wavelength"
+      ],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Embeds AWS compute and storage inside 5G networks at the edge of telecom carriers, providing single-digit millisecond latency to mobile devices and end users. Useful for AR/VR, real-time gaming, ML inference, and connected vehicles."
+    },
+    {
+      "term": "AWS Local Zones",
+      "aliases": [
+        "Local Zones"
+      ],
+      "category": "Compute",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Place compute, storage, database, and other select AWS services close to large population, industry, and IT centres. An extension of an AWS Region; supports applications that require single-digit-millisecond latency to end users."
+    },
+    {
+      "term": "Provisioned IOPS",
+      "aliases": [],
+      "category": "Compute",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An EBS volume type (io1, io2, io2 Block Express) where you specify the desired IOPS independently of volume size, up to 256,000 IOPS per volume. Suited for I/O-intensive workloads such as large relational databases and NoSQL stores."
+    },
+    {
+      "term": "AWS DataSync",
+      "aliases": [
+        "DataSync"
+      ],
+      "category": "Storage",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "An online data-transfer service that moves data between on-premises storage (NFS, SMB, HDFS, self-managed object storage), edge locations, and AWS storage services (S3, EFS, FSx). Up to 10x faster than open-source tools; preserves metadata and integrity checks."
+    },
+    {
+      "term": "AWS Snowball Edge",
+      "aliases": [
+        "Snowball Edge"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A petabyte-scale data-transport and edge-compute device in the AWS Snow Family. Storage Optimized variants (up to 80 TB usable) for bulk migration; Compute Optimized variants offer onboard EC2 and GPU for edge processing in disconnected environments."
+    },
+    {
+      "term": "AWS Snowcone",
+      "aliases": [
+        "Snowcone"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The smallest member of the AWS Snow Family (8 TB HDD or 14 TB SSD). Portable, rugged, secure, designed for collecting data at the edge in space-constrained or austere environments. Integrates with AWS DataSync for online sync to AWS."
+    },
+    {
+      "term": "Amazon S3 Glacier",
+      "aliases": [
+        "S3 Glacier",
+        "Glacier Instant Retrieval",
+        "Glacier Flexible Retrieval",
+        "Glacier Deep Archive"
+      ],
+      "category": "Storage",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Low-cost S3 storage classes designed for archival data. Glacier Instant Retrieval (ms access, archive infrequent), Glacier Flexible Retrieval (minutes-to-hours retrieval), and Glacier Deep Archive (cheapest, 12-48 hour retrieval) trade retrieval time for storage price."
+    },
+    {
+      "term": "Amazon S3 Intelligent-Tiering",
+      "aliases": [
+        "S3 Intelligent-Tiering"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An S3 storage class that automatically moves objects between Frequent, Infrequent, Archive Instant, Archive, and Deep Archive access tiers based on changing access patterns, with no retrieval fees or operational overhead."
+    },
+    {
+      "term": "Amazon S3 Transfer Acceleration",
+      "aliases": [
+        "S3 Transfer Acceleration"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Uses the global Amazon CloudFront edge-location network to accelerate uploads and downloads to S3 buckets. Useful for transferring large objects over long geographic distances; enabled per bucket."
+    },
+    {
+      "term": "Amazon S3 Versioning",
+      "aliases": [
+        "S3 versioning",
+        "S3 Object Versioning"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Enables you to keep multiple variants of an object in the same bucket so you can recover from unintended user actions and application failures. Combined with MFA Delete and lifecycle policies for compliance / retention controls."
+    },
+    {
+      "term": "Amazon S3 Replication",
+      "aliases": [
+        "Cross-Region Replication",
+        "CRR",
+        "Same-Region Replication",
+        "SRR"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Automatically copies S3 objects to one or more destination buckets in the same or different Regions. Supports replica modification sync, replication time control (RTC) for 15-minute SLAs, and KMS-key replication."
+    },
+    {
+      "term": "Amazon S3 Object Lock",
+      "aliases": [
+        "S3 Object Lock"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A write-once-read-many (WORM) feature that prevents objects from being deleted or overwritten for a fixed amount of time or indefinitely. Two retention modes: Governance (with special IAM permission to override) and Compliance (immutable, even by root)."
+    },
+    {
+      "term": "Amazon Data Lifecycle Manager",
+      "aliases": [
+        "Data Lifecycle Manager",
+        "DLM"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Automates creation, retention, and deletion of EBS snapshots and EBS-backed AMIs according to schedule-based policies. Used for backup, disaster recovery, and AMI hygiene."
+    },
+    {
+      "term": "AWS Amplify Hosting",
+      "aliases": [
+        "Amplify Hosting"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A fully managed CI/CD and hosting service for fast, secure, reliable static and server-side rendered web apps (Next.js, Nuxt, etc.). Git-based workflow with preview environments, custom domains, branch deployments, and edge content delivery via CloudFront."
+    },
+    {
+      "term": "Multipart upload",
+      "aliases": [],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An S3 API that splits a large object (>100 MB recommended, required >5 GB) into parts uploaded in parallel and reassembled on completion. Improves throughput, supports pause/resume, and is required for very large objects."
+    },
+    {
+      "term": "Cross-Region Replication (CRR)",
+      "aliases": [
+        "CRR"
+      ],
+      "category": "Storage",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Asynchronous, automated replication of S3 objects to a destination bucket in a different AWS Region. Useful for compliance, lower-latency access in distant geographies, and operational redundancy. Configured at the bucket level via S3 Replication rules."
+    },
+    {
+      "term": "Amazon RDS Proxy",
+      "aliases": [
+        "RDS Proxy"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A fully managed, highly available database proxy for RDS and Aurora that pools and shares database connections. Reduces application latency under bursty workloads (especially serverless Lambda) and improves failover times."
+    },
+    {
+      "term": "Amazon Aurora Serverless",
+      "aliases": [
+        "Aurora Serverless",
+        "Aurora Serverless v2"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An on-demand auto-scaling configuration for Amazon Aurora. v2 scales instance capacity in fine-grained increments to meet workload demand; you pay per-second for the database capacity used."
+    },
+    {
+      "term": "Aurora Global Database",
+      "aliases": [],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An Aurora deployment that spans multiple AWS Regions for disaster recovery and low-latency global reads. Replicates with typical lag under 1 second; supports cross-Region failover in under a minute."
+    },
+    {
+      "term": "Amazon DynamoDB Streams",
+      "aliases": [
+        "DynamoDB Streams"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A time-ordered sequence of item-level changes (inserts, updates, deletes) in a DynamoDB table. Records are stored for 24 hours; consumed by Lambda triggers, Kinesis Data Streams, or the DynamoDB Streams API for replication, materialised views, or notifications."
+    },
+    {
+      "term": "DynamoDB Global Tables",
+      "aliases": [
+        "Global Tables"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A multi-Region, multi-active replication of a DynamoDB table. Provides single-digit-millisecond local reads and writes from any participating Region, with last-writer-wins conflict resolution."
+    },
+    {
+      "term": "DynamoDB Transactions",
+      "aliases": [
+        "TransactWriteItems",
+        "TransactGetItems"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "DynamoDB APIs that group up to 100 operations across multiple items and tables into all-or-nothing ACID transactions. Useful when several items must be updated atomically (financial transfers, inventory reservations)."
+    },
+    {
+      "term": "DynamoDB on-demand capacity",
+      "aliases": [
+        "On-demand mode",
+        "DynamoDB on-demand"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A DynamoDB billing mode that automatically scales capacity to accommodate workloads with no minimum throughput. Pay per request; ideal for unpredictable traffic and new applications."
+    },
+    {
+      "term": "DynamoDB provisioned capacity",
+      "aliases": [
+        "Provisioned mode"
+      ],
+      "category": "Database",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A DynamoDB billing mode where you specify read and write capacity units per table. Combine with auto-scaling to track utilisation targets; cheaper than on-demand when traffic is predictable and steady."
+    },
+    {
+      "term": "Read replica",
+      "aliases": [
+        "RDS Read Replica"
+      ],
+      "category": "Database",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A copy of an RDS / Aurora database used to offload read traffic from the primary. Async replication; can be promoted to a standalone instance for disaster recovery or cross-Region failover."
+    },
+    {
+      "term": "Multi-AZ deployment",
+      "aliases": [
+        "Multi-AZ"
+      ],
+      "category": "Database",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "An RDS / Aurora high-availability configuration that maintains a synchronous standby replica in a different Availability Zone. Automatic failover within 60-120 seconds; transparent to application connections via the RDS endpoint."
+    },
+    {
+      "term": "AWS PrivateLink",
+      "aliases": [
+        "PrivateLink"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Provides private connectivity between VPCs, AWS services, and on-premises networks without exposing traffic to the public internet. Connections use VPC interface endpoints (ENIs) inside your VPC with private IP addresses."
+    },
+    {
+      "term": "VPC Endpoint",
+      "aliases": [
+        "VPC Endpoints",
+        "Gateway Endpoint",
+        "Interface Endpoint"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Lets you privately connect a VPC to supported AWS services without internet, NAT, VPN, or Direct Connect. Two types: Gateway endpoints (S3, DynamoDB â€” free) and Interface endpoints (powered by PrivateLink, paid)."
+    },
+    {
+      "term": "VPC Peering",
+      "aliases": [],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A networking connection between two VPCs that lets instances communicate as if they were within the same network. Non-transitive; CIDR blocks must not overlap. Supports cross-Region and cross-account peerings."
+    },
+    {
+      "term": "AWS Cloud Map",
+      "aliases": [],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A cloud resource discovery service. Lets you define custom names for application resources and maintain the updated location of these dynamic resources. Integrates with App Mesh, ECS, and Route 53 for service discovery in microservice architectures."
+    },
+    {
+      "term": "AWS Client VPN",
+      "aliases": [
+        "Client VPN"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A managed client-based VPN service that enables you to securely access AWS resources and resources in your on-premises network. Uses OpenVPN-based client; integrates with IAM, Active Directory, and SAML for authentication."
+    },
+    {
+      "term": "AWS Site-to-Site VPN",
+      "aliases": [
+        "Site-to-Site VPN"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Creates two encrypted IPsec tunnels between an on-premises customer gateway and an AWS virtual private gateway or transit gateway. Provides a quick, low-cost alternative or backup to Direct Connect."
+    },
+    {
+      "term": "Network ACL (NACL)",
+      "aliases": [
+        "NACL",
+        "Network ACL"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A stateless firewall that controls traffic in and out of a subnet using ordered allow / deny rules. Complements Security Groups (which are stateful and attached to instances)."
+    },
+    {
+      "term": "Route table",
+      "aliases": [
+        "VPC route table"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A set of rules (routes) that determine where network traffic from a subnet or gateway is directed. Each subnet must be associated with a route table; routes can point to internet gateways, NAT gateways, peering connections, transit gateways, or VPC endpoints."
+    },
+    {
+      "term": "Elastic Network Interface (ENI)",
+      "aliases": [
+        "ENI"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A virtual network card attached to an EC2 instance or other AWS resource (Lambda VPC config, ECS task, etc.). Has a primary private IPv4, optional secondary IPs, Elastic IP, MAC address, and security groups."
+    },
+    {
+      "term": "Elastic IP",
+      "aliases": [
+        "EIP"
+      ],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A static public IPv4 address allocated to your AWS account and remappable between EC2 instances or ENIs. Free while associated with a running instance; charged when allocated but unused."
+    },
+    {
+      "term": "AWS Network Manager",
+      "aliases": [],
+      "category": "Networking & Content Delivery",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A central console for managing AWS and on-premises networks. Provides a visual representation of your global network, route propagation, traffic, and performance across Transit Gateways, VPN, Direct Connect, and SD-WAN partners."
+    },
+    {
+      "term": "Amazon Detective",
+      "aliases": [
+        "Detective"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Automatically collects log data from VPC Flow Logs, CloudTrail, and GuardDuty findings, applies machine learning and graph theory to build a linked set of data so analysts can investigate, isolate, and resolve security issues."
+    },
+    {
+      "term": "AWS Audit Manager",
+      "aliases": [
+        "Audit Manager"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Helps continuously audit AWS usage to assess risk and compliance with regulations (PCI DSS, GDPR, HIPAA, AWS Foundational Security Best Practices) and industry standards. Automates evidence collection and produces audit-ready reports."
+    },
+    {
+      "term": "AWS Encryption SDK",
+      "aliases": [
+        "Encryption SDK"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A client-side encryption library that helps developers implement industry best practices: envelope encryption, key reuse via data-key caching, support for multiple key providers (KMS, custom keystores), and pluggable cryptographic algorithms. Available in Java, Python, C, JavaScript, .NET."
+    },
+    {
+      "term": "AWS Signer",
+      "aliases": [
+        "Signer"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Manages code-signing certificates and verifies signatures for Lambda functions, IoT devices, and container images. Ensures only trusted code is deployed; integrates with KMS-backed certificates from AWS Certificate Manager Private CA."
+    },
+    {
+      "term": "IAM Access Analyzer",
+      "aliases": [
+        "Access Analyzer"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Identifies resources in your organisation and accounts (S3 buckets, IAM roles, KMS keys, Lambda functions, SQS queues, Secrets Manager secrets) that are shared with an external entity. Continuously monitors policies and surfaces unintended external access."
+    },
+    {
+      "term": "AWS Directory Service",
+      "aliases": [
+        "Directory Service",
+        "Managed Microsoft AD",
+        "AD Connector",
+        "Simple AD"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Provides multiple ways to use Microsoft Active Directory with other AWS services: AWS Managed Microsoft AD (full AD service), AD Connector (proxy to on-prem AD), and Simple AD (Samba 4-based, low-cost)."
+    },
+    {
+      "term": "Permission boundary",
+      "aliases": [
+        "IAM permission boundary"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An advanced IAM feature that uses a managed policy to set the maximum permissions an identity-based policy can grant to a user or role. Useful for delegating permission management to other teams without granting overly broad privileges."
+    },
+    {
+      "term": "Resource-based policy",
+      "aliases": [],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A JSON policy document attached to a resource (S3 bucket, SNS topic, SQS queue, Lambda function, KMS key, etc.) that grants the specified Principal permissions to act on the resource. Pair with identity-based policies for cross-account access."
+    },
+    {
+      "term": "Identity-based policy",
+      "aliases": [],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A JSON policy attached to an IAM identity (user, group, or role) that grants permissions on AWS resources. Managed (AWS-managed, customer-managed) or inline; evaluated together with resource-based policies and SCPs."
+    },
+    {
+      "term": "Trust policy",
+      "aliases": [],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An IAM role's resource-based policy that defines which principals (users, services, accounts) can assume the role. Combined with the role's permissions policy to determine effective access."
+    },
+    {
+      "term": "AWS Shield Advanced",
+      "aliases": [
+        "Shield Advanced"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Paid tier of AWS Shield that provides expanded DDoS protection with the AWS Shield Response Team (SRT) for 24/7 incident response, near-real-time visibility into attacks, cost protection for scaling caused by attacks, and integration with AWS WAF and Firewall Manager."
+    },
+    {
+      "term": "AWS Shield Response Team",
+      "aliases": [
+        "DDoS Response Team",
+        "DRT",
+        "SRT"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A 24/7 team of DDoS experts available to Shield Advanced subscribers (and Business/Enterprise Support customers) for assistance with DDoS incident triage, mitigation, and post-event analysis."
+    },
+    {
+      "term": "Signature Version 4 (SigV4)",
+      "aliases": [
+        "SigV4",
+        "Signature Version 4"
+      ],
+      "category": "Security, Identity & Compliance",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "AWS's process for authenticating requests by signing them with your access key. Most AWS SDKs sign requests automatically; required by all current AWS service APIs. Includes a date/region/service scope and a hash of the request body."
+    },
+    {
+      "term": "AWS CLI",
+      "aliases": [
+        "CLI",
+        "AWS Command Line Interface"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A unified tool to manage AWS services from a command shell. Supports scripting and automation across services; uses named profiles for credentials; v2 adds SSO support, auto-prompt mode, and parameter validation."
+    },
+    {
+      "term": "AWS Management Console",
+      "aliases": [
+        "Management Console",
+        "AWS Console"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The browser-based graphical interface to AWS services. Lets administrators and developers provision, configure, monitor, and manage resources without using the CLI/SDK. Mobile companion app available."
+    },
+    {
+      "term": "AWS Toolkit",
+      "aliases": [
+        "AWS Toolkit for VS Code",
+        "AWS Toolkit for JetBrains",
+        "AWS Toolkit for Visual Studio"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "IDE extensions for VS Code, JetBrains, Eclipse, and Visual Studio that provide an integrated experience for developing serverless applications on AWS: editing SAM templates, deploying Lambda, viewing CloudWatch logs, and remote debugging."
+    },
+    {
+      "term": "AWS SAM CLI",
+      "aliases": [
+        "SAM CLI"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "The command-line tooling for AWS SAM. `sam init` scaffolds projects, `sam build` packages dependencies, `sam local invoke / start-api` runs Lambdas locally, `sam deploy` uploads to CloudFormation, and `sam logs / sync` accelerate the inner-loop."
+    },
+    {
+      "term": "buildspec.yml",
+      "aliases": [
+        "buildspec"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A YAML file that defines the build commands and settings used by AWS CodeBuild. Phases (install, pre_build, build, post_build, reports, artifacts) describe what to run; environment variables and cache locations are also configured here."
+    },
+    {
+      "term": "appspec.yml",
+      "aliases": [
+        "appspec"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A YAML file that defines deployment instructions for AWS CodeDeploy. Specifies source-to-target file mappings, lifecycle event hooks (BeforeInstall, AfterInstall, ApplicationStart, etc.) and, for ECS or Lambda, traffic-shift parameters."
+    },
+    {
+      "term": "Amazon Q",
+      "aliases": [
+        "Amazon Q Developer",
+        "AWS Q"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A generative-AI-powered assistant for software development and AWS use. Amazon Q Developer suggests code, explains APIs, refactors, generates tests, and answers AWS-architecture questions; can chat with private code repositories when enabled."
+    },
+    {
+      "term": "AWS CodeStar",
+      "aliases": [
+        "CodeStar"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A unified user interface that lets developers quickly develop, build, and deploy applications on AWS using preconfigured project templates. Aggregates CodeCommit/Build/Deploy/Pipeline and JIRA into a single dashboard."
+    },
+    {
+      "term": "AWS CodeGuru",
+      "aliases": [
+        "CodeGuru",
+        "Amazon CodeGuru",
+        "CodeGuru Reviewer",
+        "CodeGuru Profiler"
+      ],
+      "category": "Developer Tools",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Two ML-powered services: CodeGuru Reviewer (automated code reviews for Java and Python with security and performance recommendations) and CodeGuru Profiler (production profiling to identify the most expensive lines of code)."
+    },
+    {
+      "term": "Amazon CloudWatch Logs",
+      "aliases": [
+        "CloudWatch Logs"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A component of Amazon CloudWatch that monitors, stores, and accesses log files from EC2, Lambda, CloudTrail, Route 53, and other sources. Supports retention policies, metric filters that emit CloudWatch metrics, subscription filters to Kinesis/Firehose/Lambda, and log group encryption with KMS."
+    },
+    {
+      "term": "Amazon CloudWatch Logs Insights",
+      "aliases": [
+        "CloudWatch Logs Insights",
+        "Logs Insights"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An interactive query language for searching and analysing log data in CloudWatch Logs. Pay per scanned data; results render in tables or charts that can be saved to dashboards."
+    },
+    {
+      "term": "CloudWatch alarm",
+      "aliases": [
+        "CloudWatch alarms"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Watches a single CloudWatch metric over a specified time period and performs actions (SNS notification, Auto Scaling, EC2 Stop/Reboot/Terminate, Systems Manager OpsCenter incident) when the threshold is breached. Supports composite alarms across multiple metrics."
+    },
+    {
+      "term": "CloudWatch Synthetics",
+      "aliases": [
+        "Synthetics",
+        "Canaries"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Configurable scripts (canaries) that monitor endpoints and APIs from outside-in by following customer flows. Detects broken links, slow page load, and outages before customers notice; integrates with CloudWatch alarms."
+    },
+    {
+      "term": "AWS Systems Manager Parameter Store",
+      "aliases": [
+        "Parameter Store",
+        "SSM Parameter Store"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A capability of AWS Systems Manager that provides secure, hierarchical storage for configuration data and secrets. Plain-text String, StringList, and KMS-encrypted SecureString parameter types; native IAM integration."
+    },
+    {
+      "term": "AWS Systems Manager Session Manager",
+      "aliases": [
+        "Session Manager",
+        "SSM Session Manager"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A browser-based or CLI shell that gives interactive one-click access to managed EC2 instances and on-prem servers without opening SSH/RDP, bastion hosts, or managing keys. Sessions are logged to CloudWatch Logs / S3 for audit."
+    },
+    {
+      "term": "AWS Systems Manager Patch Manager",
+      "aliases": [
+        "Patch Manager"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Automates the process of patching managed instances with both security and other types of updates. Patch baselines define which patches are approved; maintenance windows schedule when patches are applied."
+    },
+    {
+      "term": "AWS Systems Manager Automation",
+      "aliases": [
+        "SSM Automation"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Lets you create runbooks (Automation documents) to perform common maintenance and deployment tasks across AWS resources. Includes AWS-curated documents and the ability to author custom JSON/YAML automations."
+    },
+    {
+      "term": "CloudFormation StackSets",
+      "aliases": [
+        "StackSets"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Extends CloudFormation stacks to provision the same template across multiple accounts and Regions in a single operation. Used for organization-wide guardrails, IAM baselines, and multi-account landing-zone deployments."
+    },
+    {
+      "term": "AWS CloudFormation drift detection",
+      "aliases": [
+        "Drift detection"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Detects whether a stack's actual configuration differs from the configuration expected by its CloudFormation template (because someone modified resources outside CloudFormation). Reports per-resource drift status and lets you re-import."
+    },
+    {
+      "term": "AWS Application Discovery Service",
+      "aliases": [
+        "Application Discovery Service"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Collects and presents information about your on-premises servers, applications, and network dependencies to plan a migration. Two collectors: agent-based (richer data) or agentless (VMware-only). Data flows into Migration Hub for centralised tracking."
+    },
+    {
+      "term": "AWS Managed Services (AMS)",
+      "aliases": [
+        "AMS"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "AWS-staffed operations service for enterprises that lets you offload ongoing infrastructure-management tasks. Includes 24/7 incident management, change management, security and patch management, monitoring, and continuity. Two tiers: Accelerate and Advanced."
+    },
+    {
+      "term": "AWS Incident Detection and Response",
+      "aliases": [
+        "Incident Detection"
+      ],
+      "category": "Management & Monitoring",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "An offering on top of Enterprise Support that provides proactive monitoring of workloads by AWS engineers. Detects incidents in less than five minutes and engages the customer for rapid mitigation."
+    },
+    {
+      "term": "Amazon EventBridge Pipes",
+      "aliases": [
+        "EventBridge Pipes"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A point-to-point integration in EventBridge that connects an event source (SQS, Kinesis, DynamoDB Streams, Kafka, MQ) to a target (Lambda, Step Functions, SNS, API destinations) with optional filtering, batching, and enrichment via Lambda / Step Functions / API destinations."
+    },
+    {
+      "term": "Amazon EventBridge Scheduler",
+      "aliases": [
+        "EventBridge Scheduler"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A serverless scheduler that lets you create, run, and manage tasks at any scale. Supports one-time and recurring schedules with delivery to over 270 AWS services and 6,000+ API operations."
+    },
+    {
+      "term": "Kinesis Data Streams",
+      "aliases": [
+        "Amazon Kinesis Data Streams"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A massively scalable real-time data streaming service. Streams are composed of shards (provisioned mode) or on-demand throughput; producers write records via the Kinesis Producer Library (KPL) and consumers read via the Kinesis Client Library (KCL) or Lambda."
+    },
+    {
+      "term": "Kinesis Data Firehose",
+      "aliases": [
+        "Amazon Kinesis Data Firehose",
+        "Amazon Data Firehose"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A fully managed service that delivers real-time streaming data to destinations such as S3, Redshift, OpenSearch, Splunk, and HTTP endpoints. Auto-scales with no shards to manage; supports data transformation via Lambda and format conversion to Parquet/ORC."
+    },
+    {
+      "term": "SQS FIFO queue",
+      "aliases": [
+        "FIFO queue"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An SQS queue type guaranteeing exactly-once processing and strict ordering of messages within a message group. Up to 300 transactions per second (TPS) without batching, 3,000 TPS with batching, or higher-throughput mode for higher TPS."
+    },
+    {
+      "term": "SQS Standard queue",
+      "aliases": [
+        "Standard queue"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "The default SQS queue type with at-least-once delivery, best-effort ordering, and nearly unlimited throughput. Use for high-throughput workloads that can tolerate occasional duplicates and out-of-order messages."
+    },
+    {
+      "term": "Dead-letter queue (DLQ)",
+      "aliases": [
+        "DLQ",
+        "Dead letter queue"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A secondary SQS queue (or SNS / Lambda destination) that receives messages that couldn't be processed successfully after a maximum number of attempts. Used to isolate problematic messages for debugging without blocking the main workflow."
+    },
+    {
+      "term": "Long polling",
+      "aliases": [],
+      "category": "Application Integration",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An SQS consumer technique that waits up to 20 seconds for messages to arrive before returning empty, reducing the number of empty receives and API calls. Set via the ReceiveMessageWaitTimeSeconds queue attribute or per-call WaitTimeSeconds parameter."
+    },
+    {
+      "term": "AWS Glue",
+      "aliases": [
+        "Glue"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "A serverless data-integration service for discovering, preparing, moving, and integrating data for analytics, machine learning, and application development. Includes a Data Catalog, crawlers, ETL jobs (Python or Scala), Glue Studio visual editor, DataBrew, and Schema Registry."
+    },
+    {
+      "term": "AWS Glue Data Catalog",
+      "aliases": [
+        "Glue Data Catalog"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A persistent, fully managed metadata store inside AWS Glue. Used by Athena, EMR, Redshift Spectrum, and Lake Formation as a centralised Hive-compatible catalog of databases, tables, and partitions."
+    },
+    {
+      "term": "Amazon DataZone",
+      "aliases": [
+        "DataZone"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A data-management service that helps catalog, discover, share, and govern data stored across AWS, on-premises, and third-party sources. Provides domain-based data marketplaces with business-friendly search and approval workflows."
+    },
+    {
+      "term": "Amazon Kendra",
+      "aliases": [
+        "Kendra"
+      ],
+      "category": "Machine Learning",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An intelligent enterprise search service powered by machine learning. Indexes documents from many connectors (S3, SharePoint, Salesforce, Confluence, etc.) and answers natural-language questions with relevance ranking and read-it-back excerpts."
+    },
+    {
+      "term": "Amazon Forecast",
+      "aliases": [
+        "Forecast"
+      ],
+      "category": "Machine Learning",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A time-series-forecasting service that uses ML to deliver accurate forecasts. Bring your historical and related data; Forecast trains models without ML expertise and exposes them via real-time and batch inference APIs."
+    },
+    {
+      "term": "Amazon Personalize",
+      "aliases": [
+        "Personalize"
+      ],
+      "category": "Machine Learning",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A real-time personalisation and recommendation service. Trains recipes on your event data, item catalog, and user attributes to deliver tailored recommendations, similar items, personalised rankings, and email/notification segmentation."
+    },
+    {
+      "term": "Amazon Augmented AI (A2I)",
+      "aliases": [
+        "A2I",
+        "Augmented AI"
+      ],
+      "category": "Machine Learning",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Makes it easy to build the human-review workflows often required for machine-learning predictions. Integrates with Textract, Rekognition, and custom SageMaker models; routes low-confidence outputs to human reviewers."
+    },
+    {
+      "term": "Amazon Bedrock Knowledge Bases",
+      "aliases": [
+        "Knowledge Bases for Amazon Bedrock"
+      ],
+      "category": "Machine Learning",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Fully managed retrieval-augmented-generation (RAG) workflows for Amazon Bedrock. Connects foundation models to private data sources (S3, web crawl, Confluence, Salesforce) so models answer with current company context, with built-in vector embedding and retrieval."
+    },
+    {
+      "term": "AWS Cost and Usage Report (CUR)",
+      "aliases": [
+        "CUR",
+        "Cost and Usage Report"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The most comprehensive set of AWS cost and usage data, delivered to S3 in CSV or Parquet format. Hourly or daily granularity; integrates with Athena, Redshift, and QuickSight for analysis."
+    },
+    {
+      "term": "AWS Billing Conductor",
+      "aliases": [
+        "Billing Conductor"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A customisable billing service that supports showback and chargeback workflows for AWS solution providers and enterprises. Lets you create custom billing groups, apply pricing rules and discounts, and produce per-group invoices."
+    },
+    {
+      "term": "AWS Cost Anomaly Detection",
+      "aliases": [
+        "Cost Anomaly Detection"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Uses machine learning to monitor AWS spend and detect anomalies. Sends alerts (email, SNS) when an unusual spend pattern is identified so cost spikes can be investigated quickly. Free to use."
+    },
+    {
+      "term": "AWS Enterprise On-Ramp",
+      "aliases": [
+        "Enterprise On-Ramp"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "An AWS Support plan between Business and Enterprise. Provides a pool of Technical Account Managers (TAMs), 30-minute response on business-critical issues, and access to most Enterprise Support benefits at a lower entry price."
+    },
+    {
+      "term": "AWS Knowledge Center",
+      "aliases": [
+        "Knowledge Center"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A free repository of how-to articles and answers to common AWS questions, curated by AWS Support. Searchable from any AWS account; no support-plan upgrade required."
+    },
+    {
+      "term": "AWS Professional Services",
+      "aliases": [
+        "ProServe",
+        "AWS ProServe"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A global team of AWS experts who provide paid engagements to help customers accelerate adoption: assessments, prescriptive guidance, hands-on engineering, and architecture/security/migration projects."
+    },
+    {
+      "term": "AWS Data Exchange",
+      "aliases": [
+        "Data Exchange"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "Makes it easy to find, subscribe to, and use third-party data in the cloud. Subscriptions appear directly in your S3 bucket / Redshift cluster / API destination. Charges roll up onto the AWS bill."
+    },
+    {
+      "term": "AWS Cost Management",
+      "aliases": [],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Umbrella for the AWS cost-related services: Cost Explorer, Budgets, Cost and Usage Report, Cost Anomaly Detection, Savings Plans, and the AWS Pricing Calculator. Accessible from the Billing console."
+    },
+    {
+      "term": "Free Tier",
+      "aliases": [
+        "AWS Free Tier"
+      ],
+      "category": "Billing & Pricing",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A program offering customers free access to AWS services in three forms: Always Free (e.g. 1M Lambda requests/month), 12-Month Free (e.g. 750 hours of t2.micro), and Trials (limited-time after activation, e.g. SageMaker Studio Lab)."
+    },
+    {
+      "term": "AWS Database Migration Service (DMS)",
+      "aliases": [
+        "DMS",
+        "Database Migration Service"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Migrates databases to AWS quickly and securely. Source database remains fully operational during the migration; supports homogeneous (e.g. Oracle to Oracle) and heterogeneous migrations (e.g. Oracle to Aurora MySQL) and continuous replication for change-data-capture."
+    },
+    {
+      "term": "AWS Schema Conversion Tool (SCT)",
+      "aliases": [
+        "SCT",
+        "Schema Conversion Tool"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Converts a source database schema and a majority of the custom code (stored procedures, views, etc.) to a format compatible with the target AWS database. Pairs with DMS to handle the data movement."
+    },
+    {
+      "term": "AWS Application Migration Service (MGN)",
+      "aliases": [
+        "MGN",
+        "Application Migration Service"
+      ],
+      "category": "Migration & Transfer",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Lift-and-shift solution for rehosting any on-premises or other-cloud server onto EC2. Continuously replicates source server disks to a Staging Area Subnet, then performs cut-over with minimal downtime."
+    },
+    {
+      "term": "AWS IoT Core",
+      "aliases": [
+        "IoT Core"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A managed cloud service that lets connected devices easily and securely interact with cloud applications and other devices. Supports MQTT, HTTP, and WebSockets; provides device registry, device shadows, and rules-engine routing to other AWS services."
+    },
+    {
+      "term": "AWS IoT Greengrass",
+      "aliases": [
+        "Greengrass"
+      ],
+      "category": "Application Integration",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Open-source edge runtime and cloud service for building, deploying, and managing intelligent device software. Lets devices run Lambda functions and ML inference locally, sync state, and operate while offline."
+    },
+    {
+      "term": "AWS IoT Analytics",
+      "aliases": [
+        "IoT Analytics"
+      ],
+      "category": "Analytics",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A fully managed service that automates each step required to analyse data from IoT devices. Filters, transforms, and enriches data before storing it in a time-series data store, then runs SQL queries or hosts notebooks for analysis."
+    },
+    {
+      "term": "Amazon WorkDocs",
+      "aliases": [
+        "WorkDocs"
+      ],
+      "category": "Business Applications",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A secure, fully managed content creation, storage, and collaboration service. Lets users create, edit, and share content stored in the cloud with built-in version control, comments, and per-folder permissions."
+    },
+    {
+      "term": "Amazon WorkMail",
+      "aliases": [
+        "WorkMail"
+      ],
+      "category": "Business Applications",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A secure, managed business email and calendar service with support for existing desktop and mobile clients. Compatible with Microsoft Outlook, Apple Mail, native Android/iOS apps, and IMAP/SMTP."
+    },
+    {
+      "term": "Active-active",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A multi-Region or multi-instance deployment in which all sites simultaneously serve live production traffic. Maximises availability and capacity but requires data-replication strategies that tolerate concurrent writes."
+    },
+    {
+      "term": "Active-passive",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A deployment pattern with one active site serving traffic and one or more passive standbys ready to take over on failure. Simpler than active-active because writes only happen in one place; RTO/RPO depend on the replication mechanism."
+    },
+    {
+      "term": "Stateless application",
+      "aliases": [
+        "Stateless"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An application that stores no client session data between requests on the compute layer. State lives in shared stores (DynamoDB, ElastiCache, S3). Stateless apps scale horizontally and tolerate instance failure with no user-visible impact."
+    },
+    {
+      "term": "Stateful application",
+      "aliases": [
+        "Stateful"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "An application that retains client session data on the compute layer between requests. Requires sticky sessions / instance affinity or session replication, complicating scale-out and failure recovery."
+    },
+    {
+      "term": "Sticky sessions",
+      "aliases": [
+        "Session affinity"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A load-balancer feature that binds a user's session to a specific target instance via a cookie. Useful for stateful apps; not recommended over making the app stateless and using ElastiCache or DynamoDB for session state."
+    },
+    {
+      "term": "RTO",
+      "aliases": [
+        "Recovery Time Objective"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Recovery Time Objective â€” the maximum acceptable elapsed time between a service interruption and restoration. Drives backup, replication, and failover strategy choices."
+    },
+    {
+      "term": "RPO",
+      "aliases": [
+        "Recovery Point Objective"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "Recovery Point Objective â€” the maximum acceptable amount of data loss measured in time. Determines required backup / replication frequency."
+    },
+    {
+      "term": "Pilot light",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A disaster-recovery strategy where a minimal version of the production environment runs at all times in a recovery Region (core services hot, application tier off). Lower cost than warm/active configurations; longer RTO."
+    },
+    {
+      "term": "Warm standby",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "A disaster-recovery strategy that maintains a scaled-down but functional copy of the production environment in another Region. Faster RTO than pilot light; higher cost."
+    },
+    {
+      "term": "Backup and restore",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02",
+        "DVA-C02"
+      ],
+      "definition": "The lowest-cost DR strategy: regularly back up data (and infrastructure-as-code definitions) and rebuild the environment from those backups on failure. Highest RTO/RPO of the four AWS DR strategies."
+    },
+    {
+      "term": "Multi-site active-active",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "DVA-C02"
+      ],
+      "definition": "The highest-cost / lowest-RTO disaster recovery strategy. Multiple Regions serve production traffic at all times; on Region failure DNS / Global Accelerator routes traffic to remaining Regions with minimal disruption."
+    },
+    {
+      "term": "Lift and shift",
+      "aliases": [
+        "Rehost"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Migration strategy that moves an existing application to AWS with minimal changes. Fast, low-risk; doesn't take full advantage of cloud-native services. Maps to the 'Rehost' R in AWS's 6 R's framework."
+    },
+    {
+      "term": "Replatform",
+      "aliases": [
+        "Lift, tinker and shift"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Migration strategy where you make a few cloud optimisations during the move without changing the core architecture (e.g. moving a self-managed DB to RDS, or apps to managed Beanstalk). One of the AWS 6 R's."
+    },
+    {
+      "term": "Refactor",
+      "aliases": [
+        "Re-architect"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Migration strategy that involves re-architecting an application to take full advantage of cloud-native services (serverless, microservices, managed databases). Highest upfront cost; greatest long-term benefit."
+    },
+    {
+      "term": "Retire",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Decommissioning applications that are no longer needed during a cloud migration. Often surfaces 10-20% of workloads that can simply be turned off, freeing budget for the real migration. One of the AWS 6 R's."
+    },
+    {
+      "term": "Retain",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Keeping certain applications on-premises (or in another cloud) for now, often because they don't yet justify migration. Reassessed periodically. One of the AWS 6 R's."
+    },
+    {
+      "term": "Repurchase",
+      "aliases": [
+        "Drop and shop"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Moving from a self-managed (or on-prem) license to a different product, often SaaS (e.g. from on-prem CRM to Salesforce). One of the AWS 6 R's."
+    },
+    {
+      "term": "Six R's of migration",
+      "aliases": [
+        "6 R's"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "AWS's six migration strategies: Rehost (lift and shift), Replatform (lift, tinker, and shift), Repurchase (drop and shop), Refactor / Re-architect, Retire, and Retain. Most enterprise migrations use a mix of these per application."
+    },
+    {
+      "term": "Operational Excellence pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "One of the six Well-Architected pillars. Focuses on running and monitoring systems to deliver business value and continuously improve supporting processes and procedures."
+    },
+    {
+      "term": "Reliability pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The Well-Architected pillar focused on the ability of a workload to perform its intended function correctly and consistently. Includes recovering from disruptions, dynamically acquiring resources, and mitigating misconfiguration."
+    },
+    {
+      "term": "Performance Efficiency pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The Well-Architected pillar that addresses using IT and computing resources efficiently. Includes selecting the right resource types, monitoring performance, and making informed decisions as needs evolve."
+    },
+    {
+      "term": "Cost Optimization pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The Well-Architected pillar focused on running systems to deliver business value at the lowest price point. Includes financial-management practices, expenditure awareness, and matching supply with demand."
+    },
+    {
+      "term": "Security pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The Well-Architected pillar that addresses protecting information, systems, and assets while delivering business value. Includes identity and access management, detection, infrastructure protection, data protection, and incident response."
+    },
+    {
+      "term": "Sustainability pillar",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The newest Well-Architected pillar (added 2021). Focuses on minimising the environmental impact of running cloud workloads through right-sizing, efficient architectures, regional choice, and managed services."
+    },
+    {
+      "term": "Capital expense (CapEx)",
+      "aliases": [
+        "CapEx"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "An upfront expenditure for physical assets (servers, data centres, networking gear) that depreciates over time. The traditional model for on-premises IT, replaced by OpEx in cloud computing."
+    },
+    {
+      "term": "Operational expense (OpEx)",
+      "aliases": [
+        "OpEx"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "An ongoing operating cost (pay-as-you-go cloud spend, electricity, support). Cloud's OpEx model lets organisations replace upfront capital investments with variable costs tied to actual usage."
+    },
+    {
+      "term": "Total Cost of Ownership (TCO)",
+      "aliases": [
+        "TCO"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The complete cost of acquiring and operating a system over its useful life, including hardware, software, energy, networking, real estate, IT labour, and security. Used to compare cloud vs on-premises economics."
+    },
+    {
+      "term": "Elasticity",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The ability of a system to scale capacity up or down automatically in response to changes in demand. Implemented in AWS via Auto Scaling groups, DynamoDB on-demand, Aurora Serverless, etc."
+    },
+    {
+      "term": "Scalability",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "The ability of a system to handle a growing amount of work, either by scaling vertically (larger instance) or horizontally (more instances). AWS strongly favours horizontal scaling for cloud-native workloads."
+    },
+    {
+      "term": "High availability (HA)",
+      "aliases": [
+        "HA"
+      ],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "Designing a workload to continue operating despite failures of underlying components. On AWS: deploy across multiple Availability Zones, use managed services with built-in failover (RDS Multi-AZ, ELB), and design for graceful degradation."
+    },
+    {
+      "term": "Fault tolerance",
+      "aliases": [],
+      "category": "Concepts & Architecture",
+      "certs": [
+        "CLF-C02"
+      ],
+      "definition": "A property of a system that lets it continue operating, possibly at reduced capability, in the presence of failures. Stronger guarantee than high availability â€” designed for zero downtime during faults."
     }
   ]
 }

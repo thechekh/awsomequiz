@@ -1,0 +1,65 @@
+[
+  {
+    "term": "AWS Cost and Usage Report (CUR)",
+    "aliases": ["CUR", "Cost and Usage Report"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "The most comprehensive set of AWS cost and usage data, delivered to S3 in CSV or Parquet format. Hourly or daily granularity; integrates with Athena, Redshift, and QuickSight for analysis."
+  },
+  {
+    "term": "AWS Billing Conductor",
+    "aliases": ["Billing Conductor"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "A customisable billing service that supports showback and chargeback workflows for AWS solution providers and enterprises. Lets you create custom billing groups, apply pricing rules and discounts, and produce per-group invoices."
+  },
+  {
+    "term": "AWS Cost Anomaly Detection",
+    "aliases": ["Cost Anomaly Detection"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "Uses machine learning to monitor AWS spend and detect anomalies. Sends alerts (email, SNS) when an unusual spend pattern is identified so cost spikes can be investigated quickly. Free to use."
+  },
+  {
+    "term": "AWS Enterprise On-Ramp",
+    "aliases": ["Enterprise On-Ramp"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "An AWS Support plan between Business and Enterprise. Provides a pool of Technical Account Managers (TAMs), 30-minute response on business-critical issues, and access to most Enterprise Support benefits at a lower entry price."
+  },
+  {
+    "term": "AWS Knowledge Center",
+    "aliases": ["Knowledge Center"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "A free repository of how-to articles and answers to common AWS questions, curated by AWS Support. Searchable from any AWS account; no support-plan upgrade required."
+  },
+  {
+    "term": "AWS Professional Services",
+    "aliases": ["ProServe", "AWS ProServe"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "A global team of AWS experts who provide paid engagements to help customers accelerate adoption: assessments, prescriptive guidance, hands-on engineering, and architecture/security/migration projects."
+  },
+  {
+    "term": "AWS Data Exchange",
+    "aliases": ["Data Exchange"],
+    "category": "Billing & Pricing",
+    "certs": ["DVA-C02"],
+    "definition": "Makes it easy to find, subscribe to, and use third-party data in the cloud. Subscriptions appear directly in your S3 bucket / Redshift cluster / API destination. Charges roll up onto the AWS bill."
+  },
+  {
+    "term": "AWS Cost Management",
+    "aliases": [],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "Umbrella for the AWS cost-related services: Cost Explorer, Budgets, Cost and Usage Report, Cost Anomaly Detection, Savings Plans, and the AWS Pricing Calculator. Accessible from the Billing console."
+  },
+  {
+    "term": "Free Tier",
+    "aliases": ["AWS Free Tier"],
+    "category": "Billing & Pricing",
+    "certs": ["CLF-C02"],
+    "definition": "A program offering customers free access to AWS services in three forms: Always Free (e.g. 1M Lambda requests/month), 12-Month Free (e.g. 750 hours of t2.micro), and Trials (limited-time after activation, e.g. SageMaker Studio Lab)."
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "term": "Amazon Machine Image (AMI)",
+    "aliases": ["AMI"],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A template containing the software configuration (OS, application server, applications) required to launch an EC2 instance. AMIs can be owned by AWS, the AWS Marketplace community, or built privately; shared across accounts; copied across Regions."
+  },
+  {
+    "term": "AWS Auto Scaling",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A service that monitors applications and automatically adjusts capacity to maintain steady, predictable performance at the lowest possible cost. Coordinates scaling across multiple resources (EC2 Auto Scaling groups, ECS services, DynamoDB tables, Aurora replicas) from a single configuration."
+  },
+  {
+    "term": "Amazon EC2 Auto Scaling",
+    "aliases": ["EC2 Auto Scaling", "Auto Scaling group", "ASG"],
+    "category": "Compute",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Helps maintain application availability by automatically launching or terminating EC2 instances based on policies. Defines an Auto Scaling group with min, max, and desired capacity; scaling policies can be target-tracking, step, simple, predictive, or scheduled."
+  },
+  {
+    "term": "AWS Graviton",
+    "aliases": ["Graviton", "Graviton2", "Graviton3"],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "AWS-designed Arm-based processors that power EC2 instance families (M6g/M7g, C6g/C7g, R6g/R7g, T4g) at up to 40% better price-performance than comparable x86 instances. Supported in Lambda, ECS Fargate, EKS, RDS, and ElastiCache."
+  },
+  {
+    "term": "AWS Copilot",
+    "aliases": ["Copilot", "AWS Copilot CLI"],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "A command-line tool that helps developers build, release, and operate production-ready containerized applications on Amazon ECS and AWS Fargate. Generates the underlying CloudFormation templates and CI/CD pipelines from a single `copilot init` workflow."
+  },
+  {
+    "term": "AWS Compute Optimizer",
+    "aliases": ["Compute Optimizer"],
+    "category": "Compute",
+    "certs": ["CLF-C02"],
+    "definition": "Analyses configuration and utilisation metrics across EC2 instances, Auto Scaling groups, EBS volumes, Lambda functions, and ECS services on Fargate to recommend right-sized resource configurations that reduce cost and improve performance."
+  },
+  {
+    "term": "AWS Mainframe Modernization",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["CLF-C02"],
+    "definition": "A managed runtime and tooling service to migrate, modernise, run, and operate mainframe applications on AWS. Supports replatform (AWS Blu Age) and refactor (Micro Focus) patterns."
+  },
+  {
+    "term": "Lambda alias",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "A pointer to a specific Lambda function version. Aliases let you decouple integrations (event sources, API Gateway, callers) from versions and enable weighted alias routing for canary / linear deployments."
+  },
+  {
+    "term": "Lambda version",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "An immutable snapshot of a Lambda function's code and configuration. Published versions get a sequential version number; the unpublished latest is referenced as `$LATEST`. Combine with aliases for stable invocation targets."
+  },
+  {
+    "term": "Lambda layer",
+    "aliases": ["Lambda layers"],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "A .zip archive of libraries, custom runtimes, or other dependencies that you can attach to one or more Lambda functions. Layers reduce deployment-package size, enable sharing of common dependencies, and can be versioned and shared across accounts."
+  },
+  {
+    "term": "Lambda@Edge",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "A feature of Amazon CloudFront that runs Lambda functions at AWS edge locations in response to viewer/origin request and response events. Used for HTTP header manipulation, A/B testing, dynamic origin selection, and personalised responses with low latency."
+  },
+  {
+    "term": "CloudFront Functions",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "Lightweight JavaScript functions that run at CloudFront edge locations with sub-millisecond startup time. Limited to <1 ms CPU and 2 MB memory; ideal for header/URL rewrites, cache-key normalisation, and simple auth checks. Cheaper and faster than Lambda@Edge for short tasks."
+  },
+  {
+    "term": "AWS Wavelength",
+    "aliases": ["Wavelength"],
+    "category": "Compute",
+    "certs": ["CLF-C02"],
+    "definition": "Embeds AWS compute and storage inside 5G networks at the edge of telecom carriers, providing single-digit millisecond latency to mobile devices and end users. Useful for AR/VR, real-time gaming, ML inference, and connected vehicles."
+  },
+  {
+    "term": "AWS Local Zones",
+    "aliases": ["Local Zones"],
+    "category": "Compute",
+    "certs": ["CLF-C02"],
+    "definition": "Place compute, storage, database, and other select AWS services close to large population, industry, and IT centres. An extension of an AWS Region; supports applications that require single-digit-millisecond latency to end users."
+  },
+  {
+    "term": "Provisioned IOPS",
+    "aliases": [],
+    "category": "Compute",
+    "certs": ["DVA-C02"],
+    "definition": "An EBS volume type (io1, io2, io2 Block Express) where you specify the desired IOPS independently of volume size, up to 256,000 IOPS per volume. Suited for I/O-intensive workloads such as large relational databases and NoSQL stores."
+  }
+]

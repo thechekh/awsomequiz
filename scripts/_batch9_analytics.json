@@ -1,0 +1,72 @@
+[
+  {
+    "term": "AWS Glue",
+    "aliases": ["Glue"],
+    "category": "Analytics",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A serverless data-integration service for discovering, preparing, moving, and integrating data for analytics, machine learning, and application development. Includes a Data Catalog, crawlers, ETL jobs (Python or Scala), Glue Studio visual editor, DataBrew, and Schema Registry."
+  },
+  {
+    "term": "AWS Glue Data Catalog",
+    "aliases": ["Glue Data Catalog"],
+    "category": "Analytics",
+    "certs": ["DVA-C02"],
+    "definition": "A persistent, fully managed metadata store inside AWS Glue. Used by Athena, EMR, Redshift Spectrum, and Lake Formation as a centralised Hive-compatible catalog of databases, tables, and partitions."
+  },
+  {
+    "term": "Amazon DataZone",
+    "aliases": ["DataZone"],
+    "category": "Analytics",
+    "certs": ["CLF-C02"],
+    "definition": "A data-management service that helps catalog, discover, share, and govern data stored across AWS, on-premises, and third-party sources. Provides domain-based data marketplaces with business-friendly search and approval workflows."
+  },
+  {
+    "term": "Amazon OpenSearch Service",
+    "aliases": [],
+    "category": "Analytics",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented; duplicate skipped."
+  },
+  {
+    "term": "Amazon Kendra",
+    "aliases": ["Kendra"],
+    "category": "Machine Learning",
+    "certs": ["DVA-C02"],
+    "definition": "An intelligent enterprise search service powered by machine learning. Indexes documents from many connectors (S3, SharePoint, Salesforce, Confluence, etc.) and answers natural-language questions with relevance ranking and read-it-back excerpts."
+  },
+  {
+    "term": "Amazon Forecast",
+    "aliases": ["Forecast"],
+    "category": "Machine Learning",
+    "certs": ["CLF-C02"],
+    "definition": "A time-series-forecasting service that uses ML to deliver accurate forecasts. Bring your historical and related data; Forecast trains models without ML expertise and exposes them via real-time and batch inference APIs."
+  },
+  {
+    "term": "Amazon Personalize",
+    "aliases": ["Personalize"],
+    "category": "Machine Learning",
+    "certs": ["CLF-C02"],
+    "definition": "A real-time personalisation and recommendation service. Trains recipes on your event data, item catalog, and user attributes to deliver tailored recommendations, similar items, personalised rankings, and email/notification segmentation."
+  },
+  {
+    "term": "Amazon Augmented AI (A2I)",
+    "aliases": ["A2I", "Augmented AI"],
+    "category": "Machine Learning",
+    "certs": ["DVA-C02"],
+    "definition": "Makes it easy to build the human-review workflows often required for machine-learning predictions. Integrates with Textract, Rekognition, and custom SageMaker models; routes low-confidence outputs to human reviewers."
+  },
+  {
+    "term": "Amazon Q",
+    "aliases": [],
+    "category": "Machine Learning",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented in Developer Tools batch; merge skips."
+  },
+  {
+    "term": "Amazon Bedrock Knowledge Bases",
+    "aliases": ["Knowledge Bases for Amazon Bedrock"],
+    "category": "Machine Learning",
+    "certs": ["DVA-C02"],
+    "definition": "Fully managed retrieval-augmented-generation (RAG) workflows for Amazon Bedrock. Connects foundation models to private data sources (S3, web crawl, Confluence, Salesforce) so models answer with current company context, with built-in vector embedding and retrieval."
+  }
+]

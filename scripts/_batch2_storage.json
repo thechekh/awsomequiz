@@ -1,0 +1,100 @@
+[
+  {
+    "term": "AWS DataSync",
+    "aliases": ["DataSync"],
+    "category": "Storage",
+    "certs": ["CLF-C02"],
+    "definition": "An online data-transfer service that moves data between on-premises storage (NFS, SMB, HDFS, self-managed object storage), edge locations, and AWS storage services (S3, EFS, FSx). Up to 10x faster than open-source tools; preserves metadata and integrity checks."
+  },
+  {
+    "term": "AWS Snowball Edge",
+    "aliases": ["Snowball Edge"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "A petabyte-scale data-transport and edge-compute device in the AWS Snow Family. Storage Optimized variants (up to 80 TB usable) for bulk migration; Compute Optimized variants offer onboard EC2 and GPU for edge processing in disconnected environments."
+  },
+  {
+    "term": "AWS Snowcone",
+    "aliases": ["Snowcone"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "The smallest member of the AWS Snow Family (8 TB HDD or 14 TB SSD). Portable, rugged, secure, designed for collecting data at the edge in space-constrained or austere environments. Integrates with AWS DataSync for online sync to AWS."
+  },
+  {
+    "term": "Amazon S3 Glacier",
+    "aliases": ["S3 Glacier", "Glacier Instant Retrieval", "Glacier Flexible Retrieval", "Glacier Deep Archive"],
+    "category": "Storage",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Low-cost S3 storage classes designed for archival data. Glacier Instant Retrieval (ms access, archive infrequent), Glacier Flexible Retrieval (minutes-to-hours retrieval), and Glacier Deep Archive (cheapest, 12-48 hour retrieval) trade retrieval time for storage price."
+  },
+  {
+    "term": "Amazon S3 Intelligent-Tiering",
+    "aliases": ["S3 Intelligent-Tiering"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "An S3 storage class that automatically moves objects between Frequent, Infrequent, Archive Instant, Archive, and Deep Archive access tiers based on changing access patterns, with no retrieval fees or operational overhead."
+  },
+  {
+    "term": "Amazon S3 Transfer Acceleration",
+    "aliases": ["S3 Transfer Acceleration"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "Uses the global Amazon CloudFront edge-location network to accelerate uploads and downloads to S3 buckets. Useful for transferring large objects over long geographic distances; enabled per bucket."
+  },
+  {
+    "term": "Amazon S3 Versioning",
+    "aliases": ["S3 versioning", "S3 Object Versioning"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "Enables you to keep multiple variants of an object in the same bucket so you can recover from unintended user actions and application failures. Combined with MFA Delete and lifecycle policies for compliance / retention controls."
+  },
+  {
+    "term": "Amazon S3 Replication",
+    "aliases": ["Cross-Region Replication", "CRR", "Same-Region Replication", "SRR"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "Automatically copies S3 objects to one or more destination buckets in the same or different Regions. Supports replica modification sync, replication time control (RTC) for 15-minute SLAs, and KMS-key replication."
+  },
+  {
+    "term": "Amazon S3 Object Lock",
+    "aliases": ["S3 Object Lock"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "A write-once-read-many (WORM) feature that prevents objects from being deleted or overwritten for a fixed amount of time or indefinitely. Two retention modes: Governance (with special IAM permission to override) and Compliance (immutable, even by root)."
+  },
+  {
+    "term": "Amazon Data Lifecycle Manager",
+    "aliases": ["Data Lifecycle Manager", "DLM"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "Automates creation, retention, and deletion of EBS snapshots and EBS-backed AMIs according to schedule-based policies. Used for backup, disaster recovery, and AMI hygiene."
+  },
+  {
+    "term": "AWS Backup",
+    "aliases": [],
+    "category": "Storage",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Already documented; this duplicate-named entry is intentionally skipped at merge time."
+  },
+  {
+    "term": "AWS Amplify Hosting",
+    "aliases": ["Amplify Hosting"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "A fully managed CI/CD and hosting service for fast, secure, reliable static and server-side rendered web apps (Next.js, Nuxt, etc.). Git-based workflow with preview environments, custom domains, branch deployments, and edge content delivery via CloudFront."
+  },
+  {
+    "term": "Multipart upload",
+    "aliases": [],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "An S3 API that splits a large object (>100 MB recommended, required >5 GB) into parts uploaded in parallel and reassembled on completion. Improves throughput, supports pause/resume, and is required for very large objects."
+  },
+  {
+    "term": "Cross-Region Replication (CRR)",
+    "aliases": ["CRR"],
+    "category": "Storage",
+    "certs": ["DVA-C02"],
+    "definition": "Asynchronous, automated replication of S3 objects to a destination bucket in a different AWS Region. Useful for compliance, lower-latency access in distant geographies, and operational redundancy. Configured at the bucket level via S3 Replication rules."
+  }
+]

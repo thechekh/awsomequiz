@@ -1,0 +1,72 @@
+[
+  {
+    "term": "Amazon RDS Proxy",
+    "aliases": ["RDS Proxy"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A fully managed, highly available database proxy for RDS and Aurora that pools and shares database connections. Reduces application latency under bursty workloads (especially serverless Lambda) and improves failover times."
+  },
+  {
+    "term": "Amazon Aurora Serverless",
+    "aliases": ["Aurora Serverless", "Aurora Serverless v2"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "An on-demand auto-scaling configuration for Amazon Aurora. v2 scales instance capacity in fine-grained increments to meet workload demand; you pay per-second for the database capacity used."
+  },
+  {
+    "term": "Aurora Global Database",
+    "aliases": [],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "An Aurora deployment that spans multiple AWS Regions for disaster recovery and low-latency global reads. Replicates with typical lag under 1 second; supports cross-Region failover in under a minute."
+  },
+  {
+    "term": "Amazon DynamoDB Streams",
+    "aliases": ["DynamoDB Streams"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A time-ordered sequence of item-level changes (inserts, updates, deletes) in a DynamoDB table. Records are stored for 24 hours; consumed by Lambda triggers, Kinesis Data Streams, or the DynamoDB Streams API for replication, materialised views, or notifications."
+  },
+  {
+    "term": "DynamoDB Global Tables",
+    "aliases": ["Global Tables"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A multi-Region, multi-active replication of a DynamoDB table. Provides single-digit-millisecond local reads and writes from any participating Region, with last-writer-wins conflict resolution."
+  },
+  {
+    "term": "DynamoDB Transactions",
+    "aliases": ["TransactWriteItems", "TransactGetItems"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "DynamoDB APIs that group up to 100 operations across multiple items and tables into all-or-nothing ACID transactions. Useful when several items must be updated atomically (financial transfers, inventory reservations)."
+  },
+  {
+    "term": "DynamoDB on-demand capacity",
+    "aliases": ["On-demand mode", "DynamoDB on-demand"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A DynamoDB billing mode that automatically scales capacity to accommodate workloads with no minimum throughput. Pay per request; ideal for unpredictable traffic and new applications."
+  },
+  {
+    "term": "DynamoDB provisioned capacity",
+    "aliases": ["Provisioned mode"],
+    "category": "Database",
+    "certs": ["DVA-C02"],
+    "definition": "A DynamoDB billing mode where you specify read and write capacity units per table. Combine with auto-scaling to track utilisation targets; cheaper than on-demand when traffic is predictable and steady."
+  },
+  {
+    "term": "Read replica",
+    "aliases": ["RDS Read Replica"],
+    "category": "Database",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A copy of an RDS / Aurora database used to offload read traffic from the primary. Async replication; can be promoted to a standalone instance for disaster recovery or cross-Region failover."
+  },
+  {
+    "term": "Multi-AZ deployment",
+    "aliases": ["Multi-AZ"],
+    "category": "Database",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "An RDS / Aurora high-availability configuration that maintains a synchronous standby replica in a different Availability Zone. Automatic failover within 60-120 seconds; transparent to application connections via the RDS endpoint."
+  }
+]

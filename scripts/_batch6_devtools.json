@@ -1,0 +1,72 @@
+[
+  {
+    "term": "AWS CLI",
+    "aliases": ["CLI", "AWS Command Line Interface"],
+    "category": "Developer Tools",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A unified tool to manage AWS services from a command shell. Supports scripting and automation across services; uses named profiles for credentials; v2 adds SSO support, auto-prompt mode, and parameter validation."
+  },
+  {
+    "term": "AWS Management Console",
+    "aliases": ["Management Console", "AWS Console"],
+    "category": "Developer Tools",
+    "certs": ["CLF-C02"],
+    "definition": "The browser-based graphical interface to AWS services. Lets administrators and developers provision, configure, monitor, and manage resources without using the CLI/SDK. Mobile companion app available."
+  },
+  {
+    "term": "AWS Toolkit",
+    "aliases": ["AWS Toolkit for VS Code", "AWS Toolkit for JetBrains", "AWS Toolkit for Visual Studio"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "IDE extensions for VS Code, JetBrains, Eclipse, and Visual Studio that provide an integrated experience for developing serverless applications on AWS: editing SAM templates, deploying Lambda, viewing CloudWatch logs, and remote debugging."
+  },
+  {
+    "term": "AWS SAM CLI",
+    "aliases": ["SAM CLI"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "The command-line tooling for AWS SAM. `sam init` scaffolds projects, `sam build` packages dependencies, `sam local invoke / start-api` runs Lambdas locally, `sam deploy` uploads to CloudFormation, and `sam logs / sync` accelerate the inner-loop."
+  },
+  {
+    "term": "AWS Cloud Map",
+    "aliases": [],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "buildspec.yml",
+    "aliases": ["buildspec"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A YAML file that defines the build commands and settings used by AWS CodeBuild. Phases (install, pre_build, build, post_build, reports, artifacts) describe what to run; environment variables and cache locations are also configured here."
+  },
+  {
+    "term": "appspec.yml",
+    "aliases": ["appspec"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A YAML file that defines deployment instructions for AWS CodeDeploy. Specifies source-to-target file mappings, lifecycle event hooks (BeforeInstall, AfterInstall, ApplicationStart, etc.) and, for ECS or Lambda, traffic-shift parameters."
+  },
+  {
+    "term": "Amazon Q",
+    "aliases": ["Amazon Q Developer", "AWS Q"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A generative-AI-powered assistant for software development and AWS use. Amazon Q Developer suggests code, explains APIs, refactors, generates tests, and answers AWS-architecture questions; can chat with private code repositories when enabled."
+  },
+  {
+    "term": "AWS CodeStar",
+    "aliases": ["CodeStar"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "A unified user interface that lets developers quickly develop, build, and deploy applications on AWS using preconfigured project templates. Aggregates CodeCommit/Build/Deploy/Pipeline and JIRA into a single dashboard."
+  },
+  {
+    "term": "AWS CodeGuru",
+    "aliases": ["CodeGuru", "Amazon CodeGuru", "CodeGuru Reviewer", "CodeGuru Profiler"],
+    "category": "Developer Tools",
+    "certs": ["DVA-C02"],
+    "definition": "Two ML-powered services: CodeGuru Reviewer (automated code reviews for Java and Python with security and performance recommendations) and CodeGuru Profiler (production profiling to identify the most expensive lines of code)."
+  }
+]

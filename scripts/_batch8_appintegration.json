@@ -1,0 +1,65 @@
+[
+  {
+    "term": "Amazon EventBridge Pipes",
+    "aliases": ["EventBridge Pipes"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "A point-to-point integration in EventBridge that connects an event source (SQS, Kinesis, DynamoDB Streams, Kafka, MQ) to a target (Lambda, Step Functions, SNS, API destinations) with optional filtering, batching, and enrichment via Lambda / Step Functions / API destinations."
+  },
+  {
+    "term": "Amazon EventBridge Scheduler",
+    "aliases": ["EventBridge Scheduler"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "A serverless scheduler that lets you create, run, and manage tasks at any scale. Supports one-time and recurring schedules with delivery to over 270 AWS services and 6,000+ API operations."
+  },
+  {
+    "term": "Kinesis Data Streams",
+    "aliases": ["Amazon Kinesis Data Streams"],
+    "category": "Analytics",
+    "certs": ["DVA-C02"],
+    "definition": "A massively scalable real-time data streaming service. Streams are composed of shards (provisioned mode) or on-demand throughput; producers write records via the Kinesis Producer Library (KPL) and consumers read via the Kinesis Client Library (KCL) or Lambda."
+  },
+  {
+    "term": "Kinesis Data Firehose",
+    "aliases": ["Amazon Kinesis Data Firehose", "Amazon Data Firehose"],
+    "category": "Analytics",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A fully managed service that delivers real-time streaming data to destinations such as S3, Redshift, OpenSearch, Splunk, and HTTP endpoints. Auto-scales with no shards to manage; supports data transformation via Lambda and format conversion to Parquet/ORC."
+  },
+  {
+    "term": "SQS FIFO queue",
+    "aliases": ["FIFO queue"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "An SQS queue type guaranteeing exactly-once processing and strict ordering of messages within a message group. Up to 300 transactions per second (TPS) without batching, 3,000 TPS with batching, or higher-throughput mode for higher TPS."
+  },
+  {
+    "term": "SQS Standard queue",
+    "aliases": ["Standard queue"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "The default SQS queue type with at-least-once delivery, best-effort ordering, and nearly unlimited throughput. Use for high-throughput workloads that can tolerate occasional duplicates and out-of-order messages."
+  },
+  {
+    "term": "Dead-letter queue (DLQ)",
+    "aliases": ["DLQ", "Dead letter queue"],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "A secondary SQS queue (or SNS / Lambda destination) that receives messages that couldn't be processed successfully after a maximum number of attempts. Used to isolate problematic messages for debugging without blocking the main workflow."
+  },
+  {
+    "term": "Visibility timeout",
+    "aliases": [],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "Long polling",
+    "aliases": [],
+    "category": "Application Integration",
+    "certs": ["DVA-C02"],
+    "definition": "An SQS consumer technique that waits up to 20 seconds for messages to arrive before returning empty, reducing the number of empty receives and API calls. Set via the ReceiveMessageWaitTimeSeconds queue attribute or per-call WaitTimeSeconds parameter."
+  }
+]

@@ -1,0 +1,219 @@
+[
+  {
+    "term": "Active-active",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A multi-Region or multi-instance deployment in which all sites simultaneously serve live production traffic. Maximises availability and capacity but requires data-replication strategies that tolerate concurrent writes."
+  },
+  {
+    "term": "Active-passive",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A deployment pattern with one active site serving traffic and one or more passive standbys ready to take over on failure. Simpler than active-active because writes only happen in one place; RTO/RPO depend on the replication mechanism."
+  },
+  {
+    "term": "Stateless application",
+    "aliases": ["Stateless"],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "An application that stores no client session data between requests on the compute layer. State lives in shared stores (DynamoDB, ElastiCache, S3). Stateless apps scale horizontally and tolerate instance failure with no user-visible impact."
+  },
+  {
+    "term": "Stateful application",
+    "aliases": ["Stateful"],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "An application that retains client session data on the compute layer between requests. Requires sticky sessions / instance affinity or session replication, complicating scale-out and failure recovery."
+  },
+  {
+    "term": "Sticky sessions",
+    "aliases": ["Session affinity"],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A load-balancer feature that binds a user's session to a specific target instance via a cookie. Useful for stateful apps; not recommended over making the app stateless and using ElastiCache or DynamoDB for session state."
+  },
+  {
+    "term": "RTO",
+    "aliases": ["Recovery Time Objective"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Recovery Time Objective — the maximum acceptable elapsed time between a service interruption and restoration. Drives backup, replication, and failover strategy choices."
+  },
+  {
+    "term": "RPO",
+    "aliases": ["Recovery Point Objective"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Recovery Point Objective — the maximum acceptable amount of data loss measured in time. Determines required backup / replication frequency."
+  },
+  {
+    "term": "Pilot light",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A disaster-recovery strategy where a minimal version of the production environment runs at all times in a recovery Region (core services hot, application tier off). Lower cost than warm/active configurations; longer RTO."
+  },
+  {
+    "term": "Warm standby",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "A disaster-recovery strategy that maintains a scaled-down but functional copy of the production environment in another Region. Faster RTO than pilot light; higher cost."
+  },
+  {
+    "term": "Backup and restore",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "The lowest-cost DR strategy: regularly back up data (and infrastructure-as-code definitions) and rebuild the environment from those backups on failure. Highest RTO/RPO of the four AWS DR strategies."
+  },
+  {
+    "term": "Multi-site active-active",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["DVA-C02"],
+    "definition": "The highest-cost / lowest-RTO disaster recovery strategy. Multiple Regions serve production traffic at all times; on Region failure DNS / Global Accelerator routes traffic to remaining Regions with minimal disruption."
+  },
+  {
+    "term": "Lift and shift",
+    "aliases": ["Rehost"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Migration strategy that moves an existing application to AWS with minimal changes. Fast, low-risk; doesn't take full advantage of cloud-native services. Maps to the 'Rehost' R in AWS's 6 R's framework."
+  },
+  {
+    "term": "Replatform",
+    "aliases": ["Lift, tinker and shift"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Migration strategy where you make a few cloud optimisations during the move without changing the core architecture (e.g. moving a self-managed DB to RDS, or apps to managed Beanstalk). One of the AWS 6 R's."
+  },
+  {
+    "term": "Refactor",
+    "aliases": ["Re-architect"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Migration strategy that involves re-architecting an application to take full advantage of cloud-native services (serverless, microservices, managed databases). Highest upfront cost; greatest long-term benefit."
+  },
+  {
+    "term": "Retire",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Decommissioning applications that are no longer needed during a cloud migration. Often surfaces 10-20% of workloads that can simply be turned off, freeing budget for the real migration. One of the AWS 6 R's."
+  },
+  {
+    "term": "Retain",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Keeping certain applications on-premises (or in another cloud) for now, often because they don't yet justify migration. Reassessed periodically. One of the AWS 6 R's."
+  },
+  {
+    "term": "Repurchase",
+    "aliases": ["Drop and shop"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Moving from a self-managed (or on-prem) license to a different product, often SaaS (e.g. from on-prem CRM to Salesforce). One of the AWS 6 R's."
+  },
+  {
+    "term": "Six R's of migration",
+    "aliases": ["6 R's"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "AWS's six migration strategies: Rehost (lift and shift), Replatform (lift, tinker, and shift), Repurchase (drop and shop), Refactor / Re-architect, Retire, and Retain. Most enterprise migrations use a mix of these per application."
+  },
+  {
+    "term": "Operational Excellence pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "One of the six Well-Architected pillars. Focuses on running and monitoring systems to deliver business value and continuously improve supporting processes and procedures."
+  },
+  {
+    "term": "Reliability pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The Well-Architected pillar focused on the ability of a workload to perform its intended function correctly and consistently. Includes recovering from disruptions, dynamically acquiring resources, and mitigating misconfiguration."
+  },
+  {
+    "term": "Performance Efficiency pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The Well-Architected pillar that addresses using IT and computing resources efficiently. Includes selecting the right resource types, monitoring performance, and making informed decisions as needs evolve."
+  },
+  {
+    "term": "Cost Optimization pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The Well-Architected pillar focused on running systems to deliver business value at the lowest price point. Includes financial-management practices, expenditure awareness, and matching supply with demand."
+  },
+  {
+    "term": "Security pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The Well-Architected pillar that addresses protecting information, systems, and assets while delivering business value. Includes identity and access management, detection, infrastructure protection, data protection, and incident response."
+  },
+  {
+    "term": "Sustainability pillar",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The newest Well-Architected pillar (added 2021). Focuses on minimising the environmental impact of running cloud workloads through right-sizing, efficient architectures, regional choice, and managed services."
+  },
+  {
+    "term": "Capital expense (CapEx)",
+    "aliases": ["CapEx"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "An upfront expenditure for physical assets (servers, data centres, networking gear) that depreciates over time. The traditional model for on-premises IT, replaced by OpEx in cloud computing."
+  },
+  {
+    "term": "Operational expense (OpEx)",
+    "aliases": ["OpEx"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "An ongoing operating cost (pay-as-you-go cloud spend, electricity, support). Cloud's OpEx model lets organisations replace upfront capital investments with variable costs tied to actual usage."
+  },
+  {
+    "term": "Total Cost of Ownership (TCO)",
+    "aliases": ["TCO"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The complete cost of acquiring and operating a system over its useful life, including hardware, software, energy, networking, real estate, IT labour, and security. Used to compare cloud vs on-premises economics."
+  },
+  {
+    "term": "Elasticity",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The ability of a system to scale capacity up or down automatically in response to changes in demand. Implemented in AWS via Auto Scaling groups, DynamoDB on-demand, Aurora Serverless, etc."
+  },
+  {
+    "term": "Scalability",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "The ability of a system to handle a growing amount of work, either by scaling vertically (larger instance) or horizontally (more instances). AWS strongly favours horizontal scaling for cloud-native workloads."
+  },
+  {
+    "term": "High availability (HA)",
+    "aliases": ["HA"],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "Designing a workload to continue operating despite failures of underlying components. On AWS: deploy across multiple Availability Zones, use managed services with built-in failover (RDS Multi-AZ, ELB), and design for graceful degradation."
+  },
+  {
+    "term": "Fault tolerance",
+    "aliases": [],
+    "category": "Concepts & Architecture",
+    "certs": ["CLF-C02"],
+    "definition": "A property of a system that lets it continue operating, possibly at reduced capability, in the presence of failures. Stronger guarantee than high availability — designed for zero downtime during faults."
+  }
+]

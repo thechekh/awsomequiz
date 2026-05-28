@@ -1,0 +1,86 @@
+[
+  {
+    "term": "AWS PrivateLink",
+    "aliases": ["PrivateLink"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "Provides private connectivity between VPCs, AWS services, and on-premises networks without exposing traffic to the public internet. Connections use VPC interface endpoints (ENIs) inside your VPC with private IP addresses."
+  },
+  {
+    "term": "VPC Endpoint",
+    "aliases": ["VPC Endpoints", "Gateway Endpoint", "Interface Endpoint"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "Lets you privately connect a VPC to supported AWS services without internet, NAT, VPN, or Direct Connect. Two types: Gateway endpoints (S3, DynamoDB — free) and Interface endpoints (powered by PrivateLink, paid)."
+  },
+  {
+    "term": "VPC Peering",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A networking connection between two VPCs that lets instances communicate as if they were within the same network. Non-transitive; CIDR blocks must not overlap. Supports cross-Region and cross-account peerings."
+  },
+  {
+    "term": "AWS Cloud Map",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A cloud resource discovery service. Lets you define custom names for application resources and maintain the updated location of these dynamic resources. Integrates with App Mesh, ECS, and Route 53 for service discovery in microservice architectures."
+  },
+  {
+    "term": "AWS Client VPN",
+    "aliases": ["Client VPN"],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02"],
+    "definition": "A managed client-based VPN service that enables you to securely access AWS resources and resources in your on-premises network. Uses OpenVPN-based client; integrates with IAM, Active Directory, and SAML for authentication."
+  },
+  {
+    "term": "AWS Site-to-Site VPN",
+    "aliases": ["Site-to-Site VPN"],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02"],
+    "definition": "Creates two encrypted IPsec tunnels between an on-premises customer gateway and an AWS virtual private gateway or transit gateway. Provides a quick, low-cost alternative or backup to Direct Connect."
+  },
+  {
+    "term": "Network ACL (NACL)",
+    "aliases": ["NACL", "Network ACL"],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A stateless firewall that controls traffic in and out of a subnet using ordered allow / deny rules. Complements Security Groups (which are stateful and attached to instances)."
+  },
+  {
+    "term": "Route table",
+    "aliases": ["VPC route table"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A set of rules (routes) that determine where network traffic from a subnet or gateway is directed. Each subnet must be associated with a route table; routes can point to internet gateways, NAT gateways, peering connections, transit gateways, or VPC endpoints."
+  },
+  {
+    "term": "Elastic Network Interface (ENI)",
+    "aliases": ["ENI"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A virtual network card attached to an EC2 instance or other AWS resource (Lambda VPC config, ECS task, etc.). Has a primary private IPv4, optional secondary IPs, Elastic IP, MAC address, and security groups."
+  },
+  {
+    "term": "Elastic IP",
+    "aliases": ["EIP"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "A static public IPv4 address allocated to your AWS account and remappable between EC2 instances or ENIs. Free while associated with a running instance; charged when allocated but unused."
+  },
+  {
+    "term": "AWS Network Manager",
+    "aliases": [],
+    "category": "Networking & Content Delivery",
+    "certs": ["CLF-C02"],
+    "definition": "A central console for managing AWS and on-premises networks. Provides a visual representation of your global network, route propagation, traffic, and performance across Transit Gateways, VPN, Direct Connect, and SD-WAN partners."
+  },
+  {
+    "term": "AWS Global Accelerator",
+    "aliases": ["Global Accelerator"],
+    "category": "Networking & Content Delivery",
+    "certs": ["DVA-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  }
+]

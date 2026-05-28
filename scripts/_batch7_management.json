@@ -1,0 +1,93 @@
+[
+  {
+    "term": "Amazon CloudWatch Logs",
+    "aliases": ["CloudWatch Logs"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A component of Amazon CloudWatch that monitors, stores, and accesses log files from EC2, Lambda, CloudTrail, Route 53, and other sources. Supports retention policies, metric filters that emit CloudWatch metrics, subscription filters to Kinesis/Firehose/Lambda, and log group encryption with KMS."
+  },
+  {
+    "term": "Amazon CloudWatch Logs Insights",
+    "aliases": ["CloudWatch Logs Insights", "Logs Insights"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "An interactive query language for searching and analysing log data in CloudWatch Logs. Pay per scanned data; results render in tables or charts that can be saved to dashboards."
+  },
+  {
+    "term": "CloudWatch alarm",
+    "aliases": ["CloudWatch alarms"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Watches a single CloudWatch metric over a specified time period and performs actions (SNS notification, Auto Scaling, EC2 Stop/Reboot/Terminate, Systems Manager OpsCenter incident) when the threshold is breached. Supports composite alarms across multiple metrics."
+  },
+  {
+    "term": "CloudWatch Synthetics",
+    "aliases": ["Synthetics", "Canaries"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "Configurable scripts (canaries) that monitor endpoints and APIs from outside-in by following customer flows. Detects broken links, slow page load, and outages before customers notice; integrates with CloudWatch alarms."
+  },
+  {
+    "term": "AWS Systems Manager Parameter Store",
+    "aliases": ["Parameter Store", "SSM Parameter Store"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "A capability of AWS Systems Manager that provides secure, hierarchical storage for configuration data and secrets. Plain-text String, StringList, and KMS-encrypted SecureString parameter types; native IAM integration."
+  },
+  {
+    "term": "AWS Systems Manager Session Manager",
+    "aliases": ["Session Manager", "SSM Session Manager"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "A browser-based or CLI shell that gives interactive one-click access to managed EC2 instances and on-prem servers without opening SSH/RDP, bastion hosts, or managing keys. Sessions are logged to CloudWatch Logs / S3 for audit."
+  },
+  {
+    "term": "AWS Systems Manager Patch Manager",
+    "aliases": ["Patch Manager"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02"],
+    "definition": "Automates the process of patching managed instances with both security and other types of updates. Patch baselines define which patches are approved; maintenance windows schedule when patches are applied."
+  },
+  {
+    "term": "AWS Systems Manager Automation",
+    "aliases": ["SSM Automation"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "Lets you create runbooks (Automation documents) to perform common maintenance and deployment tasks across AWS resources. Includes AWS-curated documents and the ability to author custom JSON/YAML automations."
+  },
+  {
+    "term": "CloudFormation StackSets",
+    "aliases": ["StackSets"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "Extends CloudFormation stacks to provision the same template across multiple accounts and Regions in a single operation. Used for organization-wide guardrails, IAM baselines, and multi-account landing-zone deployments."
+  },
+  {
+    "term": "AWS CloudFormation drift detection",
+    "aliases": ["Drift detection"],
+    "category": "Management & Monitoring",
+    "certs": ["DVA-C02"],
+    "definition": "Detects whether a stack's actual configuration differs from the configuration expected by its CloudFormation template (because someone modified resources outside CloudFormation). Reports per-resource drift status and lets you re-import."
+  },
+  {
+    "term": "AWS Application Discovery Service",
+    "aliases": ["Application Discovery Service"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "Collects and presents information about your on-premises servers, applications, and network dependencies to plan a migration. Two collectors: agent-based (richer data) or agentless (VMware-only). Data flows into Migration Hub for centralised tracking."
+  },
+  {
+    "term": "AWS Managed Services (AMS)",
+    "aliases": ["AMS"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02"],
+    "definition": "AWS-staffed operations service for enterprises that lets you offload ongoing infrastructure-management tasks. Includes 24/7 incident management, change management, security and patch management, monitoring, and continuity. Two tiers: Accelerate and Advanced."
+  },
+  {
+    "term": "AWS Incident Detection and Response",
+    "aliases": ["Incident Detection"],
+    "category": "Management & Monitoring",
+    "certs": ["CLF-C02"],
+    "definition": "An offering on top of Enterprise Support that provides proactive monitoring of workloads by AWS engineers. Detects incidents in less than five minutes and engages the customer for rapid mitigation."
+  }
+]

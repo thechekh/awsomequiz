@@ -1,0 +1,79 @@
+[
+  {
+    "term": "AWS Database Migration Service (DMS)",
+    "aliases": ["DMS", "Database Migration Service"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02", "DVA-C02"],
+    "definition": "Migrates databases to AWS quickly and securely. Source database remains fully operational during the migration; supports homogeneous (e.g. Oracle to Oracle) and heterogeneous migrations (e.g. Oracle to Aurora MySQL) and continuous replication for change-data-capture."
+  },
+  {
+    "term": "AWS Schema Conversion Tool (SCT)",
+    "aliases": ["SCT", "Schema Conversion Tool"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "Converts a source database schema and a majority of the custom code (stored procedures, views, etc.) to a format compatible with the target AWS database. Pairs with DMS to handle the data movement."
+  },
+  {
+    "term": "AWS Application Migration Service (MGN)",
+    "aliases": ["MGN", "Application Migration Service"],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "Lift-and-shift solution for rehosting any on-premises or other-cloud server onto EC2. Continuously replicates source server disks to a Staging Area Subnet, then performs cut-over with minimal downtime."
+  },
+  {
+    "term": "AWS Migration Hub",
+    "aliases": [],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "AWS Mainframe Modernization",
+    "aliases": [],
+    "category": "Migration & Transfer",
+    "certs": ["CLF-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "AWS IoT Core",
+    "aliases": ["IoT Core"],
+    "category": "Application Integration",
+    "certs": ["CLF-C02"],
+    "definition": "A managed cloud service that lets connected devices easily and securely interact with cloud applications and other devices. Supports MQTT, HTTP, and WebSockets; provides device registry, device shadows, and rules-engine routing to other AWS services."
+  },
+  {
+    "term": "AWS IoT Greengrass",
+    "aliases": ["Greengrass"],
+    "category": "Application Integration",
+    "certs": ["CLF-C02"],
+    "definition": "Open-source edge runtime and cloud service for building, deploying, and managing intelligent device software. Lets devices run Lambda functions and ML inference locally, sync state, and operate while offline."
+  },
+  {
+    "term": "AWS IoT Analytics",
+    "aliases": ["IoT Analytics"],
+    "category": "Analytics",
+    "certs": ["CLF-C02"],
+    "definition": "A fully managed service that automates each step required to analyse data from IoT devices. Filters, transforms, and enriches data before storing it in a time-series data store, then runs SQL queries or hosts notebooks for analysis."
+  },
+  {
+    "term": "Amazon Connect",
+    "aliases": [],
+    "category": "Business Applications",
+    "certs": ["CLF-C02"],
+    "definition": "Already documented; duplicate skipped at merge time."
+  },
+  {
+    "term": "Amazon WorkDocs",
+    "aliases": ["WorkDocs"],
+    "category": "Business Applications",
+    "certs": ["CLF-C02"],
+    "definition": "A secure, fully managed content creation, storage, and collaboration service. Lets users create, edit, and share content stored in the cloud with built-in version control, comments, and per-folder permissions."
+  },
+  {
+    "term": "Amazon WorkMail",
+    "aliases": ["WorkMail"],
+    "category": "Business Applications",
+    "certs": ["CLF-C02"],
+    "definition": "A secure, managed business email and calendar service with support for existing desktop and mobile clients. Compatible with Microsoft Outlook, Apple Mail, native Android/iOS apps, and IMAP/SMTP."
+  }
+]
