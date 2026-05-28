@@ -571,14 +571,18 @@ def pick_bookmarked_question_ids(
 
 
 def report_question(user_id: str, question_id: str, reason: str, details: str | None) -> None:
-    """Insert a row into question_reports.
+    """File a question report via the SECURITY DEFINER RPC.
 
-    RLS policy is `auth.uid() = user_id`. We pass the user_id explicitly and
-    also re-auth the PostgREST sub-client right before the call -- inside
-    an @st.dialog rerun the session occasionally hadn't propagated yet.
-    The user_id we use comes from supabase.auth.get_user() so it can't
-    drift from auth.uid() the way a stale session_state copy could.
+    The direct INSERT path kept tripping `question_reports` RLS in prod even
+    after `set_session` + `postgrest.auth()` (see migration 0010). The RPC
+    forces `user_id = auth.uid()` server-side so we can't be tricked into
+    filing under another identity, and bypasses the policy that wouldn't
+    pass for plain inserts.
+
+    `user_id` arg is kept in the signature for backward compatibility but
+    isn't sent over the wire -- the server reads it from the JWT.
     """
+    del user_id  # use server-side auth.uid() instead
     if reason not in REPORT_REASONS:
         raise ValueError(f"Unknown report reason: {reason}")
     import streamlit as _st
@@ -590,18 +594,14 @@ def report_question(user_id: str, question_id: str, reason: str, details: str | 
     supabase = get_supabase()
     supabase.auth.set_session(access_token, refresh_token)
     supabase.postgrest.auth(access_token)
-    try:
-        live = supabase.auth.get_user(access_token)
-        if live and getattr(live, "user", None):
-            user_id = live.user.id  # canonical UID == auth.uid() server-side
-    except Exception:  # noqa: BLE001 -- best-effort, fall back to passed-in user_id
-        pass
-    supabase.table("question_reports").insert({
-        "user_id": user_id,
-        "question_id": question_id,
-        "reason": reason,
-        "details": details or None,
-    }).execute()
+    supabase.rpc(
+        "submit_question_report",
+        {
+            "p_question_id": question_id,
+            "p_reason": reason,
+            "p_details": details or None,
+        },
+    ).execute()
 
 
 # ---------------------------------------------------------------------------
