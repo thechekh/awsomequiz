@@ -33,7 +33,9 @@ html, body, .stApp {
 .material-symbols-sharp,
 [class*="material-icons"],
 [class*="material-symbols"],
-[class*="MaterialSymbols"] {
+[class*="MaterialSymbols"],
+[data-testid="stIconMaterial"],
+[data-testid="stIconMaterial"] * {
     font-family: 'Material Symbols Outlined', 'Material Symbols Rounded',
                  'Material Symbols Sharp', 'Material Icons' !important;
     font-weight: normal !important;
@@ -45,6 +47,7 @@ html, body, .stApp {
     letter-spacing: normal !important;
     line-height: 1 !important;
     white-space: nowrap !important;
+    overflow: hidden !important;
 }
 
 /* Page chrome */
