@@ -94,6 +94,17 @@ if session is None:
                 "Random: shuffled each session."
             ),
         )
+        start_at = st.number_input(
+            "Start at question #",
+            min_value=1,
+            value=1,
+            step=1,
+            help=(
+                "Begin partway into the set instead of question 1 -- e.g. pick "
+                "Sequential + 'All' and start at 210 to resume the bank there. "
+                "You can also jump to any question mid-session from the sidebar."
+            ),
+        )
         start = st.form_submit_button(
             "Start practice", type="primary", width="stretch"
         )
@@ -113,9 +124,11 @@ if session is None:
             st.error(str(exc))
             st.stop()
         st.session_state[SESSION_KEY] = new_session
-        st.session_state[INDEX_KEY] = 0
+        st.session_state[INDEX_KEY] = max(
+            0, min(int(start_at) - 1, len(new_session["question_ids"]) - 1)
+        )
         st.rerun()
     st.stop()
 
-# 3. Active session -> runner
-render_runner(session, user, NAMESPACE)
+# 3. Active session -> runner (allow jumping directly to any question #)
+render_runner(session, user, NAMESPACE, allow_jump=True)

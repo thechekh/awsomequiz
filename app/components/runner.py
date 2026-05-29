@@ -106,8 +106,13 @@ def _clear_runner_state(namespace: str) -> None:
             st.session_state.pop(k, None)
 
 
-def render_runner(session: dict, user: dict, namespace: str) -> None:
-    """Render the in-session UI. Writes summary to f'{namespace}_summary' when done."""
+def render_runner(session: dict, user: dict, namespace: str, allow_jump: bool = False) -> None:
+    """Render the in-session UI. Writes summary to f'{namespace}_summary' when done.
+
+    allow_jump=True adds a "jump to question #" control in the sidebar so the
+    user can move directly to any position in the queue (used by sequential
+    practice). Off by default so review / bookmarks keep their linear flow.
+    """
     session_key = f"{namespace}_session"
     index_key = f"{namespace}_index"
     summary_key = f"{namespace}_summary"
@@ -119,6 +124,20 @@ def render_runner(session: dict, user: dict, namespace: str) -> None:
     with st.sidebar:
         st.divider()
         st.metric("Question", f"{min(index + 1, total)} / {total}")
+        if allow_jump and total > 1:
+            jcol1, jcol2 = st.columns([2, 1])
+            target = jcol1.number_input(
+                "Jump to question #",
+                min_value=1,
+                max_value=total,
+                value=min(index + 1, total),
+                step=1,
+                key=f"runner_jump_{namespace}",
+                label_visibility="collapsed",
+            )
+            if jcol2.button("Go", key=f"runner_jump_go_{namespace}", width="stretch"):
+                st.session_state[index_key] = int(target) - 1
+                st.rerun()
         if st.button("Quit session", width="stretch", key=f"runner_quit_{namespace}"):
             _quit_dialog(session["id"], namespace)
 

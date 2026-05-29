@@ -34,18 +34,22 @@ def _clear_guest_state() -> None:
             st.session_state.pop(k, None)
 
 
-def _start_guest_session() -> None:
-    """Start a guest session with ALL active questions in random order."""
+def _start_guest_session(shuffle: bool = True, start_n: int = 1) -> None:
+    """Start a guest session over ALL active questions.
+
+    shuffle=False keeps source (sequential) order so question numbers line up
+    1:1 with position; start_n is the 1-based question to begin at.
+    """
     cert = get_current_certification()
     if not cert:
         st.error("Question bank not seeded.")
         return
-    ids = pick_question_ids(cert["id"], count=None)  # all questions, shuffled
+    ids = pick_question_ids(cert["id"], count=None, shuffle=shuffle)  # all questions
     if not ids:
         st.error("No questions available.")
         return
     st.session_state[QUEUE_KEY] = ids
-    st.session_state[INDEX_KEY] = 0
+    st.session_state[INDEX_KEY] = max(0, min(start_n - 1, len(ids) - 1))
     st.session_state[ANSWERS_KEY] = {}
     st.session_state.pop(SUMMARY_KEY, None)
     st.rerun()
@@ -156,8 +160,33 @@ if queue is None:
         if chosen != current_code:
             set_current_certification(chosen)
             st.rerun()
+
+    # Order + start position (#7). Sequential keeps source order so a guest can
+    # start from / jump to a specific question number.
+    order = st.radio(
+        "Order",
+        options=["Sequential", "Random"],
+        horizontal=True,
+        index=0,
+        key="guest_order",
+        help="Sequential: source order, so question numbers line up and you can "
+             "start from / jump to a specific one. Random: shuffled each session.",
+    )
+    start_n = 1
+    if order == "Sequential":
+        max_q = int(((current or available[0]).get("question_count")) or 1)
+        start_n = st.number_input(
+            "Start from question #",
+            min_value=1,
+            max_value=max_q,
+            value=1,
+            step=1,
+            key="guest_start_n",
+            help="Begin at this question number (default 1). You can also jump "
+                 "to any question while practicing.",
+        )
     if st.button("Start practice", type="primary", width="stretch"):
-        _start_guest_session()
+        _start_guest_session(shuffle=(order == "Random"), start_n=int(start_n))
     st.stop()
 
 # ---------------------------------------------------------------------------
@@ -171,6 +200,20 @@ answers = st.session_state.setdefault(ANSWERS_KEY, {})
 with st.sidebar:
     st.divider()
     st.metric("Question", f"{min(index + 1, total)} / {total}")
+    # Jump directly to any question number (#7).
+    jcol1, jcol2 = st.columns([2, 1])
+    jump_to = jcol1.number_input(
+        "Jump to question #",
+        min_value=1,
+        max_value=total,
+        value=min(index + 1, total),
+        step=1,
+        key="guest_jump_n",
+        label_visibility="collapsed",
+    )
+    if jcol2.button("Go", key="guest_jump_go", width="stretch"):
+        st.session_state[INDEX_KEY] = int(jump_to) - 1
+        st.rerun()
     st.caption("Guest session -- not saved.")
     answered_count = len(answers)
     if answered_count and st.button(

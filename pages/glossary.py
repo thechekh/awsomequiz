@@ -92,6 +92,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Back-to-home up top -- guests have no sidebar nav, so without this they're
+# stranded on the glossary with no way back (#6). Authenticated users go to
+# Home; guests go to the sign-in page (their "home").
+if st.button("← Back to home", key="glossary_back_top"):
+    st.switch_page("pages/home.py" if current_user() else "pages/login.py")
+
 st.title("AWS Glossary")
 
 all_entries = _load_entries()
@@ -119,14 +125,36 @@ with c2:
         key="glossary_cert_filter",
     )
 
+# Second filter row: the term's category tag + a quick "services only" toggle (#5).
+_categories = sorted({e["category"] for e in all_entries if e.get("category")})
+c3, c4 = st.columns([3, 1])
+with c3:
+    category_filter = st.selectbox(
+        "Category",
+        options=["All categories", *_categories],
+        key="glossary_category_filter",
+        help="Filter by the term's AWS category tag (Compute, Database, Networking, ...).",
+    )
+with c4:
+    services_only = st.toggle(
+        "AWS services only",
+        key="glossary_services_only",
+        help='Show only branded AWS services/products (terms starting with '
+             '"Amazon" or "AWS"), hiding general concepts and acronyms.',
+    )
+
 # Apply filters
 entries = all_entries
 if cert_filter != "All certs":
     entries = [e for e in entries if cert_filter in (e.get("certs") or [])]
+if category_filter != "All categories":
+    entries = [e for e in entries if e.get("category") == category_filter]
+if services_only:
+    entries = [e for e in entries if _PREFIX_RE.match(e["term"])]
 entries = [e for e in entries if _matches(e, query)]
 
 if not entries:
-    st.info("No entries match. Try a different keyword or clear the cert filter.")
+    st.info("No entries match. Try a different keyword or clear the filters.")
     st.stop()
 
 st.caption(f"Showing **{len(entries)}** of {len(all_entries)} entries.")
