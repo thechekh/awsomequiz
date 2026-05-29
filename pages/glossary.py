@@ -71,16 +71,21 @@ def _matches(entry: dict, query: str) -> bool:
 st.markdown(
     """
     <style>
+    /* The un-testid'd wrapper that directly holds stMain also caps height to
+       the viewport; relax it too (via :has) so scrolling lands on the document
+       (html), not an inner box -- that makes the scrollbar, PageDown and wheel
+       all work like a normal page. */
     [data-testid="stApp"],
     [data-testid="stAppViewContainer"],
-    [data-testid="stMain"] {
+    [data-testid="stMain"],
+    [data-testid="stAppViewContainer"] > div:has(> [data-testid="stMain"]) {
         position: static !important;
         height: auto !important;
         min-height: 0 !important;
         overflow: visible !important;
     }
     [data-testid="stMain"] { min-height: 100vh !important; }
-    html, body { height: auto !important; min-height: 100% !important; overflow-y: auto !important; }
+    html, body { height: auto !important; min-height: 100% !important; overflow: visible !important; }
     [data-testid="stHeader"] { position: sticky !important; top: 0 !important; }
     </style>
     """,
