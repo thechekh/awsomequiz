@@ -61,6 +61,32 @@ def _matches(entry: dict, query: str) -> bool:
     return False
 
 
+# Native page scroll for this very long page. Streamlit puts the scroll on an
+# inner [data-testid="stMain"] overflow container that sits *under* the absolute
+# stHeader, so on the deployed app the page felt "stuck" at the top and the
+# scrollbar only appeared mid-scroll. Relaxing the height/overflow on the app
+# containers hands scrolling back to the document (default browser scroll) and
+# pinning the header (sticky) keeps it from overlapping the content. Scoped to
+# this page -- the markdown is gone once you navigate away.
+st.markdown(
+    """
+    <style>
+    [data-testid="stApp"],
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"] {
+        position: static !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+    [data-testid="stMain"] { min-height: 100vh !important; }
+    html, body { height: auto !important; min-height: 100% !important; overflow-y: auto !important; }
+    [data-testid="stHeader"] { position: sticky !important; top: 0 !important; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.title("AWS Glossary")
 
 all_entries = _load_entries()

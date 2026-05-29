@@ -17,6 +17,7 @@ from app.queries import (
     list_certifications_with_questions,
     pick_question_ids,
     set_current_certification,
+    summarize_answers_by_domain,
 )
 
 QUEUE_KEY = "guest_queue"
@@ -50,6 +51,31 @@ def _start_guest_session() -> None:
     st.rerun()
 
 
+def _finish_guest_session() -> None:
+    """End now and build the summary from answered questions only.
+
+    Computes total + per-category (domain) accuracy via
+    summarize_answers_by_domain so the visitor sees where they're strong/weak.
+    Questions not yet answered (including the current one) are excluded from the
+    denominator -- "end on the current question" means count what's done so far.
+    """
+    answers = st.session_state.get(ANSWERS_KEY, {})
+    cert = get_current_certification()
+    if cert and answers:
+        summary = summarize_answers_by_domain(cert["id"], answers)
+    else:
+        total = len(answers)
+        correct = sum(1 for a in answers.values() if a.get("is_correct"))
+        summary = {
+            "total": total,
+            "correct": correct,
+            "score_pct": round(correct / total * 100, 1) if total else 0.0,
+            "by_domain": [],
+        }
+    st.session_state[SUMMARY_KEY] = summary
+    st.rerun()
+
+
 st.title("Practice (guest)")
 st.caption(
     "Try the question runner without signing in. Progress isn't saved -- "
@@ -72,6 +98,19 @@ if summary := st.session_state.get(SUMMARY_KEY):
             f"Session complete: **{pct}%** ({summary['correct']}/{summary['total']}) -- "
             f"below 70% pass threshold"
         )
+    # Per-category (domain) accuracy breakdown.
+    by_domain = summary.get("by_domain") or []
+    if by_domain:
+        st.markdown("#### Accuracy by category")
+        for d in by_domain:
+            st.markdown(
+                f"**{d['name']}** — {d['accuracy_pct']}% "
+                f"({d['correct']}/{d['total']} correct)"
+            )
+            st.progress(min(1.0, d["accuracy_pct"] / 100))
+    elif summary.get("total"):
+        st.caption("Per-category breakdown isn't available for this question set.")
+
     st.caption(
         "Sign in to save sessions, track streaks, build a missed-questions queue, "
         "and unlock timed exams + flashcards."
@@ -133,20 +172,22 @@ with st.sidebar:
     st.divider()
     st.metric("Question", f"{min(index + 1, total)} / {total}")
     st.caption("Guest session -- not saved.")
+    answered_count = len(answers)
+    if answered_count and st.button(
+        "End session & see results",
+        type="primary",
+        width="stretch",
+        key="guest_end",
+        help=f"Finish now and score the {answered_count} question(s) you've answered.",
+    ):
+        _finish_guest_session()
     if st.button("Quit", width="stretch", key="guest_quit"):
         _clear_guest_state()
         st.switch_page("pages/login.py")
 
-# End of queue -> compute summary
+# End of queue -> compute summary (with per-category breakdown)
 if index >= total:
-    correct = sum(1 for a in answers.values() if a["is_correct"])
-    score_pct = round(correct / total * 100, 1) if total else 0.0
-    st.session_state[SUMMARY_KEY] = {
-        "total": total,
-        "correct": correct,
-        "score_pct": score_pct,
-    }
-    st.rerun()
+    _finish_guest_session()
 
 qid = queue[index]
 question = get_question_with_options(qid)

@@ -62,7 +62,7 @@ tests/
 requirements.txt             # Streamlit Cloud dep manifest (mirror of pyproject.toml)
 app/
   auth.py                    # Supabase auth helpers -- DONE
-  db.py                      # @st.cache_resource Supabase client (PKCE flow) -- DONE
+  db.py                      # two clients: cached anon read-client + per-session authed client (PKCE) -- DONE
   queries.py                 # cert/domains/questions/bookmark/report/review-bundle + mode-specific pick_* -- DONE
   session.py                 # start/record/complete/abandon for all session modes -- DONE
   components/
@@ -122,7 +122,7 @@ docs/how_to_run.md           # local + deploy walkthroughs
 ## Hard constraints from the brief (do not violate)
 
 - **No AI commit attribution.** Omit `Co-Authored-By: Claude` and "Generated with Claude Code" footers from commits and PR descriptions. (Brief §9.)
-- **Free tier only.** Keep payloads small. Don't store option text in `user_answers` -- only IDs. Cache the Supabase client with `@st.cache_resource`; cache static reference data (domains, certifications) with `@st.cache_data(ttl=...)`.
+- **Free tier only.** Keep payloads small. Don't store option text in `user_answers` -- only IDs. The anon read-client is cached with `@st.cache_resource` (`get_public_supabase()`); the **authed** client is per-browser-session in `st.session_state` (`get_supabase()`) for user isolation -- see "Supabase client architecture" below. Cache static reference data (domains, certifications) with `@st.cache_data(ttl=...)`.
 - **No PII beyond email.** No payment processing.
 - **`questions.is_active` is the soft-delete mechanism.** Don't hard-delete rows referenced by `user_answers`.
 
@@ -216,7 +216,16 @@ The product brief is fully implemented. There is no "next phase" in the roadmap.
 ### Phase 3 notes (still relevant)
 
 - PKCE flow is enabled in `app/db.py` (`ClientOptions(flow_type="pkce")`) so OAuth + reset links return a `code` we can `exchange_code_for_session` for. Email confirmation links use `verify_otp` with `token_hash + type` -- both handled in `streamlit_app.py` `_handle_auth_callback()`.
-- Session lives in `st.session_state["supabase_session"]` as a dict (not the raw `Session` model -- Streamlit serializes it across reruns). `app/auth.apply_session_to_client()` must be called on every rerun before queries that need RLS.
+- Session lives in `st.session_state["supabase_session"]` as a dict (not the raw `Session` model -- Streamlit serializes it across reruns). `app/auth.apply_session_to_client()` must be called on every rerun before queries that need RLS; it now also **resets the client to the anon key when there's no session** so a stale user token can't linger.
+
+### Supabase client architecture (read before touching `app/db.py`)
+
+There are **two** clients, on purpose. Do not collapse them back into one shared cached client.
+
+- **`get_public_supabase()`** -- `@st.cache_resource`, process-global, anon key, **never** has `set_session()` called on it. Used by world-readable reference reads in `app/queries.py` (`get_certification_by_code`, `list_certifications_with_questions`, `list_domains`, `pick_question_ids`, `get_question_with_options`, `_cert_question_ids`). Anon-readable since migration 0006, so these power guest mode.
+- **`get_supabase()`** -- a **per-browser-session** client stored in `st.session_state` (created once per session, reused across reruns). Wears this user's access token via `apply_session_to_client()`. Used by every user-scoped read/write (profiles, sessions, answers, bookmarks, stats, flashcards, `report_question`) and all of `app/session.py`.
+
+**Why (the bug this fixed):** the old single `@st.cache_resource` client was shared across all browser sessions in the server process *and* had `set_session()` called on it per request. A logged-in user's 1-hour token would stay on that shared client and then surface as `PGRST303 "JWT expired"` for the next guest / cache-miss (the reported bug), and under concurrency one user's query could run with another user's token (RLS identity bleed). Per-session authed clients + a never-mutated anon read-client remove both. `auto_refresh_token=False` on the client: we refresh deterministically in `get_session()` each rerun rather than relying on per-session background timers.
 - GitHub OAuth: button in `pages/login.py` calls `get_github_oauth_url()` which always returns a URL (supabase-py doesn't validate provider availability server-side -- it just builds the request URL). So the button always renders when a URL is generated. Validation happens when the user clicks: if GitHub isn't enabled in Supabase, they get a 400 "Unsupported provider" error. To enable: GitHub OAuth App at <https://github.com/settings/developers> -> Supabase dashboard -> Auth -> Providers -> GitHub -> paste Client ID + Secret. (No Google Cloud Console / consent screen needed; this was swapped from Google for that reason.)
 - Email confirmations are `false` locally (instant signup). For prod, flip `[auth.email] enable_confirmations = true`. Either way, Inbucket at http://localhost:54324 catches signup/reset emails locally.
 - `profiles` row is auto-created by the `on_auth_user_created` trigger -- don't insert on signup, just read/update via `pages/account.py`.

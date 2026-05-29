@@ -150,6 +150,11 @@ def _store_session(session) -> dict:
 
 def _clear_session() -> None:
     st.session_state.pop(SESSION_KEY, None)
+    # Drop this session's authed client so the next get_supabase() returns a
+    # clean anon one -- otherwise the just-signed-out user's token would stay on
+    # the client and break reads once it expires.
+    from app.db import drop_session_client
+    drop_session_client()
     # Drop the cached current-cert + theme so a new sign-in re-resolves
     # from the next user's profile (or default). Deferred import to dodge
     # the auth <-> queries circular at module load.
@@ -187,16 +192,22 @@ def current_user() -> dict | None:
 
 
 def apply_session_to_client() -> None:
-    """Push the stored access+refresh tokens onto the cached Supabase client.
+    """Push the stored access+refresh tokens onto this session's Supabase client.
 
-    Streamlit reruns recreate the page module but reuse the cached client, so
-    this must be called on every rerun before any query that needs RLS.
+    Streamlit reruns recreate the page module but reuse the per-session client,
+    so this must be called on every rerun before any query that needs RLS. When
+    signed out it resets the client's PostgREST bearer back to the anon key so a
+    token applied earlier in this browser session can't linger and later raise
+    PGRST303 (JWT expired) or read under a stale identity.
     """
-    session = st.session_state.get(SESSION_KEY)
-    if not session:
-        return
+    from app.db import reset_client_to_anon
+
     client = get_supabase()
-    client.auth.set_session(session["access_token"], session["refresh_token"])
+    session = st.session_state.get(SESSION_KEY)
+    if session:
+        client.auth.set_session(session["access_token"], session["refresh_token"])
+    else:
+        reset_client_to_anon(client)
 
 
 # ---------------------------------------------------------------------------

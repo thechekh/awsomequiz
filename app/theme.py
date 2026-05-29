@@ -151,44 +151,30 @@ def _vars_block(palette: dict[str, str]) -> str:
 
 
 def resolve_palette_name(theme_pref: str | None) -> str:
-    """Map a stored preference to a concrete palette name (drops 'system')."""
+    """Map a stored preference to a concrete palette name.
+
+    "system" / None / unknown resolve to Dark Slate. The app is dark-first, and
+    a server-side render can't read the browser's prefers-color-scheme, so the
+    old `@media` split left the binary dark-mode toggle out of sync (it showed
+    "light" while a dark-OS visitor saw a dark page). Resolving "system" to an
+    explicit dark palette keeps the rendered theme and the toggle consistent.
+    """
     if theme_pref == THEME_LIGHT:
         return THEME_LIGHT
-    if theme_pref == THEME_DARK_SLATE:
-        return THEME_DARK_SLATE
     if theme_pref == THEME_DARK_HC:
         return THEME_DARK_HC
-    # "system" / None / unknown -> let the @media rule decide; we emit BOTH
-    # palettes wrapped in prefers-color-scheme media queries.
-    return THEME_SYSTEM
+    # dark_slate, system, None, unknown -> Dark Slate.
+    return THEME_DARK_SLATE
 
 
 def render_theme_css(theme_pref: str | None) -> str:
     """Return a <style> block setting CSS custom properties for the theme.
 
-    For "system" (or unset): emit Light vars in the no-preference state and
-    swap to Dark Slate inside an `@media (prefers-color-scheme: dark)` block.
-    For explicit choices: emit a single :root block with that palette.
+    Every preference resolves to one concrete palette (see resolve_palette_name;
+    "system"/unset -> Dark Slate), so we always emit a single :root block. This
+    keeps the rendered palette and the binary dark-mode toggle in agreement.
     """
     name = resolve_palette_name(theme_pref)
-    if name == THEME_SYSTEM:
-        light_vars = _vars_block(LIGHT_PALETTE)
-        dark_vars = _vars_block(DARK_SLATE_PALETTE)
-        return f"""
-<style>
-:root {{
-{light_vars}
-  --color-scheme: light;
-}}
-@media (prefers-color-scheme: dark) {{
-  :root {{
-{dark_vars}
-    --color-scheme: dark;
-  }}
-}}
-html {{ color-scheme: var(--color-scheme); }}
-</style>
-"""
     palette = PALETTES[name]
     is_dark = name in (THEME_DARK_SLATE, THEME_DARK_HC)
     vars_str = _vars_block(palette)

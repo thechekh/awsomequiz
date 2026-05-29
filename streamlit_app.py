@@ -161,7 +161,9 @@ def _resolve_theme_pref() -> str:
     if cookie_val in VALID_THEMES:
         st.session_state[THEME_PREF_KEY] = cookie_val
         return cookie_val
-    return THEME_SYSTEM
+    # Dark-first default: the app renders dark out of the box, so default the
+    # preference to dark_slate too -- keeps the toggle in sync on first load.
+    return THEME_DARK_SLATE
 
 
 # Global stylesheet now -- it consumes CSS vars but they have safe defaults
@@ -313,8 +315,12 @@ _current_theme_pref = _resolve_theme_pref()
 
 
 def _is_dark_pref(pref: str) -> bool:
-    """Return True if a stored preference paints dark."""
-    return pref in (THEME_DARK_SLATE, THEME_DARK_HC)
+    """Return True if a stored preference paints dark.
+
+    "system" counts as dark because resolve_palette_name renders it as Dark
+    Slate -- so the toggle reflects what the user actually sees.
+    """
+    return pref in (THEME_DARK_SLATE, THEME_DARK_HC, THEME_SYSTEM)
 
 
 def _flip_dark(new_dark: bool, save_to_profile: bool, user_id: str | None) -> None:

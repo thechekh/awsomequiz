@@ -1,8 +1,16 @@
 """Query helpers for the practice modes.
 
-All functions go through `get_supabase()`, which returns the cached client
-already wearing the user's session (RLS applies). Static reference data is
-cached with `@st.cache_data` per the brief's free-tier constraint.
+Two client accessors (see app/db.py):
+
+* World-readable reference reads (certifications, domains, questions, options)
+  use `get_public_supabase()` -- a shared anon client whose auth is never
+  mutated. These power guest mode and can't fail with PGRST303.
+* User-scoped reads/writes (profiles, sessions, answers, bookmarks, stats,
+  flashcards) use `get_supabase()` -- this browser session's client, wearing
+  the user's token so RLS applies.
+
+Static reference data is cached with `@st.cache_data` per the brief's free-tier
+constraint.
 """
 
 from __future__ import annotations
@@ -12,7 +20,7 @@ from datetime import datetime, timedelta, timezone
 
 import streamlit as st
 
-from app.db import get_supabase
+from app.db import get_public_supabase, get_supabase
 
 CACHE_TTL_REFERENCE = 60 * 60  # 1 h: cert, domains -- ~never change
 CACHE_TTL_QUESTION = 5 * 60     # 5 min: question text / options
@@ -32,7 +40,7 @@ _CERT_FIELDS = "id, code, name, question_count, duration_minutes, pass_threshold
 @st.cache_data(ttl=CACHE_TTL_REFERENCE)
 def get_certification_by_code(code: str) -> dict | None:
     """Fetch one certification row by its code (CLF-C02, DVA-C02, ...). None if missing."""
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     rows = (
         supabase.table("certifications")
         .select(_CERT_FIELDS)
@@ -51,7 +59,7 @@ def list_certifications_with_questions() -> list[dict]:
     up in `certifications`). Cached at the reference TTL because adding a
     question bank to a cert is a deploy-time event, not a per-request thing.
     """
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     rows = (
         supabase.table("questions")
         .select("certification_id")
@@ -194,7 +202,7 @@ def get_display_name(user_id: str, email: str) -> str:
 @st.cache_data(ttl=CACHE_TTL_REFERENCE)
 def list_domains(certification_id: str) -> list[dict]:
     """Return domain rows for a certification, ordered for display."""
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     return (
         supabase.table("domains")
         .select("id, code, name, weight, display_order")
@@ -202,6 +210,72 @@ def list_domains(certification_id: str) -> list[dict]:
         .order("display_order")
         .execute()
     ).data or []
+
+
+def summarize_answers_by_domain(certification_id: str, answers: dict) -> dict:
+    """Total + per-domain accuracy from a set of answered questions.
+
+    `answers` maps question_id -> a dict carrying an "is_correct" bool (the
+    shape guest practice stores in session_state). Reads question -> domain via
+    the public anon client, so it works for signed-out guests. Per-domain rows
+    follow the cert's domain display order; an "Untagged" bucket is appended
+    when answered questions have no domain assigned. Only buckets with at least
+    one attempt are returned.
+
+    Returns: {total, correct, score_pct, by_domain: [{code, name, correct,
+    total, accuracy_pct}, ...]}.
+    """
+    qids = list(answers)
+    total = len(qids)
+    correct = sum(1 for a in answers.values() if a.get("is_correct"))
+    result = {
+        "total": total,
+        "correct": correct,
+        "score_pct": round(correct / total * 100, 1) if total else 0.0,
+        "by_domain": [],
+    }
+    if not qids:
+        return result
+
+    supabase = get_public_supabase()
+    # question_id -> domain_id, fetched in chunks so the `in_` URL stays sane.
+    q_to_domain: dict[str, str | None] = {}
+    for i in range(0, len(qids), 200):
+        rows = (
+            supabase.table("questions")
+            .select("id, domain_id")
+            .in_("id", qids[i:i + 200])
+            .execute()
+        ).data or []
+        for r in rows:
+            q_to_domain[r["id"]] = r.get("domain_id")
+
+    bucket: dict[str | None, dict] = {}
+    for qid, a in answers.items():
+        d_id = q_to_domain.get(qid)
+        b = bucket.setdefault(d_id, {"correct": 0, "total": 0})
+        b["total"] += 1
+        if a.get("is_correct"):
+            b["correct"] += 1
+
+    def _row(code: str, name: str, b: dict) -> dict:
+        return {
+            "code": code,
+            "name": name,
+            "correct": b["correct"],
+            "total": b["total"],
+            "accuracy_pct": round(b["correct"] / b["total"] * 100, 1) if b["total"] else 0.0,
+        }
+
+    rows_out: list[dict] = []
+    for d in list_domains(certification_id):  # display-order rows
+        b = bucket.get(d["id"])
+        if b:
+            rows_out.append(_row(d["code"], d["name"], b))
+    if None in bucket:  # questions with no domain assigned
+        rows_out.append(_row("untagged", "Untagged", bucket[None]))
+    result["by_domain"] = rows_out
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -228,7 +302,7 @@ def pick_question_ids(
     shuffling and numeric sorting happen client-side. For <1000 questions
     per certification this is negligible.
     """
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     query = (
         supabase.table("questions")
         .select("id, external_id")
@@ -262,7 +336,7 @@ def pick_question_ids(
 @st.cache_data(ttl=CACHE_TTL_QUESTION)
 def get_question_with_options(question_id: str) -> dict:
     """Fetch one question + its options, ordered A-F."""
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     q = (
         supabase.table("questions")
         .select("id, stem, type, version")
@@ -478,7 +552,7 @@ def format_started_at(iso_ts: str | None) -> str:
 
 
 def _cert_question_ids(certification_id: str) -> list[str]:
-    supabase = get_supabase()
+    supabase = get_public_supabase()
     rows = (
         supabase.table("questions")
         .select("id")

@@ -2106,7 +2106,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "Lets you privately connect a VPC to supported AWS services without internet, NAT, VPN, or Direct Connect. Two types: Gateway endpoints (S3, DynamoDB â€” free) and Interface endpoints (powered by PrivateLink, paid)."
+      "definition": "Lets you privately connect a VPC to supported AWS services without internet, NAT, VPN, or Direct Connect. Two types: Gateway endpoints (S3, DynamoDB — free) and Interface endpoints (powered by PrivateLink, paid)."
     },
     {
       "term": "VPC Peering",
@@ -3035,7 +3035,7 @@
         "CLF-C02",
         "DVA-C02"
       ],
-      "definition": "Recovery Time Objective â€” the maximum acceptable elapsed time between a service interruption and restoration. Drives backup, replication, and failover strategy choices."
+      "definition": "Recovery Time Objective — the maximum acceptable elapsed time between a service interruption and restoration. Drives backup, replication, and failover strategy choices."
     },
     {
       "term": "RPO",
@@ -3047,7 +3047,7 @@
         "CLF-C02",
         "DVA-C02"
       ],
-      "definition": "Recovery Point Objective â€” the maximum acceptable amount of data loss measured in time. Determines required backup / replication frequency."
+      "definition": "Recovery Point Objective — the maximum acceptable amount of data loss measured in time. Determines required backup / replication frequency."
     },
     {
       "term": "Pilot light",
@@ -3282,7 +3282,7 @@
       "certs": [
         "CLF-C02"
       ],
-      "definition": "A property of a system that lets it continue operating, possibly at reduced capability, in the presence of failures. Stronger guarantee than high availability â€” designed for zero downtime during faults."
+      "definition": "A property of a system that lets it continue operating, possibly at reduced capability, in the presence of failures. Stronger guarantee than high availability — designed for zero downtime during faults."
     },
     {
       "term": "IAM role",
@@ -3375,7 +3375,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "Identity federation using a public web identity provider ??? Login with Amazon, Facebook, Google, or any OIDC-compatible provider ??? to obtain AWS credentials via STS AssumeRoleWithWebIdentity. Most mobile/web apps integrate this through Amazon Cognito identity pools rather than calling STS directly."
+      "definition": "Identity federation using a public web identity provider — Login with Amazon, Facebook, Google, or any OIDC-compatible provider — to obtain AWS credentials via STS AssumeRoleWithWebIdentity. Most mobile/web apps integrate this through Amazon Cognito identity pools rather than calling STS directly."
     },
     {
       "term": "Cross-account access",
@@ -3427,7 +3427,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "Cryptography using a mathematically linked key pair ??? a public key that anyone can use to encrypt or verify and a private key kept by the owner to decrypt or sign. KMS supports asymmetric keys for sign/verify (RSA, ECC) and encrypt/decrypt (RSA only) use cases."
+      "definition": "Cryptography using a mathematically linked key pair — a public key that anyone can use to encrypt or verify and a private key kept by the owner to decrypt or sign. KMS supports asymmetric keys for sign/verify (RSA, ECC) and encrypt/decrypt (RSA only) use cases."
     },
     {
       "term": "Server-side encryption (SSE)",
@@ -3494,7 +3494,7 @@
         "CLF-C02",
         "DVA-C02"
       ],
-      "definition": "An asymmetric RSA or ED25519 key pair used for SSH (Linux) or RDP password retrieval (Windows) on an EC2 instance. AWS keeps the public key; you download the private key once at creation. Losing the private key means you cannot connect via SSH ??? recover by detaching the volume or using EC2 Instance Connect / Session Manager."
+      "definition": "An asymmetric RSA or ED25519 key pair used for SSH (Linux) or RDP password retrieval (Windows) on an EC2 instance. AWS keeps the public key; you download the private key once at creation. Losing the private key means you cannot connect via SSH — recover by detaching the volume or using EC2 Instance Connect / Session Manager."
     },
     {
       "term": "Dedicated Host",
@@ -3554,7 +3554,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "The unique identifier of an object within an S3 bucket ??? a UTF-8 string up to 1,024 bytes. The full S3 URL is s3://bucket/key. S3 treats keys as flat, but slash-delimited keys (logs/2026/01/01.json) render as folders in the console and enable prefix-based filtering, lifecycle, and replication."
+      "definition": "The unique identifier of an object within an S3 bucket — a UTF-8 string up to 1,024 bytes. The full S3 URL is s3://bucket/key. S3 treats keys as flat, but slash-delimited keys (logs/2026/01/01.json) render as folders in the console and enable prefix-based filtering, lifecycle, and replication."
     },
     {
       "term": "S3 lifecycle policy",
@@ -3567,7 +3567,7 @@
         "CLF-C02",
         "DVA-C02"
       ],
-      "definition": "A set of rules attached to an S3 bucket that automatically transitions objects between storage classes (e.g. Standard ??? Standard-IA ??? Glacier Flexible Retrieval ??? Glacier Deep Archive) or expires/deletes them after a configurable age. Filters by prefix or tag; rules also clean up incomplete multipart uploads and expired delete markers."
+      "definition": "A set of rules attached to an S3 bucket that automatically transitions objects between storage classes (e.g. Standard → Standard-IA → Glacier Flexible Retrieval → Glacier Deep Archive) or expires/deletes them after a configurable age. Filters by prefix or tag; rules also clean up incomplete multipart uploads and expired delete markers."
     },
     {
       "term": "S3 Standard",
@@ -3744,7 +3744,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A consistency model where every read returns the latest committed write. DynamoDB supports it per-request (consumes 2?? the RCU). Amazon S3 has provided strong read-after-write consistency for all objects since December 2020."
+      "definition": "A consistency model where every read returns the latest committed write. DynamoDB supports it per-request (consumes 2× the RCU). Amazon S3 has provided strong read-after-write consistency for all objects since December 2020."
     },
     {
       "term": "Atomic counter",
@@ -3753,7 +3753,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A DynamoDB numeric attribute that you increment or decrement atomically via UpdateItem with the ADD action. The operation never blocks and never returns a conflict, but is not idempotent ??? retries may double-count. Suitable for visit counters where exact accuracy isn't required."
+      "definition": "A DynamoDB numeric attribute that you increment or decrement atomically via UpdateItem with the ADD action. The operation never blocks and never returns a conflict, but is not idempotent — retries may double-count. Suitable for visit counters where exact accuracy isn't required."
     },
     {
       "term": "Subnet",
@@ -3920,7 +3920,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A preview of how a proposed CloudFormation template change would affect the resources in an existing stack ??? which resources are created, updated, replaced, or deleted. Execute the change set to apply the change, or discard it."
+      "definition": "A preview of how a proposed CloudFormation template change would affect the resources in an existing stack — which resources are created, updated, replaced, or deleted. Execute the change set to apply the change, or discard it."
     },
     {
       "term": "Continuous integration (CI)",
@@ -3953,7 +3953,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A practice that extends continuous delivery by automatically deploying every change that passes CI into production with no manual approval ??? relying on automated tests, canary / blue-green deploys, and rollback to keep risk low."
+      "definition": "A practice that extends continuous delivery by automatically deploying every change that passes CI into production with no manual approval — relying on automated tests, canary / blue-green deploys, and rollback to keep risk low."
     },
     {
       "term": "AWS Organizations OU",
@@ -4071,7 +4071,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "The original name for what is now Amazon EventBridge ??? an event bus that routes events from AWS services, custom applications, and SaaS partners to targets (Lambda, Step Functions, SNS, SQS, etc.). The CloudWatch Events name is still recognised in older docs and IAM actions (events:*)."
+      "definition": "The original name for what is now Amazon EventBridge — an event bus that routes events from AWS services, custom applications, and SaaS partners to targets (Lambda, Step Functions, SNS, SQS, etc.). The CloudWatch Events name is still recognised in older docs and IAM actions (events:*)."
     },
     {
       "term": "Access key",
@@ -4083,7 +4083,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A long-term credential pair (AKIA???/SecretKey) used to sign programmatic AWS API requests. Issued to IAM users (or via root, strongly discouraged). Prefer IAM roles or IAM Identity Center temporary credentials; if you must use access keys, rotate them regularly via IAM Access Analyzer recommendations."
+      "definition": "A long-term credential pair (AKIA…/SecretKey) used to sign programmatic AWS API requests. Issued to IAM users (or via root, strongly discouraged). Prefer IAM roles or IAM Identity Center temporary credentials; if you must use access keys, rotate them regularly via IAM Access Analyzer recommendations."
     },
     {
       "term": "Temporary security credentials",
@@ -4134,7 +4134,7 @@
       "certs": [
         "CLF-C02"
       ],
-      "definition": "AWS publishes its scope-1 and scope-2 emissions via the Customer Carbon Footprint Tool in Billing. Customers are responsible for sustainability of what they build in the cloud ??? right-sizing instances, using managed services, choosing renewable Regions, and applying the Sustainability pillar guidance."
+      "definition": "AWS publishes its scope-1 and scope-2 emissions via the Customer Carbon Footprint Tool in Billing. Customers are responsible for sustainability of what they build in the cloud — right-sizing instances, using managed services, choosing renewable Regions, and applying the Sustainability pillar guidance."
     },
     {
       "term": "Disaster recovery (DR)",
@@ -4182,7 +4182,7 @@
       "certs": [
         "DVA-C02"
       ],
-      "definition": "A retry strategy where the wait between attempts grows exponentially (1s, 2s, 4s, 8s ???), usually combined with random jitter to avoid thundering-herd. The AWS SDKs implement it automatically for throttling and 5xx responses; standard recipe for handling AWS API rate-limit errors."
+      "definition": "A retry strategy where the wait between attempts grows exponentially (1s, 2s, 4s, 8s …), usually combined with random jitter to avoid thundering-herd. The AWS SDKs implement it automatically for throttling and 5xx responses; standard recipe for handling AWS API rate-limit errors."
     },
     {
       "term": "Idempotency token",
