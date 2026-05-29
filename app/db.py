@@ -83,6 +83,21 @@ def get_public_supabase() -> Client:
     return _new_client()
 
 
+@st.cache_resource
+def get_oauth_supabase() -> Client:
+    """Process-shared client for the PKCE auth handshake (OAuth + email links).
+
+    The PKCE code-verifier is generated when the auth URL is built and must
+    still be present when the provider redirects back with a `?code=` -- but the
+    callback lands in a DIFFERENT Streamlit session (new tab / fresh connection
+    after navigating away to the provider), whose per-session client wouldn't
+    hold it. Keeping the whole handshake on one process-global client preserves
+    the verifier across that hop. Callers reset it to anon after a successful
+    exchange (reset_client_to_anon) so it never retains a user's token.
+    """
+    return _new_client()
+
+
 def get_supabase() -> Client:
     """Return this browser session's client (carries the user's token, or anon).
 

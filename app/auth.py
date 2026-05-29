@@ -20,7 +20,7 @@ from app.cookies import (
     read_cookie_client_side,
     read_cookie_from_headers,
 )
-from app.db import get_supabase
+from app.db import get_oauth_supabase, get_supabase
 
 SESSION_KEY = "supabase_session"
 COOKIE_NAME = "awsomequiz_rt"
@@ -253,8 +253,13 @@ def sign_out() -> None:
 
 
 def reset_password_request(email: str) -> None:
-    """Trigger the password-reset email. Link in the email lands on /reset_password."""
-    client = get_supabase()
+    """Trigger the password-reset email. Link in the email lands on /reset_password.
+
+    Built on the shared OAuth client so the PKCE verifier survives until the
+    user clicks the emailed link (which opens a fresh session); exchange_code
+    then completes against the same shared client.
+    """
+    client = get_oauth_supabase()
     client.auth.reset_password_for_email(
         email,
         {"redirect_to": f"{site_url()}/reset_password"},
@@ -307,7 +312,9 @@ def get_github_oauth_url() -> str | None:
     the actual validation happens when the user clicks through and Supabase
     rejects unsupported providers.
     """
-    client = get_supabase()
+    # Use the process-shared OAuth client so the PKCE verifier survives until
+    # the callback (which arrives in a different Streamlit session).
+    client = get_oauth_supabase()
     try:
         resp = client.auth.sign_in_with_oauth({
             "provider": "github",
@@ -322,14 +329,24 @@ def get_github_oauth_url() -> str | None:
 
 
 def exchange_code(code: str) -> dict | None:
-    """Exchange a PKCE auth code (from OAuth or magic-link callback) for a session."""
-    client = get_supabase()
+    """Exchange a PKCE auth code (from OAuth or magic-link callback) for a session.
+
+    Uses the process-shared OAuth client so the PKCE verifier created when the
+    auth URL was built (in another session) is still present. Resets that client
+    to anon afterwards so it never keeps the signed-in user's token.
+    """
+    from app.db import reset_client_to_anon
+
+    client = get_oauth_supabase()
     try:
         resp = client.auth.exchange_code_for_session({"auth_code": code})
         if resp.session:
-            return _store_session(resp.session)
+            stored = _store_session(resp.session)
+            reset_client_to_anon(client)
+            return stored
     except Exception:  # noqa: BLE001 - bad / expired code; let caller show a clean error
-        return None
+        pass
+    reset_client_to_anon(client)
     return None
 
 
